@@ -1,16 +1,15 @@
 package com.company;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 public class Main {
 
-    public static void main(String[] args) {
-
-        Book bok = new Book("123", "hej", "hehe", (byte) 2, "2323", "efeef");
-
-
-        System.out.println(bok.toString());
-        bok.setTitle("test");
-
-        System.out.println(bok.toString());
+    public static void main(String[] args) throws IOException {
+        Path path = Paths.get("test2.txt");
+        Base wth = new Base();
+        System.out.println(wth.readFromDisk(path));
 
     }
 }
