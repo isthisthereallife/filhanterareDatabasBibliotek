@@ -83,6 +83,10 @@ public class Library{
         int i = users.size() - 1;
         User user = users.get(i);
         String uniqueId = user.getId();
+        String fileName = "database/users/" + uniqueId;
+        String str = String.format("%s\n%s\n%s\n%s\n%s", uniqueId, name, adress, mail, tel);
+        Base b = new Base ();
+        b.writeToFile(fileName, str);
         System.out.printf("Registration completed!\nYour unique id is: %s\n", uniqueId);
         loginMenu();
     }
@@ -112,6 +116,10 @@ public class Library{
         System.out.println(bok);
 
         books.add(new Book(title, author, genre, year, isbn));
+        String fileName = "database/books/" + isbn;
+        String str = String.format("%s\n%s\n%s\n%s\n%s", isbn, title, author, year, genre);
+        Base b = new Base ();
+        b.writeToFile(fileName, str);
     }
 
 

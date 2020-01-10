@@ -1,7 +1,6 @@
 package com.company;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -59,10 +58,20 @@ public class Base {
         for (String item : resultList){
             result = result.concat(item) +"\n";
         }
-        return result;
 
+        return result;
     }
 
-
-
+    public void writeToFile(String fileName, String str) {
+        PrintWriter writer = null; //creates the new file
+        try {
+            writer = new PrintWriter(fileName + ".txt", "UTF-8");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        writer.println(str);
+        writer.close();
+    }
 }
