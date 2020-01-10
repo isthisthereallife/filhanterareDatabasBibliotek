@@ -21,6 +21,29 @@ public class User {
         this.uniqueId = idGenerator();
     }
 
+    public User(String userInfoFromDisk) {
+        String[] stringsInfo = userInfoFromDisk.split("\\r?\\n");
+        for (String s : stringsInfo) {
+            String trim = s.substring(s.indexOf(":") + 1).trim();
+            if (s.contains("name :")) {
+                this.name = trim;
+            } else if (s.contains("address :")) {
+                this.address = trim;
+            } else if (s.contains("mail :")) {
+                this.mail = trim;
+            } else if (s.contains("tel :")) {
+                this.tel = trim;
+            } else if (s.contains("activeLoans :")) {
+                this.activeLoans = trim;
+            } else if (s.contains("uniqueId :")) {
+                this.uniqueId = trim;
+            }
+
+        }
+
+
+    }
+
     private String idGenerator() {
         String result = "";
         Random randomizer = new Random();
@@ -33,9 +56,10 @@ public class User {
         return result;
     }
 
-    public String getId(){
+    public String getId() {
         return this.uniqueId;
     }
+
     public String getActiveLoans() {
         return this.activeLoans;
     }
