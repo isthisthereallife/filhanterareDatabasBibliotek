@@ -1,6 +1,6 @@
 package com.company;
 
-public class Book {
+public class Book extends Base{
 
     private String isbn;
     private String title;
