@@ -1,0 +1,6 @@
+ISBN : 856733498222
+Title : Aurora
+Author : Kim Stanley Robinson
+Qty : 1
+Year : 2015
+Genre : Science Fiction

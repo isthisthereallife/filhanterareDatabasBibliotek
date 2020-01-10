@@ -1,0 +1,6 @@
+ISBN : 82739472394
+Title : Kindred
+Author : Octavia E. Butler
+Qty : 1
+Year : 1979
+Genre : Fantasy
