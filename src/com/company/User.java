@@ -1,8 +1,9 @@
 package com.company;
 
+import java.util.ArrayList;
 import java.util.Random;
 
-public class User {
+public class User extends Base{
 
 
     private String name;
@@ -61,7 +62,39 @@ public class User {
     }
 
     public String getActiveLoans() {
-        return this.activeLoans;
+        //TODO detta nog ska inte vara i gettern, lägg nån annanstans. ELLER? hmmm.
+        String result = "";
+
+        /* splitta strängen vid mellanslag,
+        sök i disk efter isbn
+        */
+        String isbnString = this.activeLoans.substring(this.activeLoans.indexOf(":") +1);
+
+        String[] isbnStringList = isbnString.split(" ");
+        for (String s : isbnStringList){
+            //skicka strängen tilll readFromDisk, hitta filen som har denna sträng i sig
+            result = result.concat(searchInFile(s,"database/books"));
+        }
+
+        return result;
+    }
+
+    public String activeLoansInfo() {
+        //TODO detta nog ska inte vara i gettern, lägg nån annanstans. ELLER? hmmm.
+        String result = "";
+
+        /* splitta strängen vid mellanslag,
+        sök i disk efter isbn
+        */
+        String isbnString = this.activeLoans.substring(this.activeLoans.indexOf(":") +1);
+
+        String[] isbnStringList = isbnString.split(" ");
+        for (String s : isbnStringList){
+            //skicka strängen tilll readFromDisk, hitta filen som har denna sträng i sig
+            result = result.concat(searchInFile(s,"database/books"));
+        }
+
+        return result;
     }
 
     private void setActiveLoans(String loaned) {
