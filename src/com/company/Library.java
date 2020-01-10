@@ -4,16 +4,18 @@ import javax.xml.xpath.XPath;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Library {
+public class Library{
     Scanner scan = new Scanner(System.in);
+    private ArrayList<User> users;
     public Library(){
     final Path path = Paths.get("books.txt");
     }
 
     public void identification(){
-        System.out.println("Who are you?");
+        System.out.println("Who would you like to login as?");
         System.out.println("1: Admin");
         System.out.println("2: User");
         byte choice = scan.nextByte();
@@ -38,9 +40,30 @@ public class Library {
     }
 
     private void userMenu() {
-        System.out.println("You are a user");
+        System.out.printf("1: Login\n 2: Register");
+        String choice = scan.nextLine();
+        if (choice == "1"){
+            loginMenu();
+        }
+        if(choice == "2"){
+            register();
+        }
     }
 
+    private void loginMenu(){
+        System.out.println("What is your login id? ");
+        String loginId = scan.nextLine();
+        for (User user : users){
+            if (user.getId() == loginId) {
+                System.out.println("Login successful!");
+                userMenu();
+            }
+        }
+        System.out.println("Login failed!");
+        loginMenu();
+    }
+    private void register() {
+    }
     public void addBook(){
         Book bok = new Book();
         String isbn;
