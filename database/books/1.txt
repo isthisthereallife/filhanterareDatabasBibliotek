@@ -1,6 +1,5 @@
 ISBN : 732498732498
 Title : Red Mars
 Author : Kim Stanley Robinson
-Qty : 1
 Year : 1992
 Genre : Science Fiction

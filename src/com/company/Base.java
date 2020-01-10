@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,7 +15,42 @@ public class Base {
 
     }
 
-    //läs in en fil från disk, returnera innehållet som sträng
+    /**
+     *
+     * @param searchItem vad som ska sökas efter
+     * @param pathString vars det ska sökas
+     * @return stränginnehållet i filerna som matchade sökningen
+     */
+    public String searchInFile(String searchItem, String pathString){
+        String result = "";
+
+        File folderPath = new File(pathString);
+        try {
+            for (File file : folderPath.listFiles()) {
+                try {
+                    //läs in en fil
+                    String stringToCheck = "";
+                    stringToCheck = stringToCheck.concat(readFromDisk(file.toPath()));
+                    if(stringToCheck.contains(searchItem)){
+                        result = result.concat(stringToCheck+"\n");
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }catch (NullPointerException e){
+            e.printStackTrace();
+            result = "No such file.";
+        }
+        return result;
+    }
+
+    /**
+     * läs in en fil från disk, returnera innehållet som sträng
+     * @param path
+     * @return
+     * @throws IOException
+     */
     public String readFromDisk(Path path) throws IOException {
 
         String result = "";
