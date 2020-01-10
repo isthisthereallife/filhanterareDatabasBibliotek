@@ -7,10 +7,8 @@ import java.nio.file.Paths;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        Path path = Paths.get("test2.txt");
-        Base wth = new Base();
-        System.out.println(wth.readFromDisk(path));
-        Library library = new Library();
-        library.addBook();
+        User h = new User("HA","gatan 3","mailen@mail.com","0802730");
+        System.out.println(h.getId());
+
     }
 }
