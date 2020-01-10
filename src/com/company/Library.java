@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class Library {
     Scanner scan = new Scanner(System.in);
     public Library(){
-
+    final Path path = Paths.get("books.txt");
     }
 
     public void identification(){
@@ -29,7 +29,7 @@ public class Library {
     private void adminMenu() {
         System.out.println("What do you want to do?");
         System.out.println("1: Add book to library");
-        System.out.println("2: Remove book to library");
+        System.out.println("2: Remove book from library");
         System.out.println("3: Edit book in library");
         byte choice = scan.nextByte();
         if (choice == 1){
@@ -41,8 +41,8 @@ public class Library {
         System.out.println("You are a user");
     }
 
-    private void addBook(){
-        /*Book bok = new Book();
+    public void addBook(){
+        Book bok = new Book();
         String isbn;
         String title;
         String author;
@@ -52,25 +52,27 @@ public class Library {
         System.out.println("What is the book's isbn number?: ");
         isbn = scan.nextLine();
         bok.setIsbn(isbn);
+
         System.out.println("What is the name of the book?: ");
         title = scan.nextLine();
         bok.setTitle(title);
-        System.out.println("What is the authors name of the book?: ");
+
+        System.out.println("What is the author's name of the book?: ");
         author = scan.nextLine();
         bok.setAuthor(author);
+
         System.out.println("How many books would you like to add?: ");
         qty = scan.nextByte();
         bok.setQty(qty);
+
         System.out.println("What year was the book released?: ");
         year = scan.nextLine();
         bok.setYear(year);
+
         System.out.println("What is the genre of the book?: ");
         genre = scan.nextLine();
         bok.setGenre(genre);
-        Path path = Paths.get("books.txt");
-        Files.createFile(path, "books.txt")
-        */
-
+        System.out.println(bok);
     }
 
 
