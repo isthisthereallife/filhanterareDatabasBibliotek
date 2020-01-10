@@ -10,8 +10,11 @@ import java.util.Scanner;
 public class Library{
     Scanner scan = new Scanner(System.in);
     private ArrayList<User> users = new ArrayList<>();
+    private ArrayList<Book> books;
+
     public Library(){
     final Path path = Paths.get("books.txt");
+    books = new ArrayList<Book>();
     }
 
     public void identification(){
@@ -86,36 +89,29 @@ public class Library{
 
     public void addBook(){
         Book bok = new Book();
-        String isbn;
-        String title;
-        String author;
-        byte qty;
-        String year;
-        String genre;
+
         System.out.println("What is the book's isbn number?: ");
-        isbn = scan.nextLine();
+        String isbn = scan.nextLine();
         bok.setIsbn(isbn);
 
         System.out.println("What is the name of the book?: ");
-        title = scan.nextLine();
+        String title = scan.nextLine();
         bok.setTitle(title);
 
         System.out.println("What is the author's name of the book?: ");
-        author = scan.nextLine();
+        String author = scan.nextLine();
         bok.setAuthor(author);
 
-        System.out.println("How many books would you like to add?: ");
-        qty = scan.nextByte();
-        bok.setQty(qty);
-
         System.out.println("What year was the book released?: ");
-        year = scan.nextLine();
+        String year = scan.nextLine();
         bok.setYear(year);
 
         System.out.println("What is the genre of the book?: ");
-        genre = scan.nextLine();
+        String genre = scan.nextLine();
         bok.setGenre(genre);
         System.out.println(bok);
+
+        books.add(new Book(title, author, genre, year, isbn));
     }
 
 
