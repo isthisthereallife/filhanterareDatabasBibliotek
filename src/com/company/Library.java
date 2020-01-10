@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 public class Library{
     Scanner scan = new Scanner(System.in);
-    private ArrayList<User> users;
+    private ArrayList<User> users = new ArrayList<>();
     public Library(){
     final Path path = Paths.get("books.txt");
     }
@@ -24,7 +24,7 @@ public class Library{
             adminMenu();
         }
         if (choice == 2){
-            userMenu();
+            userLoginMenu();
         }
     }
 
@@ -38,32 +38,52 @@ public class Library{
             addBook();
         }
     }
-
-    private void userMenu() {
-        System.out.printf("1: Login\n 2: Register");
+    private void userLoginMenu() {
+        System.out.println("1: Login\n2: Register");
         String choice = scan.nextLine();
-        if (choice == "1"){
+        if (choice.equals("1")){
             loginMenu();
         }
-        if(choice == "2"){
+        if(choice.equals("2")){
             register();
         }
     }
-
-    private void loginMenu(){
+    public void loginMenu(){
         System.out.println("What is your login id? ");
         String loginId = scan.nextLine();
         for (User user : users){
-            if (user.getId() == loginId) {
+            String id = user.getId();
+
+            if (id.equals(loginId)){
                 System.out.println("Login successful!");
                 userMenu();
+                break;
             }
         }
-        System.out.println("Login failed!");
+        System.out.println("Login failed.");
+    }
+
+    private void userMenu() {
+    }
+
+    public void register() {
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Your name:");
+        String name = scan.nextLine();
+        System.out.println("Your adress:");
+        String adress = scan.nextLine();
+        System.out.println("Your mail: ");
+        String mail = scan.nextLine();
+        System.out.println("Telephone number:");
+        String tel = scan.nextLine();
+        users.add(new User(name, adress, mail, tel));
+        int i = users.size() - 1;
+        User user = users.get(i);
+        String uniqueId = user.getId();
+        System.out.printf("Registration completed!\nYour unique id is: %s\n", uniqueId);
         loginMenu();
     }
-    private void register() {
-    }
+
     public void addBook(){
         Book bok = new Book();
         String isbn;
