@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -218,6 +219,24 @@ public class Library{
 
 
     }
-    
+
+    public void deleteBook() throws IOException {
+
+        System.out.println("Vilken bok vill du ta bort? Ange ISBN.");
+        int bok = scan.nextInt();
+        Path path = Paths.get("database/books/" + bok + ".txt");
+
+        if (!Files.exists(path)){
+            System.out.println("Boken finns ej. Försök igen!");
+        }else {
+            try {
+                Files.delete(path);
+                System.out.println(bok + " är nu borttagen.");
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        deleteBook();
+    }
 
 }

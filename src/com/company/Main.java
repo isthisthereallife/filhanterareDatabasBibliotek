@@ -7,6 +7,8 @@ import java.nio.file.Paths;
 public class Main {
 
     public static void main(String[] args) throws IOException {
+        Library library = new Library();
+        library.deleteBook();
         User u = new User("hej", "gata", "mailen", "070");
         u.setActiveLoans("39612786387");
         System.out.println(u.toString());
