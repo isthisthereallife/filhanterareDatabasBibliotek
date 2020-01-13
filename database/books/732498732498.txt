@@ -3,3 +3,4 @@ Title : Red Mars
 Author : Kim Stanley Robinson
 Year : 1992
 Genre : Science Fiction
+Status : Available

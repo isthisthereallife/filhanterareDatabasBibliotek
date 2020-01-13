@@ -3,3 +3,4 @@ Title : The Dispossessed
 Author : Ursula K. Le Guin
 Year : 1974
 Genre : Science Fiction
+Status : Available
