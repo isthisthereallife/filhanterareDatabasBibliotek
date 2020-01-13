@@ -59,7 +59,7 @@ public class Library{
             loginMenu();
         }
         if(choice.equals("2")){
-            register();
+            addUser();
         }
     }
     public void loginMenu(){
@@ -157,7 +157,7 @@ public class Library{
     }
 
 
-    public void register() {
+    public void addUser() {
         Scanner scan = new Scanner(System.in);
         System.out.println("Your name:");
         String name = scan.nextLine();
@@ -170,47 +170,33 @@ public class Library{
 
         users.add(new User(name, address, mail, tel));
 
-        int i = users.size() - 1;
-        User user = users.get(i);
-        String uniqueId = user.getId();
-        String fileName = "database/users/" + uniqueId;
-        String str = String.format("uniqueId: %s\nname: %s\naddress: %s\nmail: %s\ntel: %s", uniqueId, name, address, mail, tel);
-        Base b = new Base ();
-        b.writeToFile(fileName, str);
+        String uniqueId = users.get(users.size()-1).getId();
+        users.get(users.size()-1).writeToFile(("database/users/" + uniqueId),(users.get(users.size()-1).toString()));
         System.out.printf("Registration completed!\nYour unique id is: %s\n", uniqueId);
         loginMenu();
     }
 
     public void addBook(){
-        Book bok = new Book();
-
         System.out.println("What is the book's isbn number?: ");
         String isbn = scan.nextLine();
-        bok.setIsbn(isbn);
 
         System.out.println("What is the name of the book?: ");
         String title = scan.nextLine();
-        bok.setTitle(title);
 
         System.out.println("What is the author's name of the book?: ");
         String author = scan.nextLine();
-        bok.setAuthor(author);
 
         System.out.println("What year was the book released?: ");
         String year = scan.nextLine();
-        bok.setYear(year);
 
         System.out.println("What is the genre of the book?: ");
         String genre = scan.nextLine();
-        bok.setGenre(genre);
-        System.out.println(bok);
 
         books.add(new Book(title, author, genre, year, isbn));
-        String fileName = "database/books/" + isbn;
-        String str = bok.toString();
-        Base b = new Base ();
-        b.writeToFile(fileName, str);
+        books.get(books.size()-1).writeToFile(("database/books/" + isbn),(books.get(books.size()-1).toString()));
         System.out.println("Boken är nu tillagd i biblioteket!");
+
+
     }
     
 
