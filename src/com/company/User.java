@@ -81,7 +81,7 @@ public class User extends Base {
         return result;
     }
 
-    private void setActiveLoans(String loaned) {
+    public void setActiveLoans(String loaned) {
         this.activeLoans = loaned;
     }
 
