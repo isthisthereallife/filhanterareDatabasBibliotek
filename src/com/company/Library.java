@@ -1,10 +1,12 @@
 package com.company;
 
 import javax.xml.xpath.XPath;
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Library{
@@ -40,6 +42,9 @@ public class Library{
         if (choice == 1){
             addBook();
         }
+        /*else if (choice == 2){
+            deleteBook();
+        }*/
     }
     private void userLoginMenu() {
         System.out.println("1: Login\n2: Register");
@@ -117,10 +122,11 @@ public class Library{
 
         books.add(new Book(title, author, genre, year, isbn));
         String fileName = "database/books/" + isbn;
-        String str = String.format("%s\n%s\n%s\n%s\n%s", isbn, title, author, year, genre);
+        String str = bok.toString();
         Base b = new Base ();
         b.writeToFile(fileName, str);
+        System.out.println("Boken är nu tillagd i biblioteket!");
     }
-
+    
 
 }
