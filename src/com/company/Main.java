@@ -9,6 +9,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
         User u = new User("hej", "gata", "mailen", "070");
         u.setActiveLoans("39612786387");
+        u.setActiveLoans("123976936698");
         System.out.println(u.toString());
         System.out.println(u.activeLoansInfo());
 
