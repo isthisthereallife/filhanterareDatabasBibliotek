@@ -2,6 +2,7 @@ package com.company;
 
 import javax.xml.xpath.XPath;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -104,7 +105,8 @@ public class Library{
             }
             switch (number) {
                 case "1": {
-                    //TODO printa alla böcker med status AVAILABLE
+                    //söker efter böcker med "AVAILABLE" som text
+                    System.out.println(activeUser.searchInFile("AVAILABLE","database/books"));
                     running = rerunPrompt();
                     break;
                 }
@@ -119,7 +121,9 @@ public class Library{
                     break;
                 }
                 case "4": {
-                    //TODO printa ALLA böcker
+                    //söker efter böcker med en tom sträng
+                    System.out.println(activeUser.searchInFile("","database/books"));
+
                     running = rerunPrompt();
                     break;
                 }
@@ -176,24 +180,24 @@ public class Library{
     }
 
     public void addBook(){
-        System.out.println("What is the book's isbn number?: ");
+        System.out.println("ISBN: ");
         String isbn = scan.nextLine();
 
-        System.out.println("What is the name of the book?: ");
+        System.out.println("Title: ");
         String title = scan.nextLine();
 
-        System.out.println("What is the author's name of the book?: ");
+        System.out.println("Author: ");
         String author = scan.nextLine();
 
-        System.out.println("What year was the book released?: ");
+        System.out.println("Year: ");
         String year = scan.nextLine();
 
-        System.out.println("What is the genre of the book?: ");
+        System.out.println("Genre: ");
         String genre = scan.nextLine();
 
         books.add(new Book(title, author, genre, year, isbn));
         books.get(books.size()-1).writeToFile(("database/books/" + isbn),(books.get(books.size()-1).toString()));
-        System.out.println("Boken är nu tillagd i biblioteket!");
+        System.out.println("Book added to the library!");
 
 
     }
