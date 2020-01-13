@@ -13,19 +13,36 @@ import java.util.Scanner;
 public class Library{
     Scanner scan = new Scanner(System.in);
     private ArrayList<User> users = new ArrayList<>();
-    private ArrayList<Book> books;
+    private ArrayList<Book> books = new ArrayList<>();
+    private Base base = new Base();
     private User activeUser;
 
     public Library(){
-    books = new ArrayList<Book>();
-    initializeBookAndUserObjects();
-    //identification();
+    load();
     userLoginMenu();
+    }
 
+    private void load(){
+        loadBooks();
+        loadUsers();
     }
-    private void initializeBookAndUserObjects(){
-        //TODO initiera bok-objekten och user-objekten här
+
+    private void loadBooks() {
+        File folderPath = new File("database/books/");
+        for (File file : folderPath.listFiles()) {
+            final Path path = file.toPath();
+            books.add(new Book(base.readFromFile(path)));
+        }
     }
+
+    private void loadUsers() {
+    File folderPath = new File("database/users/");
+    for (File file : folderPath.listFiles()) {
+        final Path path = file.toPath();
+        users.add(new User(base.readFromFile(path)));
+    }
+}
+
     public void identification(){
         System.out.println("Who would you like to login as?");
         System.out.println("1: Admin");

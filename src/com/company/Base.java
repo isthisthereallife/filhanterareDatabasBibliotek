@@ -3,10 +3,8 @@ package com.company;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Base {
 
@@ -60,6 +58,18 @@ public class Base {
         }
 
         return result;
+    }
+
+    public List<String> readFromFile(Path path) {
+
+        List<String> contents = null;
+        try {
+            contents = Files.readAllLines(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return contents;
     }
 
     public void writeToFile(String fileName, String str) {
