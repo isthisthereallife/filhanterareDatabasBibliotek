@@ -130,6 +130,32 @@ public class Library{
                 }
                 case "2": {
                     //TODO låna en bok
+                    System.out.println("Sök efter bok: ");
+                    String search = new Scanner(System.in).nextLine();
+                    String match = activeUser.searchInFile(search,"database/books").toLowerCase();
+                    System.out.println(match);
+                    //TODO kolla om det är flera
+                    String[] test = match.split("isbn : ");
+                    String testet = test[1];
+                    test  = testet.split("\\n");
+                    String isbn = test[0];
+
+                    //sök igenom books, leta efter
+                    for(Book book : books){
+                        if (book.getIsbn().equals(isbn)){
+                            System.out.println("Is this the book? \n1. Yes, give!\n2. No, go back");
+                            String choice = scan.nextLine();
+                            if (choice.equals("1")){
+                                book.setStatus("Unavailable");
+                                book.writeToFile(book.getIsbn(),book.toString());
+                                activeUser.setActiveLoans(activeUser.getActiveLoans().concat(isbn));
+                                activeUser.writeToFile(activeUser.getId(),activeUser.toString());
+                                //TODO add alex kod för att uppdatera arrayerna och filerna
+                            }
+
+                        }
+                    }
+
                     running = rerunPrompt();
                     break;
                 }

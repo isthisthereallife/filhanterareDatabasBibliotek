@@ -97,6 +97,8 @@ public class Book extends Base{
         this.genre = genre;
     }
 
+    public void setStatus(String status){this.status = status;}
+
     @Override
     public String toString() {
         return "isbn: " + isbn + "\ntitle: " + title + "\nauthor: " + author +
