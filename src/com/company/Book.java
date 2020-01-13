@@ -52,8 +52,8 @@ public class Book extends Base{
         this.isbn = stringsInfo[0].substring(7);
         this.title = stringsInfo[1].substring(8);
         this.author = stringsInfo[2].substring(9);
-        this.genre = stringsInfo[3].substring(7);
-        this.year = stringsInfo[4].substring(8);
+        this.year = stringsInfo[3].substring(7);
+        this.genre = stringsInfo[4].substring(8);
         this.status = stringsInfo[5].substring(9);
 
     }
