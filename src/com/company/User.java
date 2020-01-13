@@ -97,13 +97,19 @@ public class User extends Base {
         return result;
     }
 
-    private void setActiveLoans(String loaned) {
+    public void setActiveLoans(String loaned) {
         this.activeLoans = loaned;
     }
 
 
     public String getName() {
         return this.name;
+    }
+    @Override
+    public String toString() {
+        return "name: " + this.name + "\naddress: " + this.address + "\nmail: " + this.mail +
+                "\ntel: " + this.tel + "\nactiveLoans: " + this.activeLoans + "\nuniqueId: "+this.uniqueId;
+
     }
 }
 
