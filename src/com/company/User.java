@@ -3,7 +3,7 @@ package com.company;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class User extends Base{
+public class User extends Base {
 
 
     private String name;
@@ -61,37 +61,21 @@ public class User extends Base{
         return this.uniqueId;
     }
 
-    public String getActiveLoans() {
-        //TODO detta nog ska inte vara i gettern, lägg nån annanstans. ELLER? hmmm.
-        String result = "";
-
-        /* splitta strängen vid mellanslag,
-        sök i disk efter isbn
-        */
-        String isbnString = this.activeLoans.substring(this.activeLoans.indexOf(":") +1);
-
-        String[] isbnStringList = isbnString.split(" ");
-        for (String s : isbnStringList){
-            //skicka strängen tilll readFromDisk, hitta filen som har denna sträng i sig
-            result = result.concat(searchInFile(s,"database/books"));
-        }
-
-        return result;
-    }
 
     public String activeLoansInfo() {
-        //TODO detta nog ska inte vara i gettern, lägg nån annanstans. ELLER? hmmm.
         String result = "";
 
         /* splitta strängen vid mellanslag,
         sök i disk efter isbn
         */
-        String isbnString = this.activeLoans.substring(this.activeLoans.indexOf(":") +1);
+        if(!this.activeLoans.equals("")){
+        String isbnString = this.activeLoans.substring(this.activeLoans.indexOf(":") + 1);
 
         String[] isbnStringList = isbnString.split(" ");
-        for (String s : isbnStringList){
+        for (String s : isbnStringList) {
             //skicka strängen tilll readFromDisk, hitta filen som har denna sträng i sig
-            result = result.concat(searchInFile(s,"database/books"));
+            result = result.concat(searchInFile(s, "database/books"));
+        }
         }
 
         return result;
@@ -99,6 +83,11 @@ public class User extends Base{
 
     private void setActiveLoans(String loaned) {
         this.activeLoans = loaned;
+    }
+
+
+    public String getName() {
+        return this.name;
     }
 }
 
