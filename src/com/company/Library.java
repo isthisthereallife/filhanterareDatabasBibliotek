@@ -37,11 +37,7 @@ public class Library{
     File folderPath = new File("database/users/");
     for (File file : folderPath.listFiles()) {
         final Path path = file.toPath();
-        try {
-            users.add(new User(base.readFromDisk(path)));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        users.add(new User(base.readFromFile(path)));
     }
 }
 

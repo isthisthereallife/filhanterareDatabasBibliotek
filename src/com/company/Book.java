@@ -55,7 +55,6 @@ public class Book extends Base{
         this.year = stringsInfo[3].substring(7);
         this.genre = stringsInfo[4].substring(8);
         this.status = stringsInfo[5].substring(9);
-
     }
 
     public String getIsbn() {

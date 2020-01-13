@@ -1,6 +1,7 @@
 package com.company;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class User extends Base {
@@ -43,6 +44,21 @@ public class User extends Base {
         }
 
 
+    }
+
+    public User(List<String> readFromFile) {
+        int i = 0;
+        String[] stringsInfo = new String [6];
+        for(String content:readFromFile){
+            stringsInfo[i] = content;
+            i++;
+        }
+        this.name = stringsInfo[0].substring(7);
+        this.address = stringsInfo[1].substring(10);
+        this.mail = stringsInfo[2].substring(7);
+        this.tel = stringsInfo[3].substring(6);
+        this.activeLoans = String.valueOf(stringsInfo[4].substring(14).split(" "));
+        this.uniqueId = stringsInfo[5].substring(11);
     }
 
     private String idGenerator() {
