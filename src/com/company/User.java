@@ -89,6 +89,12 @@ public class User extends Base {
     public String getName() {
         return this.name;
     }
+    @Override
+    public String toString() {
+        return "name: " + this.name + "\naddress: " + this.address + "\nmail: " + this.mail +
+                "\ntel: " + this.tel + "\nactiveLoans: " + this.activeLoans + "\nuniqueId: "+this.uniqueId;
+
+    }
 }
 
 
