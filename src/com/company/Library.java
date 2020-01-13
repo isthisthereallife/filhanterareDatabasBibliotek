@@ -18,8 +18,8 @@ public class Library{
     public Library(){
     books = new ArrayList<Book>();
     initializeBookAndUserObjects();
-
-
+    //identification();
+    userLoginMenu();
 
     }
     private void initializeBookAndUserObjects(){
@@ -73,7 +73,6 @@ public class Library{
                 activeUser = user;
                 loggedIn = true;
                 userMenu();
-
                 break;
             }
         }
@@ -169,11 +168,11 @@ public class Library{
         String tel = scan.nextLine();
 
         users.add(new User(name, address, mail, tel));
-
+        activeUser = users.get(users.size()-1);
         String uniqueId = users.get(users.size()-1).getId();
         users.get(users.size()-1).writeToFile(("database/users/" + uniqueId),(users.get(users.size()-1).toString()));
         System.out.printf("Registration completed!\nYour unique id is: %s\n", uniqueId);
-        loginMenu();
+        userMenu();
     }
 
     public void addBook(){
