@@ -23,9 +23,9 @@ public class User extends Base {
         this.uniqueId = idGenerator();
     }
 
-    public User(String userInfoFromDisk) {
-        String[] stringsInfo = userInfoFromDisk.split("\\r?\\n");
-        for (String s : stringsInfo) {
+    public User(List<String> userInfoFromDisk) {
+        //String[] stringsInfo = userInfoFromDisk.split("\\r?\\n");
+        for (String s : userInfoFromDisk) {
             String trim = s.substring(s.indexOf(":") + 1).trim();
             if (s.contains("name :")) {
                 this.name = trim;
@@ -40,13 +40,9 @@ public class User extends Base {
             } else if (s.contains("uniqueId :")) {
                 this.uniqueId = trim;
             }
-
         }
-
-
     }
-
-    public User(List<String> readFromFile) {
+    /*public User(List<String> readFromFile) {
         int i = 0;
         String[] stringsInfo = new String [6];
         for(String content:readFromFile){
@@ -59,7 +55,7 @@ public class User extends Base {
         this.tel = stringsInfo[3].substring(6);
         this.activeLoans = stringsInfo[4].substring(14);
         this.uniqueId = stringsInfo[5].substring(11);
-    }
+    }*/
 
     private String idGenerator() {
         String result = "";
@@ -111,8 +107,8 @@ public class User extends Base {
     }
     @Override
     public String toString() {
-        return "name: " + this.name + "\naddress: " + this.address + "\nmail: " + this.mail +
-                "\ntel: " + this.tel + "\nactiveLoans: " + this.activeLoans + "\nuniqueId: "+this.uniqueId;
+        return "name : " + this.name + "\naddress : " + this.address + "\nmail : " + this.mail +
+                "\ntel : " + this.tel + "\nactiveLoans : " + this.activeLoans + "\nuniqueId : "+this.uniqueId;
 
     }
 }
