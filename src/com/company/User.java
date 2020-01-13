@@ -57,7 +57,7 @@ public class User extends Base {
         this.address = stringsInfo[1].substring(10);
         this.mail = stringsInfo[2].substring(7);
         this.tel = stringsInfo[3].substring(6);
-        this.activeLoans = String.valueOf(stringsInfo[4].substring(14).split(" "));
+        this.activeLoans = stringsInfo[4].substring(14);
         this.uniqueId = stringsInfo[5].substring(11);
     }
 
