@@ -2,6 +2,7 @@ package com.company;
 
 import javax.xml.xpath.XPath;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -12,12 +13,37 @@ import java.util.Scanner;
 public class Library{
     Scanner scan = new Scanner(System.in);
     private ArrayList<User> users = new ArrayList<>();
-    private ArrayList<Book> books;
+    private ArrayList<Book> books = new ArrayList<>();
+    private Base base = new Base();
 
     public Library(){
-    final Path path = Paths.get("books.txt");
-    books = new ArrayList<Book>();
+    load();
     }
+
+    private void load(){
+        loadBooks();
+        loadUsers();
+    }
+
+    private void loadBooks() {
+        File folderPath = new File("database/books/");
+        for (File file : folderPath.listFiles()) {
+            final Path path = file.toPath();
+            books.add(new Book(base.readFromFile(path)));
+        }
+    }
+
+    private void loadUsers() {
+    File folderPath = new File("database/users/");
+    for (File file : folderPath.listFiles()) {
+        final Path path = file.toPath();
+        try {
+            users.add(new User(base.readFromDisk(path)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
 
     public void identification(){
         System.out.println("Who would you like to login as?");
