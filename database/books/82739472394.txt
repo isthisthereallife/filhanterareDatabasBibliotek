@@ -3,3 +3,4 @@ Title : Kindred
 Author : Octavia E. Butler
 Year : 1979
 Genre : Fantasy
+Status : Available

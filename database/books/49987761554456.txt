@@ -3,3 +3,4 @@ Title : A Scanner Darkly
 Author : Philip K. Dick
 Year : 1977
 Genre : Science Fiction
+Status : Available

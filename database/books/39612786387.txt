@@ -3,3 +3,4 @@ Title : Excession
 Author : Iain M. Banks
 Year : 1996
 Genre : Science Fiction
+Status : Available
