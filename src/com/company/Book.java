@@ -7,6 +7,7 @@ public class Book extends Base{
     private String author;
     private String year;
     private String genre;
+    private String status;
 
     public Book() {
     }
@@ -17,6 +18,26 @@ public class Book extends Base{
         this.author = author;
         this.year = year;
         this.genre = genre;
+        this.status = "Available";
+    }
+    public Book(String userInfoFromDisk) {
+        String[] stringsInfo = userInfoFromDisk.split("\\r?\\n");
+        for (String s : stringsInfo) {
+            String trim = s.substring(s.indexOf(":") + 1).trim();
+            if (s.contains("isbn :")) {
+                this.isbn = trim;
+            } else if (s.contains("title :")) {
+                this.title = trim;
+            } else if (s.contains("author :")) {
+                this.author = trim;
+            } else if (s.contains("year :")) {
+                this.year = trim;
+            } else if (s.contains("genre :")) {
+                this.genre = trim;
+            } else if (s.contains("status :")) {
+                this.status = trim;
+            }
+        }
     }
 
     public String getIsbn() {
