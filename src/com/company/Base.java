@@ -63,15 +63,21 @@ public class Base {
     }
 
     public void writeToFile(String fileName, String str) {
-        PrintWriter writer = null; //creates the new file
+        File file = new File(fileName + ".txt");
         try {
-            writer = new PrintWriter(fileName + ".txt", "UTF-8");
+            if(file.exists()){
+                System.out.println("Filename already exists!");
+            } else {
+                PrintWriter writer = null;
+                writer = new PrintWriter(fileName + ".txt", "UTF-8");
+                writer.println(str);
+                writer.close();
+            }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        writer.println(str);
-        writer.close();
+
     }
 }
