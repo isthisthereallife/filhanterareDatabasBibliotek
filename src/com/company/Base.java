@@ -3,10 +3,8 @@ package com.company;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Base {
 
@@ -62,16 +60,34 @@ public class Base {
         return result;
     }
 
-    public void writeToFile(String fileName, String str) {
-        PrintWriter writer = null; //creates the new file
+    public List<String> readFromFile(Path path) {
+
+        List<String> contents = null;
         try {
-            writer = new PrintWriter(fileName + ".txt", "UTF-8");
+            contents = Files.readAllLines(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return contents;
+    }
+
+    public void writeToFile(String fileName, String str) {
+        File file = new File(fileName + ".txt");
+        try {
+            if(file.exists()){
+                System.out.println("Filename already exists!");
+            } else {
+                PrintWriter writer = null;
+                writer = new PrintWriter(fileName + ".txt", "UTF-8");
+                writer.println(str);
+                writer.close();
+            }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        writer.println(str);
-        writer.close();
+
     }
 }

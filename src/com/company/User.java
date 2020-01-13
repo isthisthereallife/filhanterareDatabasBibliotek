@@ -1,9 +1,10 @@
 package com.company;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
-public class User extends Base{
+public class User extends Base {
 
 
     private String name;
@@ -45,6 +46,21 @@ public class User extends Base{
 
     }
 
+    public User(List<String> readFromFile) {
+        int i = 0;
+        String[] stringsInfo = new String [6];
+        for(String content:readFromFile){
+            stringsInfo[i] = content;
+            i++;
+        }
+        this.name = stringsInfo[0].substring(7);
+        this.address = stringsInfo[1].substring(10);
+        this.mail = stringsInfo[2].substring(7);
+        this.tel = stringsInfo[3].substring(6);
+        this.activeLoans = stringsInfo[4].substring(14);
+        this.uniqueId = stringsInfo[5].substring(11);
+    }
+
     private String idGenerator() {
         String result = "";
         Random randomizer = new Random();
@@ -61,44 +77,39 @@ public class User extends Base{
         return this.uniqueId;
     }
 
-    public String getActiveLoans() {
-        //TODO detta nog ska inte vara i gettern, lägg nån annanstans. ELLER? hmmm.
-        String result = "";
-
-        /* splitta strängen vid mellanslag,
-        sök i disk efter isbn
-        */
-        String isbnString = this.activeLoans.substring(this.activeLoans.indexOf(":") +1);
-
-        String[] isbnStringList = isbnString.split(" ");
-        for (String s : isbnStringList){
-            //skicka strängen tilll readFromDisk, hitta filen som har denna sträng i sig
-            result = result.concat(searchInFile(s,"database/books"));
-        }
-
-        return result;
-    }
 
     public String activeLoansInfo() {
-        //TODO detta nog ska inte vara i gettern, lägg nån annanstans. ELLER? hmmm.
         String result = "";
 
         /* splitta strängen vid mellanslag,
         sök i disk efter isbn
         */
-        String isbnString = this.activeLoans.substring(this.activeLoans.indexOf(":") +1);
+        if(!this.activeLoans.equals("")){
+        String isbnString = this.activeLoans.substring(this.activeLoans.indexOf(":") + 1);
 
         String[] isbnStringList = isbnString.split(" ");
-        for (String s : isbnStringList){
+        for (String s : isbnStringList) {
             //skicka strängen tilll readFromDisk, hitta filen som har denna sträng i sig
-            result = result.concat(searchInFile(s,"database/books"));
+            result = result.concat(searchInFile(s, "database/books"));
+        }
         }
 
         return result;
     }
 
-    private void setActiveLoans(String loaned) {
+    public void setActiveLoans(String loaned) {
         this.activeLoans = loaned;
+    }
+
+
+    public String getName() {
+        return this.name;
+    }
+    @Override
+    public String toString() {
+        return "name: " + this.name + "\naddress: " + this.address + "\nmail: " + this.mail +
+                "\ntel: " + this.tel + "\nactiveLoans: " + this.activeLoans + "\nuniqueId: "+this.uniqueId;
+
     }
 }
 

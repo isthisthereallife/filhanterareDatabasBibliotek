@@ -1,5 +1,7 @@
 package com.company;
 
+import java.util.List;
+
 public class Book extends Base{
 
     private String isbn;
@@ -7,6 +9,7 @@ public class Book extends Base{
     private String author;
     private String year;
     private String genre;
+    private String status;
 
     public Book() {
     }
@@ -17,6 +20,41 @@ public class Book extends Base{
         this.author = author;
         this.year = year;
         this.genre = genre;
+        this.status = "Available";
+    }
+    public Book(String userInfoFromDisk) {
+        String[] stringsInfo = userInfoFromDisk.split("\\r?\\n");
+        for (String s : stringsInfo) {
+            String trim = s.substring(s.indexOf(":") + 1).trim();
+            if (s.contains("isbn :")) {
+                this.isbn = trim;
+            } else if (s.contains("title :")) {
+                this.title = trim;
+            } else if (s.contains("author :")) {
+                this.author = trim;
+            } else if (s.contains("year :")) {
+                this.year = trim;
+            } else if (s.contains("genre :")) {
+                this.genre = trim;
+            } else if (s.contains("status :")) {
+                this.status = trim;
+            }
+        }
+    }
+
+    public Book(List<String> readFromFile) {
+        int i = 0;
+        String[] stringsInfo = new String [6];
+        for(String content:readFromFile){
+            stringsInfo[i] = content;
+            i++;
+        }
+        this.isbn = stringsInfo[0].substring(7);
+        this.title = stringsInfo[1].substring(8);
+        this.author = stringsInfo[2].substring(9);
+        this.year = stringsInfo[3].substring(7);
+        this.genre = stringsInfo[4].substring(8);
+        this.status = stringsInfo[5].substring(9);
     }
 
     public String getIsbn() {
@@ -61,8 +99,8 @@ public class Book extends Base{
 
     @Override
     public String toString() {
-        return "ISBN: " + isbn + "\nTitle: " + title + "\nAuthor: " + author +
-                "\nYear: " + year + "\nCategory: " + genre;
+        return "isbn: " + isbn + "\ntitle: " + title + "\nauthor: " + author +
+                "\nyear: " + year + "\ncategory: " + genre + "\nstatus: "+status;
 
     }
 }
