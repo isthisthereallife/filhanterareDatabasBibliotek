@@ -97,21 +97,24 @@ public class Base {
     public void editFile(String fileName, String lineToEdit, String newLine) {
         List<String> lines = new ArrayList<String>();
         String line = null;
+        String str = "";
         try {
             File fileToEdit = new File(fileName);
             FileReader fileReader = new FileReader(fileToEdit);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             while ((line = bufferedReader.readLine()) != null) {
-                if (line.contains(lineToEdit))
-                    line = line.replace(lineToEdit, lineToEdit + newLine);
+                if (line.toLowerCase().contains(lineToEdit.toLowerCase()))
+                    line = newLine;
                 lines.add(line);
             }
             fileReader.close();
             bufferedReader.close();
             FileWriter fileWriter = new FileWriter(fileToEdit);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-            for(String s : lines)
-                bufferedWriter.write(s);
+            for(String string : lines) {
+                str += string + "\n";
+            }
+            bufferedWriter.write(str);
             bufferedWriter.flush();
             bufferedWriter.close();
         } catch (Exception ex) {

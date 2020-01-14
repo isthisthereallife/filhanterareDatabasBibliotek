@@ -158,8 +158,8 @@ public class Library {
 
                                 book.setStatus("Unavailable");
                                 String fileName = "database/books/" + book.getIsbn() + ".txt";
-                                String lineToEdit = "status: ";
-                                String newLine = "unavailable";
+                                String lineToEdit = "available";
+                                String newLine = "Status: unavailable";
                                 book.editFile(fileName,lineToEdit,newLine);
                                 activeUser.setActiveLoans(activeUser.getActiveLoans().concat(isbn));
                                 //activeUser.editFile(activeUser.getId(),activeUser.toString());
