@@ -1,0 +1,6 @@
+name: e
+address: i
+mail: o
+tel: i
+activeLoans: 435698976512876
+uniqueId: o3h9v1i8y5

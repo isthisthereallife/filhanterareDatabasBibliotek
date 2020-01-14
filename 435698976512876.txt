@@ -1,0 +1,6 @@
+isbn: 435698976512876
+title: do androids dream of electric sheep
+author: philip k. dick
+year: 1968
+genre: science fiction
+status: Unavailable

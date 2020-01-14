@@ -28,7 +28,7 @@ public class Base {
                     //läs in en fil
                     String stringToCheck = "";
                     stringToCheck = stringToCheck.concat(readFromDisk(file.toPath()));
-                    if(stringToCheck.contains(searchItem)){
+                    if(stringToCheck.toLowerCase().contains(searchItem.toLowerCase())){
                         result = result.concat(stringToCheck+"\n");
                     }
                 } catch (IOException e) {
