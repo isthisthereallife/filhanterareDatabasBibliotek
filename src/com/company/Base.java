@@ -28,7 +28,7 @@ public class Base {
                     //läs in en fil
                     String stringToCheck = "";
                     stringToCheck = stringToCheck.concat(readFromDisk(file.toPath()));
-                    if(stringToCheck.contains(searchItem)){
+                    if(stringToCheck.toLowerCase().contains(searchItem.toLowerCase())){
                         result = result.concat(stringToCheck+"\n");
                     }
                 } catch (IOException e) {
@@ -92,6 +92,30 @@ public class Base {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+    }
 
+    public void editFile(String fileName, String lineToEdit, String newLine) {
+        List<String> lines = new ArrayList<String>();
+        String line = null;
+        try {
+            File fileToEdit = new File(fileName);
+            FileReader fileReader = new FileReader(fileToEdit);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            while ((line = bufferedReader.readLine()) != null) {
+                if (line.contains(lineToEdit))
+                    line = line.replace(lineToEdit, lineToEdit + newLine);
+                lines.add(line);
+            }
+            fileReader.close();
+            bufferedReader.close();
+            FileWriter fileWriter = new FileWriter(fileToEdit);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            for(String s : lines)
+                bufferedWriter.write(s);
+            bufferedWriter.flush();
+            bufferedWriter.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 }

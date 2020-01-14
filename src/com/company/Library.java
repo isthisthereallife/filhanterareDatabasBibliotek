@@ -137,7 +137,7 @@ public class Library{
 
                     //TODO refaktorera
                     String[] test = match.split("isbn : ");
-                    String testet = test[1];
+                    match = match.substring(match.toLowerCase().indexOf("isbn:"));
                     test  = testet.split("\\n");
                     String isbn = test[0];
 
@@ -153,10 +153,14 @@ public class Library{
                             System.out.println("Is this the book? \n1. Yes, give!\n2. No, go back");
                             String choice = scan.nextLine();
                             if (choice.equals("1")){
+
                                 book.setStatus("Unavailable");
-                                book.writeToFile(book.getIsbn(),book.toString());
+                                String fileName = "database/books/" + book.getIsbn() + ".txt";
+                                String lineToEdit = "status: ";
+                                String newLine = "unavailable";
+                                book.editFile(fileName,lineToEdit,newLine);
                                 activeUser.setActiveLoans(activeUser.getActiveLoans().concat(isbn));
-                                activeUser.writeToFile(activeUser.getId(),activeUser.toString());
+                                //activeUser.editFile(activeUser.getId(),activeUser.toString());
                                 //TODO add alex kod för att uppdatera arrayerna och filerna
                             }
 
