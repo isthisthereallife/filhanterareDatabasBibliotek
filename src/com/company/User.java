@@ -27,35 +27,21 @@ public class User extends Base {
         //String[] stringsInfo = userInfoFromDisk.split("\\r?\\n");
         for (String s : userInfoFromDisk) {
             String trim = s.substring(s.indexOf(":") + 1).trim();
-            if (s.contains("name :")) {
+            if (s.contains("name:")) {
                 this.name = trim;
-            } else if (s.contains("address :")) {
+            } else if (s.contains("address:")) {
                 this.address = trim;
-            } else if (s.contains("mail :")) {
+            } else if (s.contains("mail:")) {
                 this.mail = trim;
-            } else if (s.contains("tel :")) {
+            } else if (s.contains("tel:")) {
                 this.tel = trim;
-            } else if (s.contains("activeLoans :")) {
+            } else if (s.contains("activeLoans:")) {
                 this.activeLoans = trim;
-            } else if (s.contains("uniqueId :")) {
+            } else if (s.contains("uniqueId:")) {
                 this.uniqueId = trim;
             }
         }
     }
-    /*public User(List<String> readFromFile) {
-        int i = 0;
-        String[] stringsInfo = new String [6];
-        for(String content:readFromFile){
-            stringsInfo[i] = content;
-            i++;
-        }
-        this.name = stringsInfo[0].substring(7);
-        this.address = stringsInfo[1].substring(10);
-        this.mail = stringsInfo[2].substring(7);
-        this.tel = stringsInfo[3].substring(6);
-        this.activeLoans = stringsInfo[4].substring(14);
-        this.uniqueId = stringsInfo[5].substring(11);
-    }*/
 
     private String idGenerator() {
         String result = "";
@@ -107,8 +93,8 @@ public class User extends Base {
     }
     @Override
     public String toString() {
-        return "name : " + this.name + "\naddress : " + this.address + "\nmail : " + this.mail +
-                "\ntel : " + this.tel + "\nactiveLoans : " + this.activeLoans + "\nuniqueId : "+this.uniqueId;
+        return "name: " + this.name + "\naddress: " + this.address + "\nmail: " + this.mail +
+                "\ntel: " + this.tel + "\nactiveLoans: " + this.activeLoans + "\nuniqueId: "+this.uniqueId;
 
     }
 }
