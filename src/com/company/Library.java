@@ -144,8 +144,7 @@ public class Library {
                     } else if (isbnsInResult > 1) {
                         System.out.println("Your search was too general. Found " + isbnsInResult + " books.");
                     } else {
-                        //TODO klipp från efter "isbn:", inte från plats 5
-                        String isbn = result.substring(5, result.indexOf("\n")).trim();
+                        String isbn = result.substring(result.indexOf("isbn:")+5, result.indexOf("\n")).trim();
 
                         for (Book book : books) {
                             if (book.getIsbn().equals(isbn)) {
@@ -154,7 +153,6 @@ public class Library {
                                 String choice = scan.nextLine();
                                 if (choice.equals("1")) {
                                     book.setStatus("Unavailable");
-                                    //TODO add alex kod för att uppdatera arrayerna och filerna
                                     String userFileName = "database/users/" + activeUser.getId() + ".txt";
                                     String bookFileName = "database/books/" + book.getIsbn() + ".txt";
                                     String bookLineToEdit = "available";
