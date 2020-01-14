@@ -145,7 +145,7 @@ public class Library {
                         System.out.println("Your search was too general. Found " + isbnsInResult + " books.");
                     } else {
                         //TODO klipp från efter "isbn:", inte från plats 5
-                        String isbn = result.substring(5,result.indexOf("\n")).trim();
+                        String isbn = result.substring(5, result.indexOf("\n")).trim();
 
                         for (Book book : books) {
                             if (book.getIsbn().equals(isbn)) {
@@ -154,17 +154,16 @@ public class Library {
                                 String choice = scan.nextLine();
                                 if (choice.equals("1")) {
                                     book.setStatus("Unavailable");
-                                    activeUser.setActiveLoans(activeUser.getActiveLoans().concat(isbn));
                                     //TODO add alex kod för att uppdatera arrayerna och filerna
-                                String userFileName = "database/users/" + activeUser.getId() + ".txt";
-                                String bookFileName = "database/books/" + book.getIsbn() + ".txt";
-                                String bookLineToEdit = "available";
-                                String userLineToEdit = "activeLoans";
-                                String bookNewLine = "Status: unavailable";
-                                book.editFile(bookFileName,bookLineToEdit,bookNewLine);
-                                activeUser.setActiveLoans(activeUser.getActiveLoans().concat(" " + isbn));
-                                String userNewLine = "activeLoans: " + activeUser.getActiveLoans();
-                                activeUser.editFile(userFileName,userLineToEdit,userNewLine);
+                                    String userFileName = "database/users/" + activeUser.getId() + ".txt";
+                                    String bookFileName = "database/books/" + book.getIsbn() + ".txt";
+                                    String bookLineToEdit = "available";
+                                    String userLineToEdit = "activeLoans";
+                                    String bookNewLine = "Status: unavailable";
+                                    book.editFile(bookFileName, bookLineToEdit, bookNewLine);
+                                    activeUser.setActiveLoans(activeUser.getActiveLoans().concat(" " + isbn));
+                                    String userNewLine = "activeLoans: " + activeUser.getActiveLoans();
+                                    activeUser.editFile(userFileName, userLineToEdit, userNewLine);
                                 }
                             }
                         }
@@ -250,7 +249,7 @@ public class Library {
         System.out.println("Genre: ");
         String genre = scan.nextLine();
 
-        books.add(new Book(isbn, title, author, year, genre ));
+        books.add(new Book(isbn, title, author, year, genre));
         books.get(books.size() - 1).writeToFile(("database/books/" + isbn), (books.get(books.size() - 1).toString()));
         System.out.println("Book added to the library!");
 
@@ -262,8 +261,8 @@ public class Library {
         System.out.println("Vilken bok vill du ta bort? Ange ISBN.");
         String bok = scan.nextLine();
         Path path = Paths.get("database/books/" + bok + ".txt");
-        for (Book book : books){
-            if (book.getIsbn().equals(bok)){
+        for (Book book : books) {
+            if (book.getIsbn().equals(bok)) {
                 books.remove(book);
             }
         }
