@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -129,6 +130,32 @@ public class Library{
                 }
                 case "2": {
                     //TODO låna en bok
+                    System.out.println("Sök efter bok: ");
+                    String search = new Scanner(System.in).nextLine();
+                    String match = activeUser.searchInFile(search,"database/books").toLowerCase();
+                    System.out.println(match);
+                    //TODO kolla om det är flera
+                    String[] test = match.split("isbn : ");
+                    String testet = test[1];
+                    test  = testet.split("\\n");
+                    String isbn = test[0];
+
+                    //sök igenom books, leta efter
+                    for(Book book : books){
+                        if (book.getIsbn().equals(isbn)){
+                            System.out.println("Is this the book? \n1. Yes, give!\n2. No, go back");
+                            String choice = scan.nextLine();
+                            if (choice.equals("1")){
+                                book.setStatus("Unavailable");
+                                book.writeToFile(book.getIsbn(),book.toString());
+                                activeUser.setActiveLoans(activeUser.getActiveLoans().concat(isbn));
+                                activeUser.writeToFile(activeUser.getId(),activeUser.toString());
+                                //TODO add alex kod för att uppdatera arrayerna och filerna
+                            }
+
+                        }
+                    }
+
                     running = rerunPrompt();
                     break;
                 }
@@ -218,6 +245,24 @@ public class Library{
 
 
     }
-    
+
+    public void deleteBook() throws IOException {
+
+        System.out.println("Vilken bok vill du ta bort? Ange ISBN.");
+        int bok = scan.nextInt();
+        Path path = Paths.get("database/books/" + bok + ".txt");
+
+        if (!Files.exists(path)){
+            System.out.println("Boken finns ej. Försök igen!");
+        }else {
+            try {
+                Files.delete(path);
+                System.out.println(bok + " är nu borttagen.");
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        deleteBook();
+    }
 
 }

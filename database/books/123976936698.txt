@@ -3,3 +3,4 @@ Title : Blue Mars
 Author : Kim Stanley Robinson
 Year : 1996
 Genre : Science Fiction
+Status : Available
