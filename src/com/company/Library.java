@@ -151,7 +151,7 @@ public class Library{
                 }
                 case "2": {
                     //TODO låna en bok
-                    System.out.println("Sök efter bok: ");
+                    System.out.println("Search for a book: ");
                     String search = new Scanner(System.in).nextLine();
                     String match = activeUser.searchInFile(search,"database/books").toLowerCase();
 
@@ -253,7 +253,7 @@ public class Library{
 
     public void addBook(){
         scan.nextLine();
-        System.out.println("Isbn: ");
+        System.out.println("ISBN: ");
         String isbn = scan.nextLine();
 
 
@@ -278,17 +278,17 @@ public class Library{
     }
 
     public void deleteBook() {
-        System.out.println("Vilken bok vill du ta bort? Ange ISBN.");
+        System.out.println("Choose a book to delete? Type ISBN to delete file.");
         long bok = scan.nextLong();
         Path path = Paths.get("database/books/" + bok + ".txt");
 
         if (!Files.exists(path)){
-            System.out.println("Boken finns ej. Försök igen!");
+            System.out.println("The book does not exists! Try again!");
             deleteBook();
         }else {
             try {
                 Files.delete(path);
-                System.out.println(bok + " är nu borttagen.");
+                System.out.println(bok + " is now deleted.");
             }catch (Exception e){
                 e.printStackTrace();
             }
