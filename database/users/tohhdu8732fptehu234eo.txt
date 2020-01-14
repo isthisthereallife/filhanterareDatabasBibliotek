@@ -3,4 +3,4 @@ address: Gatgatan 3 213 84 Malmö
 mail: steffe823882@gmail.com
 tel: 0702342382
 activeLoans: 39612786387 732498732498
-uniqueID: tohhdu8732fptehu234eo
+uniqueId: tohhdu8732fptehu234eo
