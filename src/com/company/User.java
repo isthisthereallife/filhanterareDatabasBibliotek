@@ -27,17 +27,17 @@ public class User extends Base {
         //String[] stringsInfo = userInfoFromDisk.split("\\r?\\n");
         for (String s : userInfoFromDisk) {
             String trim = s.substring(s.indexOf(":") + 1).trim();
-            if (s.contains("name :")) {
+            if (s.contains("name:")) {
                 this.name = trim;
-            } else if (s.contains("address :")) {
+            } else if (s.contains("address:")) {
                 this.address = trim;
-            } else if (s.contains("mail :")) {
+            } else if (s.contains("mail:")) {
                 this.mail = trim;
-            } else if (s.contains("tel :")) {
+            } else if (s.contains("tel:")) {
                 this.tel = trim;
-            } else if (s.contains("activeLoans :")) {
+            } else if (s.contains("activeLoans:")) {
                 this.activeLoans = trim;
-            } else if (s.contains("uniqueId :")) {
+            } else if (s.contains("uniqueId:")) {
                 this.uniqueId = trim;
             }
         }
@@ -108,8 +108,8 @@ public class User extends Base {
     }
     @Override
     public String toString() {
-        return "name : " + this.name + "\naddress : " + this.address + "\nmail : " + this.mail +
-                "\ntel : " + this.tel + "\nactiveLoans : " + this.activeLoans + "\nuniqueId : "+this.uniqueId;
+        return "name: " + this.name + "\naddress: " + this.address + "\nmail: " + this.mail +
+                "\ntel: " + this.tel + "\nactiveLoans: " + this.activeLoans + "\nuniqueId: "+this.uniqueId;
 
     }
 }

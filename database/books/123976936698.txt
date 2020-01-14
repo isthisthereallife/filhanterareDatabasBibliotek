@@ -1,6 +1,6 @@
-ISBN : 123976936698
-Title : Blue Mars
-Author : Kim Stanley Robinson
-Year : 1996
-Genre : Science Fiction
-Status : Available
+ISBN: 123976936698
+Title: Blue Mars
+Author: Kim Stanley Robinson
+Year: 1996
+Genre: Science Fiction
+Status: Available
