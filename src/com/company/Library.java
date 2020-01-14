@@ -154,9 +154,7 @@ public class Library {
                                 String choice = scan.nextLine();
                                 if (choice.equals("1")) {
                                     book.setStatus("Unavailable");
-                                    book.writeToFile(book.getIsbn(), book.toString());
                                     activeUser.setActiveLoans(activeUser.getActiveLoans().concat(isbn));
-                                    activeUser.writeToFile(activeUser.getId(), activeUser.toString());
                                     //TODO add alex kod för att uppdatera arrayerna och filerna
                                 String userFileName = "database/users/" + activeUser.getId() + ".txt";
                                 String bookFileName = "database/books/" + book.getIsbn() + ".txt";
