@@ -10,6 +10,7 @@ import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 public class Library {
     Scanner scan = new Scanner(System.in);
@@ -100,6 +101,10 @@ public class Library {
             System.out.println("Login failed.");
     }
 
+    private int countOccurrences(String searchFor, String searchIn) {
+        return (searchIn.toLowerCase().split(Pattern.quote(searchFor.toLowerCase()), -1).length) - 1;
+    }
+
     private void userMenu() {
         Scanner scan = new Scanner(System.in);
         System.out.println("Welcome " + activeUser.getName() + "\nPlease choose operation:");
@@ -130,33 +135,29 @@ public class Library {
                     break;
                 }
                 case "2": {
-                    //TODO låna en bok
                     System.out.println("Sök efter bok: ");
-                    String search = new Scanner(System.in).nextLine();
-                    String match = activeUser.searchInFile(search,"database/books").toLowerCase();
+                    String search = scan.nextLine();
+                    String result = activeUser.searchInFile(search, "database/books").toLowerCase();
+                    int isbnsInResult = countOccurrences("isbn:", result);
+                    if (isbnsInResult < 1) {
+                        System.out.println("Your search came up empty.");
+                    } else if (isbnsInResult > 1) {
+                        System.out.println("Your search was too general. Found " + isbnsInResult + " books.");
+                    } else {
+                        //TODO klipp från efter "isbn:", inte från plats 5
+                        String isbn = result.substring(5,result.indexOf("\n")).trim();
 
-
-                    //TODO refaktorera
-                    String[] test = match.split("isbn: ");
-                    match = match.substring(match.toLowerCase().indexOf("isbn:"));
-                    String testet = test[1];
-                    test  = testet.split("\\n");
-                    String isbn = test[0];
-
-                    //TODO kolla om det är flera
-                    if (isbn.contains(" ")){
-                        System.out.println("Your search returned several books: ");
-                    }
-
-                    //sök igenom books, leta efter
-                    for(Book book : books){
-                        if (book.getIsbn().equals(isbn)){
-
-                            System.out.println("Is this the book? \n1. Yes, give!\n2. No, go back");
-                            String choice = scan.nextLine();
-                            if (choice.equals("1")){
-
-                                book.setStatus("Unavailable");
+                        for (Book book : books) {
+                            if (book.getIsbn().equals(isbn)) {
+                                System.out.println(book.toString());
+                                System.out.println("\nIs this the book? \n1. Yes, give!\n2. No, go back");
+                                String choice = scan.nextLine();
+                                if (choice.equals("1")) {
+                                    book.setStatus("Unavailable");
+                                    book.writeToFile(book.getIsbn(), book.toString());
+                                    activeUser.setActiveLoans(activeUser.getActiveLoans().concat(isbn));
+                                    activeUser.writeToFile(activeUser.getId(), activeUser.toString());
+                                    //TODO add alex kod för att uppdatera arrayerna och filerna
                                 String userFileName = "database/users/" + activeUser.getId() + ".txt";
                                 String bookFileName = "database/books/" + book.getIsbn() + ".txt";
                                 String bookLineToEdit = "available";
@@ -166,7 +167,7 @@ public class Library {
                                 activeUser.setActiveLoans(activeUser.getActiveLoans().concat(" " + isbn));
                                 String userNewLine = "activeLoans: " + activeUser.getActiveLoans();
                                 activeUser.editFile(userFileName,userLineToEdit,userNewLine);
-                                //TODO add alex kod för att uppdatera arrayerna och filerna
+                                }
                             }
                         }
                     }

@@ -85,7 +85,9 @@ public class Book extends Base{
     }
 
     public void setStatus(String status){this.status = status;}
-
+    public String getStatus(){
+        return this.status;
+    }
     @Override
     public String toString() {
         return "isbn: " + isbn + "\ntitle: " + title + "\nauthor: " + author +
