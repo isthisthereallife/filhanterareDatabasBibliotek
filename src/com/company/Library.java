@@ -21,7 +21,7 @@ public class Library {
 
     public Library() {
         load();
-        userLoginMenu();
+        loginMenu();
     }
 
     private void load() {
@@ -250,7 +250,7 @@ public class Library {
         System.out.println("Genre: ");
         String genre = scan.nextLine();
 
-        books.add(new Book(title, author, genre, year, isbn));
+        books.add(new Book(isbn, title, author, year, genre ));
         books.get(books.size() - 1).writeToFile(("database/books/" + isbn), (books.get(books.size() - 1).toString()));
         System.out.println("Book added to the library!");
 
@@ -260,9 +260,13 @@ public class Library {
     public void deleteBook() throws IOException {
 
         System.out.println("Vilken bok vill du ta bort? Ange ISBN.");
-        int bok = scan.nextInt();
+        String bok = scan.nextLine();
         Path path = Paths.get("database/books/" + bok + ".txt");
-
+        for (Book book : books){
+            if (book.getIsbn().equals(bok)){
+                books.remove(book);
+            }
+        }
         if (!Files.exists(path)) {
             System.out.println("Boken finns ej. Försök igen!");
         } else {
