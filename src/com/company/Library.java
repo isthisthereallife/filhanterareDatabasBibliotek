@@ -20,7 +20,8 @@ public class Library{
 
     public Library(){
     load();
-    userLoginMenu();
+    identification();
+    //userLoginMenu();
     }
 
     private void load(){
@@ -48,13 +49,16 @@ public class Library{
         System.out.println("Who would you like to login as?");
         System.out.println("1: Admin");
         System.out.println("2: User");
-        String choice = scan.nextLine();
+        int choice = 0;
+        choice = scan.nextInt();
 
-        if (choice.equals("1")){
-            adminMenu();
-        }
-        else if (choice.equals("2")){
-            userLoginMenu();
+        switch (choice){
+            case 1:
+                adminMenu();
+                break;
+            case 2:
+                userLoginMenu();
+                break;
         }
     }
 
@@ -62,23 +66,39 @@ public class Library{
         System.out.println("What do you want to do?");
         System.out.println("1: Add book to library");
         System.out.println("2: Remove book from library");
-        System.out.println("3: Edit book in library");
-        String choice = scan.nextLine();
-        if (choice.equals("1")){
-            addBook();
+        System.out.println("3: Go back to start menu");
+        System.out.println("4: Quit");
+        //System.out.println("3: Edit book in library"); "Existerar ej än!"
+        int choice = 0;
+        choice = scan.nextInt();
+
+        switch (choice){
+            case 1:
+                addBook();
+                break;
+            case 2:
+                deleteBook();
+                break;
+            case 3:
+                identification();
+                break;
+            case 4:
+                break;
+
         }
-        /*else if (choice == 2){
-            deleteBook();
-        }*/
     }
     private void userLoginMenu() {
         System.out.println("1: Login\n2: Register");
-        String choice = scan.nextLine();
-        if (choice.equals("1")){
-            loginMenu();
-        }
-        if(choice.equals("2")){
-            addUser();
+        int choice = 0;
+        choice = scan.nextInt();
+
+        switch (choice){
+            case 1:
+                loginMenu();
+                break;
+            case 2:
+                addUser();
+                break;
         }
     }
     public void loginMenu(){
@@ -97,6 +117,7 @@ public class Library{
         }
         if (!loggedIn)
             System.out.println("Login failed.");
+            userLoginMenu();
     }
 
     private void userMenu() {
@@ -246,21 +267,22 @@ public class Library{
         System.out.println("Genre: ");
         String genre = scan.nextLine();
 
-        books.add(new Book(title, author, genre, year, isbn));
+        books.add(new Book(isbn,title, author, genre, year));
         books.get(books.size()-1).writeToFile(("database/books/" + isbn),(books.get(books.size()-1).toString()));
         System.out.println("Book added to the library!");
+        adminMenu();
 
 
     }
 
-    public void deleteBook() throws IOException {
-
+    public void deleteBook() {
         System.out.println("Vilken bok vill du ta bort? Ange ISBN.");
-        int bok = scan.nextInt();
+        long bok = scan.nextLong();
         Path path = Paths.get("database/books/" + bok + ".txt");
 
         if (!Files.exists(path)){
             System.out.println("Boken finns ej. Försök igen!");
+            deleteBook();
         }else {
             try {
                 Files.delete(path);
@@ -268,7 +290,7 @@ public class Library{
             }catch (Exception e){
                 e.printStackTrace();
             }
-        }
+        } adminMenu();
     }
 
 }
