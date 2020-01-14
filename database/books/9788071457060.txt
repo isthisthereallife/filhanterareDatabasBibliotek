@@ -1,0 +1,6 @@
+isbn: 9788071457060
+title: The Fellowship of the Ring
+author: J. R. R. Tolkien
+year: 1954
+genre: Fantasy
+status: Available

@@ -1,0 +1,6 @@
+isbn: 9781785945168
+title: Dracula
+author: Bram Stoker
+year: 1897
+genre: Horror
+status: Available

@@ -1,6 +1,6 @@
-ISBN: 732498732498
-Title: Red Mars
+ISBN: 9783641116415
+Title: Blue Mars
 Author: Kim Stanley Robinson
-Year: 1992
+Year: 1996
 Genre: Science Fiction
 Status: Available

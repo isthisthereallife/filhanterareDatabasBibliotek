@@ -1,0 +1,6 @@
+isbn: 9785271429675
+title: Club Dead
+author: Charlaine Harris
+year: 2003
+genre: Thriller
+status: Available

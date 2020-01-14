@@ -1,4 +1,4 @@
-ISBN: 49987761554456
+ISBN: 9783596905669
 Title: A Scanner Darkly
 Author: Philip K. Dick
 Year: 1977
