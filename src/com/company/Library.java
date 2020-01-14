@@ -30,7 +30,7 @@ public class Library{
 
     private void loadBooks() {
         File folderPath = new File("database/books/");
-        for (File file : folderPath.listFiles()) {
+        for (File file : base.readFromFolder(folderPath)) {
             final Path path = file.toPath();
             books.add(new Book(base.readFromFile(path)));
         }
@@ -38,7 +38,7 @@ public class Library{
 
     private void loadUsers() {
     File folderPath = new File("database/users/");
-    for (File file : folderPath.listFiles()) {
+    for (File file : base.readFromFolder(folderPath)) {
         final Path path = file.toPath();
         users.add(new User(base.readFromFile(path)));
     }
@@ -87,7 +87,7 @@ public class Library{
         String loginId = scan.nextLine();
         for (User user : users){
 
-            if (user.getId().equals(loginId)){
+            if (user.getId().equalsIgnoreCase(loginId)){
                 System.out.println("Login successful!");
                 activeUser = user;
                 loggedIn = true;
@@ -124,7 +124,7 @@ public class Library{
             switch (number) {
                 case "1": {
                     //söker efter böcker med "AVAILABLE" som text
-                    System.out.println(activeUser.searchInFile("AVAILABLE","database/books"));
+                    System.out.println(activeUser.searchInFile("Available","database/books"));
                     running = rerunPrompt();
                     break;
                 }
@@ -133,16 +133,23 @@ public class Library{
                     System.out.println("Sök efter bok: ");
                     String search = new Scanner(System.in).nextLine();
                     String match = activeUser.searchInFile(search,"database/books").toLowerCase();
-                    System.out.println(match);
-                    //TODO kolla om det är flera
+
+
+                    //TODO refaktorera
                     String[] test = match.split("isbn : ");
                     String testet = test[1];
                     test  = testet.split("\\n");
                     String isbn = test[0];
 
+                    //TODO kolla om det är flera
+                    if (isbn.contains(" ")){
+                        System.out.println("Your search returned several books: ");
+                    }
+
                     //sök igenom books, leta efter
                     for(Book book : books){
                         if (book.getIsbn().equals(isbn)){
+
                             System.out.println("Is this the book? \n1. Yes, give!\n2. No, go back");
                             String choice = scan.nextLine();
                             if (choice.equals("1")){
@@ -262,7 +269,6 @@ public class Library{
                 e.printStackTrace();
             }
         }
-        deleteBook();
     }
 
 }
