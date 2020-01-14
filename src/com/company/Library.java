@@ -157,12 +157,15 @@ public class Library {
                             if (choice.equals("1")){
 
                                 book.setStatus("Unavailable");
-                                String fileName = "database/books/" + book.getIsbn() + ".txt";
-                                String lineToEdit = "available";
-                                String newLine = "Status: unavailable";
-                                book.editFile(fileName,lineToEdit,newLine);
-                                activeUser.setActiveLoans(activeUser.getActiveLoans().concat(isbn));
-                                //activeUser.editFile(activeUser.getId(),activeUser.toString());
+                                String userFileName = "database/users/" + activeUser.getId() + ".txt";
+                                String bookFileName = "database/books/" + book.getIsbn() + ".txt";
+                                String bookLineToEdit = "available";
+                                String userLineToEdit = "activeLoans";
+                                String bookNewLine = "Status: unavailable";
+                                book.editFile(bookFileName,bookLineToEdit,bookNewLine);
+                                activeUser.setActiveLoans(activeUser.getActiveLoans().concat(" " + isbn));
+                                String userNewLine = "activeLoans: " + activeUser.getActiveLoans();
+                                activeUser.editFile(userFileName,userLineToEdit,userNewLine);
                                 //TODO add alex kod för att uppdatera arrayerna och filerna
                             }
                         }
