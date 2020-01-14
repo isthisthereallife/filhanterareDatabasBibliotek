@@ -23,30 +23,26 @@ public class User extends Base {
         this.uniqueId = idGenerator();
     }
 
-    public User(String userInfoFromDisk) {
-        String[] stringsInfo = userInfoFromDisk.split("\\r?\\n");
-        for (String s : stringsInfo) {
+    public User(List<String> userInfoFromDisk) {
+        //String[] stringsInfo = userInfoFromDisk.split("\\r?\\n");
+        for (String s : userInfoFromDisk) {
             String trim = s.substring(s.indexOf(":") + 1).trim();
-            if (s.contains("name :")) {
+            if (s.contains("name:")) {
                 this.name = trim;
-            } else if (s.contains("address :")) {
+            } else if (s.contains("address:")) {
                 this.address = trim;
-            } else if (s.contains("mail :")) {
+            } else if (s.contains("mail:")) {
                 this.mail = trim;
-            } else if (s.contains("tel :")) {
+            } else if (s.contains("tel:")) {
                 this.tel = trim;
-            } else if (s.contains("activeLoans :")) {
+            } else if (s.contains("activeLoans:")) {
                 this.activeLoans = trim;
-            } else if (s.contains("uniqueId :")) {
+            } else if (s.contains("uniqueId:")) {
                 this.uniqueId = trim;
             }
-
         }
-
-
     }
-
-    public User(List<String> readFromFile) {
+    /*public User(List<String> readFromFile) {
         int i = 0;
         String[] stringsInfo = new String [6];
         for(String content:readFromFile){
@@ -61,7 +57,7 @@ public class User extends Base {
         this.tel = stringsInfo[3];
         this.activeLoans = stringsInfo[4];
         this.uniqueId = stringsInfo[5];
-    }
+    }*/
 
     private String idGenerator() {
         String result = "";
@@ -97,6 +93,10 @@ public class User extends Base {
         }
 
         return result;
+    }
+
+    public String getActiveLoans() {
+        return activeLoans;
     }
 
     public void setActiveLoans(String loaned) {
