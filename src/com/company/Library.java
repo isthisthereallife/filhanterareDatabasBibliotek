@@ -30,7 +30,7 @@ public class Library{
 
     private void loadBooks() {
         File folderPath = new File("database/books/");
-        for (File file : folderPath.listFiles()) {
+        for (File file : base.readFromFolder(folderPath)) {
             final Path path = file.toPath();
             books.add(new Book(base.readFromFile(path)));
         }
@@ -38,7 +38,7 @@ public class Library{
 
     private void loadUsers() {
     File folderPath = new File("database/users/");
-    for (File file : folderPath.listFiles()) {
+    for (File file : base.readFromFolder(folderPath)) {
         final Path path = file.toPath();
         users.add(new User(base.readFromFile(path)));
     }

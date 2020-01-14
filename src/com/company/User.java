@@ -42,6 +42,22 @@ public class User extends Base {
             }
         }
     }
+    /*public User(List<String> readFromFile) {
+        int i = 0;
+        String[] stringsInfo = new String [6];
+        for(String content:readFromFile){
+            String trim = content.substring(content.indexOf(":") + 1).trim();
+            stringsInfo[i] = trim;
+            i++;
+        }
+
+        this.name = stringsInfo[0];
+        this.address = stringsInfo[1];
+        this.mail = stringsInfo[2];
+        this.tel = stringsInfo[3];
+        this.activeLoans = stringsInfo[4];
+        this.uniqueId = stringsInfo[5];
+    }*/
 
     private String idGenerator() {
         String result = "";
