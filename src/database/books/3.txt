@@ -1,6 +1,0 @@
-ISBN : 2342389871
-Title : Green Mars
-Author : Kim Stanley Robinson
-Qty : 1
-Year : 1993
-Genre : Science Fiction
