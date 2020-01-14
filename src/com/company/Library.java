@@ -252,8 +252,10 @@ public class Library{
     }
 
     public void addBook(){
-        System.out.println("ISBN: ");
+        scan.nextLine();
+        System.out.println("Isbn: ");
         String isbn = scan.nextLine();
+
 
         System.out.println("Title: ");
         String title = scan.nextLine();
@@ -267,7 +269,7 @@ public class Library{
         System.out.println("Genre: ");
         String genre = scan.nextLine();
 
-        books.add(new Book(isbn,title, author, genre, year));
+        books.add(new Book(isbn, title, author, genre, year));
         books.get(books.size()-1).writeToFile(("database/books/" + isbn),(books.get(books.size()-1).toString()));
         System.out.println("Book added to the library!");
         adminMenu();
