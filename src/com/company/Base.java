@@ -60,6 +60,11 @@ public class Base {
         return result;
     }
 
+    public File[] readFromFolder(File folderPath) {
+        File[] fileList = folderPath.listFiles();
+        return fileList;
+    }
+
     public List<String> readFromFile(Path path) {
 
         List<String> contents = null;
@@ -68,7 +73,6 @@ public class Base {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return contents;
     }
 

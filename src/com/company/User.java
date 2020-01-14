@@ -50,15 +50,17 @@ public class User extends Base {
         int i = 0;
         String[] stringsInfo = new String [6];
         for(String content:readFromFile){
-            stringsInfo[i] = content;
+            String trim = content.substring(content.indexOf(":") + 1).trim();
+            stringsInfo[i] = trim;
             i++;
         }
-        this.name = stringsInfo[0].substring(7);
-        this.address = stringsInfo[1].substring(10);
-        this.mail = stringsInfo[2].substring(7);
-        this.tel = stringsInfo[3].substring(6);
-        this.activeLoans = stringsInfo[4].substring(14);
-        this.uniqueId = stringsInfo[5].substring(11);
+
+        this.name = stringsInfo[0];
+        this.address = stringsInfo[1];
+        this.mail = stringsInfo[2];
+        this.tel = stringsInfo[3];
+        this.activeLoans = stringsInfo[4];
+        this.uniqueId = stringsInfo[5];
     }
 
     private String idGenerator() {
