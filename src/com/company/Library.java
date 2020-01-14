@@ -19,8 +19,8 @@ public class Library {
     private User activeUser;
 
     public Library() {
-        loginMenu();
         load();
+        loginMenu();
     }
 
     private void load() {
