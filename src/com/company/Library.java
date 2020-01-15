@@ -54,13 +54,14 @@ public class Library {
         System.out.println("1: Admin");
         System.out.println("2: User");
         System.out.println("================================");
-        String choice = "0";
 
-        choice = scan.nextLine();
+
+        String choice = scan.nextLine();
 
 
         switch (choice) {
             case "1":
+                activeUser = new User("admin","admin","admin","admin");
                 adminMenu();
                 break;
             case "2":
@@ -81,11 +82,12 @@ public class Library {
             System.out.println("1: Add book to library");
             System.out.println("2: Remove book from library");
             System.out.println("3: Edit book from library");
-            System.out.println("4: Go back to main meny");
+            System.out.println("4: Go back to main menu");
             System.out.println("5: Quit");
             System.out.println("=============================");
 
             String choice = "0";
+            String result = "";
 
             choice = scan.nextLine();
 
@@ -94,12 +96,13 @@ public class Library {
                     addBook();
                     break;
                 case "2":
-                    String result = searchForBook("database/books");
+                    result = searchForBook("database/books");
                     searchResultChoiceMenu("delete", countOccurrences("isbn:", result), result);
                     running = rerunPrompt();
                     break;
                 case "3":
-                    // editBook();
+                    result = searchForBook("database/books");
+                    searchResultChoiceMenu("edit", countOccurrences("isbn:", result), result);
                     break;
                 case "4":
                     identification();
@@ -248,6 +251,8 @@ public class Library {
                             borrowBook(book);
                         } else if (operation.equals("return")) {
                             returnBook(book);
+                        } else if (operation.equals("edit")) {
+                            editBook(book);
                         } else if (operation.equals("delete")) {
                             deleteBook(book);
                         }
@@ -415,6 +420,44 @@ public class Library {
         bok.deleteFiles(path);
         System.out.println(bok.getTitle() + " is now deleted.");
         adminMenu();
+    }
+
+    public void editBook(Book bookToEdit) {
+        String input = "";
+        System.out.println("===========\n1. Title\n2. Author\n3. Year\n4. Genre\n0. Cancel\n===========\n");
+        String edit = scan.nextLine();
+            switch (edit) {
+                case "1":
+                    System.out.println("Edit title:");
+                    input = scan.nextLine();
+                    bookToEdit.editFile("database/books/" + bookToEdit.getIsbn() + ".txt", "title", "title: " + input);
+                    System.out.println("The title is now changed to " + input);
+                    break;
+                case "2":
+                    System.out.println("Edit author:");
+                    input = scan.nextLine();
+                    bookToEdit.editFile("database/books/" + bookToEdit.getIsbn() + ".txt", "author", "author: " + input);
+                    System.out.println("The author is now changed to " + input);
+                    break;
+                case "3":
+                    System.out.println("Edit year:");
+                    input = scan.nextLine();
+                    bookToEdit.editFile("database/books/" + bookToEdit.getIsbn() + ".txt", "year", "year: " + input);
+                    System.out.println("The year is now changed to " + input);
+                    break;
+                case "4":
+                    System.out.println("Edit genre:");
+                    input = scan.nextLine();
+                    bookToEdit.editFile("database/books/" + bookToEdit.getIsbn() + ".txt", "genre", "genre: " + input);
+                    System.out.println("The genre is now changed to " + input);
+                    break;
+                case "0":
+                    break;
+                default:
+                    System.out.println("Invalid choice!");
+                    break;
+            }
+            adminMenu();
     }
 
 }
