@@ -61,7 +61,7 @@ public class Library {
 
         switch (choice) {
             case "1":
-                activeUser = new User("admin","admin","admin","admin");
+                activeUser = new User("admin", "admin", "admin", "admin");
                 adminMenu();
                 break;
             case "2":
@@ -423,41 +423,63 @@ public class Library {
     }
 
     public void editBook(Book bookToEdit) {
-        String input = "";
-        System.out.println("===========\n1. Title\n2. Author\n3. Year\n4. Genre\n0. Cancel\n===========\n");
-        String edit = scan.nextLine();
+        boolean running = true;
+        boolean inputOk = false;
+        do {
+            String input = "";
+            System.out.println("===========\nEdit what?\n1. Title\n2. Author\n3. Year\n4. Genre\n0. Cancel\n===========\n");
+            String edit = scan.nextLine();
             switch (edit) {
                 case "1":
-                    System.out.println("Edit title:");
+                    System.out.println("Current title: " + bookToEdit.getTitle());
+                    System.out.println("New title:");
                     input = scan.nextLine();
                     bookToEdit.editFile("database/books/" + bookToEdit.getIsbn() + ".txt", "title", "title: " + input);
-                    System.out.println("The title is now changed to " + input);
+                    bookToEdit.setTitle(input);
+                    System.out.println("The title is now changed to " + bookToEdit.getTitle());
                     break;
                 case "2":
-                    System.out.println("Edit author:");
-                    input = scan.nextLine();
+                    do {
+                        System.out.println("Current author: " + bookToEdit.getAuthor());
+                        System.out.println("New author:");
+                        input = scan.nextLine();
+                        inputOk = checkIfStringOfLetters(input);
+                    } while (!inputOk);
                     bookToEdit.editFile("database/books/" + bookToEdit.getIsbn() + ".txt", "author", "author: " + input);
-                    System.out.println("The author is now changed to " + input);
+                    bookToEdit.setAuthor(input);
+                    System.out.println("The author is now changed to " + bookToEdit.getAuthor());
                     break;
                 case "3":
-                    System.out.println("Edit year:");
-                    input = scan.nextLine();
+                    do {
+                        System.out.println("Current year: " + bookToEdit.getYear());
+                        System.out.println("New year:");
+                        input = scan.nextLine();
+                        inputOk = checkIfStringOfNumbers(input);
+                    } while (!inputOk);
                     bookToEdit.editFile("database/books/" + bookToEdit.getIsbn() + ".txt", "year", "year: " + input);
-                    System.out.println("The year is now changed to " + input);
+                    bookToEdit.setYear(input);
+                    System.out.println("The year is now changed to " + bookToEdit.getYear());
                     break;
                 case "4":
-                    System.out.println("Edit genre:");
-                    input = scan.nextLine();
+                    do {
+                        System.out.println("Current genre: " + bookToEdit.getGenre());
+                        System.out.println("Edit genre:");
+                        input = scan.nextLine();
+                        inputOk = checkIfStringOfLetters(input);
+                    } while (!inputOk);
                     bookToEdit.editFile("database/books/" + bookToEdit.getIsbn() + ".txt", "genre", "genre: " + input);
-                    System.out.println("The genre is now changed to " + input);
+                    bookToEdit.setGenre(input);
+                    System.out.println("The genre is now changed to " + bookToEdit.getGenre());
                     break;
                 case "0":
+                    running = false;
                     break;
                 default:
-                    System.out.println("Invalid choice!");
+                    System.out.println("Invalid choice. Please try again");
                     break;
             }
-            adminMenu();
+        } while (running);
+        adminMenu();
     }
 
 }
