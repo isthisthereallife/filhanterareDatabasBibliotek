@@ -306,22 +306,14 @@ public class Library {
     }
 
     public void deleteBook() {
-        System.out.println("Choose a book to delete? Type ISBN to delete file.");
-        long bok = scan.nextLong();
+
+        System.out.println("What book do you want to delete? Enter its ISBN: ");
+        String bok = scan.nextLine();
         Path path = Paths.get("database/books/" + bok + ".txt");
-
-        if (!Files.exists(path)){
-            System.out.println("The book does not exists! Try again!");
-            deleteBook();
-        }else {
-
-            try {
-                Files.delete(path);
-                System.out.println(bok + " is now deleted.");
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-        } adminMenu();
+        books.removeIf(book -> book.getIsbn().equals(bok));
+        base.deleteFiles(path);
+        System.out.println(bok + " is now deleted.");
+        
     }
 
 }
