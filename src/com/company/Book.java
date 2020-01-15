@@ -36,7 +36,7 @@ public class Book extends Base{
         this.author = stringsInfo[2];
         this.year = stringsInfo[3];
         this.genre = stringsInfo[4];
-        this.status = "Available";
+        this.status = stringsInfo[5];
     }
 
     /*userInfoFromDisk) {

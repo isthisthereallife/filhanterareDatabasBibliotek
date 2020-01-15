@@ -184,8 +184,13 @@ public class Library {
             }
             switch (number) {
                 case "1": {
+                    for(Book book : books){
+                        if(book.getStatus().equals("Available"))
+                            System.out.println(book.listToString());
+                    }
+                    System.out.println("");
                     //söker efter böcker med "AVAILABLE" som text
-                    System.out.println(activeUser.searchInFile("available", "database/books"));
+                    //System.out.println(activeUser.searchInFile("available", "database/books"));
                     running = rerunPrompt();
                     break;
                 }
