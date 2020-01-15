@@ -22,7 +22,24 @@ public class Book extends Base{
         this.genre = genre;
         this.status = "Available";
     }
-    public Book(List<String> userInfoFromDisk) {
+
+    public Book(List<String> readFromFile) {
+        int i = 0;
+        String[] stringsInfo = new String [6];
+        for(String content:readFromFile){
+            String trim = content.substring(content.indexOf(":") + 1).trim();
+            stringsInfo[i] = trim;
+            i++;
+        }
+        this.isbn = stringsInfo[0];
+        this.title = stringsInfo[1];
+        this.author = stringsInfo[2];
+        this.year = stringsInfo[3];
+        this.genre = stringsInfo[4];
+        this.status = "Available";
+    }
+
+    /*userInfoFromDisk) {
         //String[] stringsInfo = userInfoFromDisk.split("\\r?\\n");
 
         for (String s : userInfoFromDisk) {
@@ -42,7 +59,7 @@ public class Book extends Base{
                 this.status = trim;
             }
         }
-    }
+    }*/
 
     public String getIsbn() {
         return isbn;
@@ -88,6 +105,11 @@ public class Book extends Base{
     public String getStatus(){
         return this.status;
     }
+
+    public String listToString() {
+        return title + " by " + author + " (" + year + ") - ISBN: " + isbn;
+    }
+
     @Override
     public String toString() {
         return "isbn: " + isbn + "\ntitle: " + title + "\nauthor: " + author +

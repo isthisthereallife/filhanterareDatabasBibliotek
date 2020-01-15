@@ -202,9 +202,10 @@ public class Library {
                     break;
                 }
                 case "4": {
-                    //söker efter böcker med en tom sträng
-                    System.out.println(activeUser.searchInFile("", "database/books"));
+                    for(Book book : books)
+                        System.out.println(book.listToString());
 
+                    System.out.println(" ");
                     running = rerunPrompt();
                     break;
                 }
