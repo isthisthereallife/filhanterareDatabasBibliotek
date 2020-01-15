@@ -1,6 +1,6 @@
-isbn: 9788372980618
-title: The Two Towers
-author: J. R. R. Tolkien
-year: 1954
-genre: Fantasy
-status: Available
+ISBN: 9788372980618
+Title: The Two Towers
+Author: J. R. R. Tolkien
+Year: 1954
+Genre: Fantasy
+Status: Available

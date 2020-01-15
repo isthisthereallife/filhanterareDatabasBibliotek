@@ -1,6 +1,6 @@
-isbn: 9781428183896
-title: Dead to the World
-author: Charlaine Harris
-year: 2004
-genre: Thriller
-status: Available
+ISBN: 9781428183896
+Title: Dead to the World
+Author: Charlaine Harris
+Year: 2004
+Genre: Thriller
+Status: Available
