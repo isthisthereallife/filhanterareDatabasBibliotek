@@ -1,6 +1,6 @@
-ISBN: 39612786387
-Title: Excession
+ISBN: 9781428125377
+Title: Look To Windward
 Author: Iain M. Banks
-Year: 1996
+Year: 2000
 Genre: Science Fiction
 Status: Available

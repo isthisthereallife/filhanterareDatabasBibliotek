@@ -1,0 +1,6 @@
+isbn: 9781607441717
+title: Dead as a Doornail
+author: Charlaine Harris
+year: 2005
+genre: Thriller
+status: Available

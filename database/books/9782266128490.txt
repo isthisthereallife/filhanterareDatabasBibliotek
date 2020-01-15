@@ -1,6 +1,6 @@
-ISBN: 123976936698
-Title: Blue Mars
+ISBN: 9782266128490
+Title: Green Mars
 Author: Kim Stanley Robinson
-Year: 1996
+Year: 1993
 Genre: Science Fiction
 Status: Available

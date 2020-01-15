@@ -1,0 +1,6 @@
+isbn: 9789875781252
+title: Dead Until Dark
+author: Charlaine Harris
+year: 2001
+genre: Thriller
+status: Available
