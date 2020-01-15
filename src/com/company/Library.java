@@ -173,19 +173,22 @@ public class Library {
             switch (number) {
                 case "1": {
                     //söker efter böcker med "AVAILABLE" som text
-                    System.out.println(activeUser.searchInFile("unvailable", "database/books"));
+                    System.out.println(activeUser.searchInFile("available", "database/books"));
                     running = rerunPrompt();
                     break;
                 }
                 case "2": {
-                    String result = searchForBook();
-                    searchResultChoiceMenu(countOccurrences("isbn:", result), result);
+                    String result = searchForBook("database/books");
+                    searchResultChoiceMenu("borrow", countOccurrences("isbn:", result), result);
+
                     running = rerunPrompt();
                     break;
                 }
                 case "3": {
                     //TODO lämna tillbaka en bok
-                    rerunPrompt();
+                    //String result = searchForBook("database/book");
+                    //searchResultChoiceMenu("return",countOccurrences("isbn:",result),result);
+                    running = rerunPrompt();
                     break;
                 }
                 case "4": {
@@ -210,10 +213,10 @@ public class Library {
     }
 
 
-    private String searchForBook() {
+    private String searchForBook(String whereToSearch) {
         System.out.println("Enter search: ");
         String search = scan.nextLine();
-        return activeUser.searchInFile(search, "database/books").toLowerCase();
+        return activeUser.searchInFile(search, whereToSearch).toLowerCase();
 
     }
 
@@ -221,7 +224,7 @@ public class Library {
         return (searchIn.toLowerCase().split(Pattern.quote(searchFor.toLowerCase()), -1).length) - 1;
     }
 
-    private void searchResultChoiceMenu(int nrOfSearchMatches, String resultOfSearch) {
+    private void searchResultChoiceMenu(String operation, int nrOfSearchMatches, String resultOfSearch) {
         if (nrOfSearchMatches < 1) {
             System.out.println("Your search came up empty.");
         } else if (nrOfSearchMatches > 1) {
@@ -235,7 +238,12 @@ public class Library {
                     System.out.println("\nIs this the book? \n1. Yes, give!\n2. No, go back");
                     String choice = scan.nextLine();
                     if (choice.equals("1")) {
-                        borrowBook(book);
+                        if (operation.equals("borrow")){
+                            borrowBook(book);
+                        }
+                        else if (operation.equals("return")){
+                            //returnBook(book)
+                        }
                     }
                 }
             }
