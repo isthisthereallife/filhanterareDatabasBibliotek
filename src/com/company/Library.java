@@ -1,5 +1,6 @@
 package com.company;
 
+import javax.print.DocFlavor;
 import javax.xml.xpath.XPath;
 import java.io.File;
 import java.io.IOException;
@@ -9,6 +10,7 @@ import java.nio.file.Paths;
 import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
@@ -73,7 +75,7 @@ public class Library {
 
     private void adminMenu() {
         boolean running = true;
-        activeUser = new User("admin","admin","admin","admin");
+        activeUser = new User("admin", "admin", "admin", "admin");
         do {
             System.out.println("=============================");
             System.out.println("What do you want to do?");
@@ -188,13 +190,13 @@ public class Library {
                 }
                 case "2": {
                     String result = searchForBook("database/books");
-                    searchResultChoiceMenu("borrow", countOccurrences("isbn:", result),result);
+                    searchResultChoiceMenu("borrow", countOccurrences("isbn:", result), result);
                     running = rerunPrompt();
                     break;
                 }
                 case "3": {
                     String result = searchForBook("database/books");
-                    searchResultChoiceMenu("return", countOccurrences("isbn:", result),result);
+                    searchResultChoiceMenu("return", countOccurrences("isbn:", result), result);
                     running = rerunPrompt();
                     break;
                 }
@@ -324,24 +326,83 @@ public class Library {
         userMenu();
     }
 
+    private boolean checkIfStringOfNumbers(String stringToCheck) {
+        boolean result = true;
+        Character[] charList = new Character[stringToCheck.length() - 1];
+        for (int i = 0; i < stringToCheck.length() - 1; i++) {
+            charList[i] = stringToCheck.charAt(i);
+        }
+        for (Character c : charList) {
+            //kolla om c är en siffra
+            if (!Character.isDigit(c)) {
+                System.out.println("Please enter only numbers.");
+                return false;
+            }
+        }
+        return result;
+    }
+
+    private boolean checkIfStringOfLetters(String stringToCheck) {
+        boolean result = true;
+        stringToCheck = stringToCheck.replace(" ", "");
+        Character[] charList = new Character[stringToCheck.length() - 1];
+        for (int i = 0; i < stringToCheck.length() - 1; i++) {
+            charList[i] = stringToCheck.charAt(i);
+        }
+        for (Character c : charList) {
+            //kolla om c är en siffra
+            if (!Character.isLetter(c)) {
+                System.out.println("Please enter only letters.");
+                return false;
+            }
+        }
+        return result;
+    }
+
+    private boolean checkForDuplicates(String stringToCheck) {
+        Path path = Paths.get("database/books/" + stringToCheck + ".txt");
+        if (Files.exists(path)) {
+            System.out.println("Book already in library.");
+            return false;
+        } else return true;
+    }
+
     public void addBook() {
+        boolean inputOk = false;
+        String isbn;
+        String title;
+        String author;
+        String year;
+        String genre;
+        do {
+            System.out.println("ISBN: ");
+            isbn = scan.nextLine();
+            inputOk = checkIfStringOfNumbers(isbn);
+            if (inputOk) {
+                inputOk = checkForDuplicates(isbn);
 
-        System.out.println("ISBN: ");
-        String isbn = scan.nextLine();
-
+            }
+        } while (!inputOk);
 
         System.out.println("Title: ");
-        String title = scan.nextLine();
+        title = scan.nextLine();
 
-        System.out.println("Author: ");
-        String author = scan.nextLine();
+        do {
+            System.out.println("Author: ");
+            author = scan.nextLine();
+            inputOk = checkIfStringOfLetters(author);
+        } while (!inputOk);
+        do {
+            System.out.println("Year: ");
+            year = scan.nextLine();
+            inputOk = checkIfStringOfNumbers(year);
+        } while (!inputOk);
 
-        System.out.println("Year: ");
-        String year = scan.nextLine();
-
-        System.out.println("Genre: ");
-        String genre = scan.nextLine();
-
+        do {
+            System.out.println("Genre: ");
+            genre = scan.nextLine();
+            inputOk = checkIfStringOfLetters(genre);
+        } while (!inputOk);
 
         books.add(new Book(isbn, title, author, genre, year));
         books.get(books.size() - 1).writeToFile(("database/books/" + isbn), (books.get(books.size() - 1).toString()));
