@@ -20,9 +20,9 @@ public class Library {
     private User activeUser;
 
 
-    public Library(){
-    load();
-    identification();
+    public Library() {
+        load();
+        identification();
     }
 
     private void load() {
@@ -92,7 +92,7 @@ public class Library {
                 deleteBook();
                 break;
             case "3":
-               // editBook();
+                // editBook();
                 break;
             case "4":
                 identification();
@@ -145,7 +145,7 @@ public class Library {
         }
         if (!loggedIn)
             System.out.println("Login failed.");
-            userLoginMenu();
+        userLoginMenu();
     }
 
     private void userMenu() {
@@ -185,9 +185,8 @@ public class Library {
                     break;
                 }
                 case "3": {
-                    //TODO lämna tillbaka en bok
-                    //String result = searchForBook("database/book");
-                    //searchResultChoiceMenu("return",countOccurrences("isbn:",result),result);
+                    String result = searchForBook("database/books");
+                    searchResultChoiceMenu("return", countOccurrences("isbn:", result), result);
                     running = rerunPrompt();
                     break;
                 }
@@ -238,11 +237,10 @@ public class Library {
                     System.out.println("\nIs this the book? \n1. Yes, give!\n2. No, go back");
                     String choice = scan.nextLine();
                     if (choice.equals("1")) {
-                        if (operation.equals("borrow")){
+                        if (operation.equals("borrow")) {
                             borrowBook(book);
-                        }
-                        else if (operation.equals("return")){
-                            //returnBook(book)
+                        } else if (operation.equals("return")) {
+                            returnBook(book);
                         }
                     }
                 }
@@ -259,6 +257,22 @@ public class Library {
         String bookNewLine = "Status: unavailable";
         bookToBorrow.editFile(bookFileName, bookLineToEdit, bookNewLine);
         activeUser.setActiveLoans(activeUser.getActiveLoans().concat(" " + bookToBorrow.getIsbn()));
+        String userNewLine = "activeLoans: " + activeUser.getActiveLoans();
+        activeUser.editFile(userFileName, userLineToEdit, userNewLine);
+    }
+
+    private void returnBook(Book bookToReturn) {
+        bookToReturn.setStatus("Available");
+        String userFileName = "database/users/" + activeUser.getId() + ".txt";
+        String bookFileName = "database/books/" + bookToReturn.getIsbn() + ".txt";
+        String bookLineToEdit = "available";
+        String userLineToEdit = "activeLoans";
+        String bookNewLine = "Status: available";
+        bookToReturn.editFile(bookFileName, bookLineToEdit, bookNewLine);
+        //ta bort en rad från user
+        activeUser.setActiveLoans(activeUser.getActiveLoans().replace(bookToReturn.getIsbn(), ""));
+        //concat(" " + bookToReturn.getIsbn()));
+
         String userNewLine = "activeLoans: " + activeUser.getActiveLoans();
         activeUser.editFile(userFileName, userLineToEdit, userNewLine);
     }
@@ -298,7 +312,7 @@ public class Library {
         userMenu();
     }
 
-    public void addBook(){
+    public void addBook() {
 
         System.out.println("ISBN: ");
         String isbn = scan.nextLine();
@@ -318,7 +332,7 @@ public class Library {
 
 
         books.add(new Book(isbn, title, author, genre, year));
-        books.get(books.size()-1).writeToFile(("database/books/" + isbn),(books.get(books.size()-1).toString()));
+        books.get(books.size() - 1).writeToFile(("database/books/" + isbn), (books.get(books.size() - 1).toString()));
         System.out.println("Book added to the library!");
         adminMenu();
 
