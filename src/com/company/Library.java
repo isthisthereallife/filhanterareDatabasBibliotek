@@ -47,60 +47,85 @@ public class Library {
     }
 
     public void identification() {
+        System.out.println("================================");
         System.out.println("Who would you like to login as?");
         System.out.println("1: Admin");
         System.out.println("2: User");
-        int choice = 0;
-        choice = scan.nextInt();
+        System.out.println("================================");
+        String choice = "0";
 
-        switch (choice){
-            case 1:
+        choice = scan.nextLine();
+
+
+        switch (choice) {
+            case "1":
                 adminMenu();
                 break;
-            case 2:
+            case "2":
                 userLoginMenu();
                 break;
+            default:
+                System.out.println("Invalid choice. Try again!");
+                identification();
         }
     }
 
     private void adminMenu() {
+        System.out.println("=============================");
         System.out.println("What do you want to do?");
         System.out.println("1: Add book to library");
         System.out.println("2: Remove book from library");
-        System.out.println("3: Go back to start menu");
-        System.out.println("4: Quit");
-        //System.out.println("3: Edit book in library"); "Existerar ej än!"
-        int choice = 0;
-        choice = scan.nextInt();
+        System.out.println("3: Edit book from library");
+        System.out.println("4: Go back to main meny");
+        System.out.println("5: Quit");
+        System.out.println("=============================");
 
-        switch (choice){
-            case 1:
+        String choice = "0";
+
+        choice = scan.nextLine();
+
+        switch (choice) {
+            case "1":
                 addBook();
                 break;
-            case 2:
+            case "2":
                 deleteBook();
                 break;
-            case 3:
+            case "3":
+               // editBook();
+                break;
+            case "4":
                 identification();
                 break;
-            case 4:
+            case "5":
                 break;
-
+            default:
+                System.out.println("Invalid choice. Try again!");
+                adminMenu();
         }
+
     }
 
     private void userLoginMenu() {
+        System.out.println("============");
         System.out.println("1: Login\n2: Register");
-        int choice = 0;
-        choice = scan.nextInt();
+        System.out.println("============");
+        String choice = "0";
 
-        switch (choice){
-            case 1:
+
+        choice = scan.nextLine();
+
+
+        switch (choice) {
+            case "1":
                 loginMenu();
                 break;
-            case 2:
+            case "2":
                 addUser();
                 break;
+            default:
+                System.out.println("Invalid choice. Try again!");
+                userLoginMenu();
         }
     }
 
@@ -259,7 +284,7 @@ public class Library {
     }
 
     public void addBook(){
-        scan.nextLine();
+
         System.out.println("ISBN: ");
         String isbn = scan.nextLine();
 
