@@ -148,10 +148,6 @@ public class Library {
             userLoginMenu();
     }
 
-    private int countOccurrences(String searchFor, String searchIn) {
-        return (searchIn.toLowerCase().split(Pattern.quote(searchFor.toLowerCase()), -1).length) - 1;
-    }
-
     private void userMenu() {
         Scanner scan = new Scanner(System.in);
         System.out.println("Welcome " + activeUser.getName() + "\nPlease choose operation:");
@@ -177,42 +173,13 @@ public class Library {
             switch (number) {
                 case "1": {
                     //söker efter böcker med "AVAILABLE" som text
-                    System.out.println(activeUser.searchInFile("Available", "database/books"));
+                    System.out.println(activeUser.searchInFile("unvailable", "database/books"));
                     running = rerunPrompt();
                     break;
                 }
                 case "2": {
-                    System.out.println("Sök efter bok: ");
-                    String search = scan.nextLine();
-                    String result = activeUser.searchInFile(search, "database/books").toLowerCase();
-                    int isbnsInResult = countOccurrences("isbn:", result);
-                    if (isbnsInResult < 1) {
-                        System.out.println("Your search came up empty.");
-                    } else if (isbnsInResult > 1) {
-                        System.out.println("Your search was too general. Found " + isbnsInResult + " books.");
-                    } else {
-                        String isbn = result.substring(result.indexOf("isbn:")+5, result.indexOf("\n")).trim();
-
-                        for (Book book : books) {
-                            if (book.getIsbn().equals(isbn)) {
-                                System.out.println(book.toString());
-                                System.out.println("\nIs this the book? \n1. Yes, give!\n2. No, go back");
-                                String choice = scan.nextLine();
-                                if (choice.equals("1")) {
-                                    book.setStatus("Unavailable");
-                                    String userFileName = "database/users/" + activeUser.getId() + ".txt";
-                                    String bookFileName = "database/books/" + book.getIsbn() + ".txt";
-                                    String bookLineToEdit = "available";
-                                    String userLineToEdit = "activeLoans";
-                                    String bookNewLine = "Status: unavailable";
-                                    book.editFile(bookFileName, bookLineToEdit, bookNewLine);
-                                    activeUser.setActiveLoans(activeUser.getActiveLoans().concat(" " + isbn));
-                                    String userNewLine = "activeLoans: " + activeUser.getActiveLoans();
-                                    activeUser.editFile(userFileName, userLineToEdit, userNewLine);
-                                }
-                            }
-                        }
-                    }
+                    String result = searchForBook();
+                    searchResultChoiceMenu(countOccurrences("isbn:", result), result);
                     running = rerunPrompt();
                     break;
                 }
@@ -242,6 +209,51 @@ public class Library {
         } while (running);
     }
 
+
+    private String searchForBook() {
+        System.out.println("Enter search: ");
+        String search = scan.nextLine();
+        return activeUser.searchInFile(search, "database/books").toLowerCase();
+
+    }
+
+    private int countOccurrences(String searchFor, String searchIn) {
+        return (searchIn.toLowerCase().split(Pattern.quote(searchFor.toLowerCase()), -1).length) - 1;
+    }
+
+    private void searchResultChoiceMenu(int nrOfSearchMatches, String resultOfSearch) {
+        if (nrOfSearchMatches < 1) {
+            System.out.println("Your search came up empty.");
+        } else if (nrOfSearchMatches > 1) {
+            System.out.println("Your search was too general. Found " + nrOfSearchMatches + " books.");
+        } else {
+            String isbn = resultOfSearch.substring(resultOfSearch.indexOf("isbn:") + 5, resultOfSearch.indexOf("\n")).trim();
+
+            for (Book book : books) {
+                if (book.getIsbn().equals(isbn)) {
+                    System.out.println(book.toString());
+                    System.out.println("\nIs this the book? \n1. Yes, give!\n2. No, go back");
+                    String choice = scan.nextLine();
+                    if (choice.equals("1")) {
+                        borrowBook(book);
+                    }
+                }
+            }
+        }
+    }
+
+    private void borrowBook(Book bookToBorrow) {
+        bookToBorrow.setStatus("Unavailable");
+        String userFileName = "database/users/" + activeUser.getId() + ".txt";
+        String bookFileName = "database/books/" + bookToBorrow.getIsbn() + ".txt";
+        String bookLineToEdit = "available";
+        String userLineToEdit = "activeLoans";
+        String bookNewLine = "Status: unavailable";
+        bookToBorrow.editFile(bookFileName, bookLineToEdit, bookNewLine);
+        activeUser.setActiveLoans(activeUser.getActiveLoans().concat(" " + bookToBorrow.getIsbn()));
+        String userNewLine = "activeLoans: " + activeUser.getActiveLoans();
+        activeUser.editFile(userFileName, userLineToEdit, userNewLine);
+    }
 
     private boolean rerunPrompt() {
         int choice = 0;
@@ -311,6 +323,7 @@ public class Library {
         String bok = scan.nextLine();
         Path path = Paths.get("database/books/" + bok + ".txt");
         books.removeIf(book -> book.getIsbn().equals(bok));
+
         base.deleteFiles(path);
         System.out.println(bok + " is now deleted.");
         adminMenu();
