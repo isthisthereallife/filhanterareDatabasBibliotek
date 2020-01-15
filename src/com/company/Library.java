@@ -254,26 +254,14 @@ public class Library {
 
     }
 
-    public void deleteBook() throws IOException {
+    public void deleteBook() {
 
-        System.out.println("Vilken bok vill du ta bort? Ange ISBN.");
+        System.out.println("What book do you want to delete? Enter its ISBN: ");
         String bok = scan.nextLine();
         Path path = Paths.get("database/books/" + bok + ".txt");
-        for (Book book : books) {
-            if (book.getIsbn().equals(bok)) {
-                books.remove(book);
-            }
-        }
-        if (!Files.exists(path)) {
-            System.out.println("Boken finns ej. Försök igen!");
-        } else {
-            try {
-                Files.delete(path);
-                System.out.println(bok + " är nu borttagen.");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        books.removeIf(book -> book.getIsbn().equals(bok));
+        base.deleteFiles(path);
+        System.out.println(bok + " is now deleted.");
     }
 
 }
