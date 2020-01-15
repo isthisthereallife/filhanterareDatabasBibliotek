@@ -313,7 +313,7 @@ public class Library {
         books.removeIf(book -> book.getIsbn().equals(bok));
         base.deleteFiles(path);
         System.out.println(bok + " is now deleted.");
-        
+        adminMenu();
     }
 
 }
