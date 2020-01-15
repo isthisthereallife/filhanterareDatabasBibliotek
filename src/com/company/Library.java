@@ -19,9 +19,10 @@ public class Library {
     private Base base = new Base();
     private User activeUser;
 
+
     public Library() {
         load();
-        loginMenu();
+        identification();
     }
 
     private void load() {
@@ -46,40 +47,91 @@ public class Library {
     }
 
     public void identification() {
+        System.out.println("================================");
         System.out.println("Who would you like to login as?");
         System.out.println("1: Admin");
         System.out.println("2: User");
-        String choice = scan.nextLine();
+        System.out.println("================================");
+        String choice = "0";
 
-        if (choice.equals("1")) {
-            adminMenu();
-        } else if (choice.equals("2")) {
-            userLoginMenu();
+        choice = scan.nextLine();
+
+
+        switch (choice) {
+            case "1":
+                adminMenu();
+                break;
+            case "2":
+                userLoginMenu();
+                break;
+            default:
+                System.out.println("Invalid choice. Try again!");
+                identification();
         }
     }
 
     private void adminMenu() {
-        System.out.println("What do you want to do?");
-        System.out.println("1: Add book to library");
-        System.out.println("2: Remove book from library");
-        System.out.println("3: Edit book in library");
-        String choice = scan.nextLine();
-        if (choice.equals("1")) {
-            addBook();
-        }
-        /*else if (choice == 2){
-            deleteBook();
-        }*/
+        boolean running = true;
+        activeUser = new User("admin","admin","admin","admin");
+        do {
+            System.out.println("=============================");
+            System.out.println("What do you want to do?");
+            System.out.println("1: Add book to library");
+            System.out.println("2: Remove book from library");
+            System.out.println("3: Edit book from library");
+            System.out.println("4: Go back to main meny");
+            System.out.println("5: Quit");
+            System.out.println("=============================");
+
+            String choice = "0";
+
+            choice = scan.nextLine();
+
+            switch (choice) {
+                case "1":
+                    addBook();
+                    break;
+                case "2":
+                    String result = searchForBook("database/books");
+                    searchResultChoiceMenu("delete", countOccurrences("isbn:", result), result);
+                    running = rerunPrompt();
+                    break;
+                case "3":
+                    // editBook();
+                    break;
+                case "4":
+                    identification();
+                    break;
+                case "5":
+                    break;
+                default:
+                    System.out.println("Invalid choice. Try again!");
+                    adminMenu();
+            }
+
+        } while (running);
     }
 
     private void userLoginMenu() {
+        System.out.println("============");
         System.out.println("1: Login\n2: Register");
-        String choice = scan.nextLine();
-        if (choice.equals("1")) {
-            loginMenu();
-        }
-        if (choice.equals("2")) {
-            addUser();
+        System.out.println("============");
+        String choice = "0";
+
+
+        choice = scan.nextLine();
+
+
+        switch (choice) {
+            case "1":
+                loginMenu();
+                break;
+            case "2":
+                addUser();
+                break;
+            default:
+                System.out.println("Invalid choice. Try again!");
+                userLoginMenu();
         }
     }
 
@@ -99,10 +151,7 @@ public class Library {
         }
         if (!loggedIn)
             System.out.println("Login failed.");
-    }
-
-    private int countOccurrences(String searchFor, String searchIn) {
-        return (searchIn.toLowerCase().split(Pattern.quote(searchFor.toLowerCase()), -1).length) - 1;
+        userLoginMenu();
     }
 
     private void userMenu() {
@@ -130,48 +179,20 @@ public class Library {
             switch (number) {
                 case "1": {
                     //söker efter böcker med "AVAILABLE" som text
-                    System.out.println(activeUser.searchInFile("Available", "database/books"));
+                    System.out.println(activeUser.searchInFile("available", "database/books"));
                     running = rerunPrompt();
                     break;
                 }
                 case "2": {
-                    System.out.println("Sök efter bok: ");
-                    String search = scan.nextLine();
-                    String result = activeUser.searchInFile(search, "database/books").toLowerCase();
-                    int isbnsInResult = countOccurrences("isbn:", result);
-                    if (isbnsInResult < 1) {
-                        System.out.println("Your search came up empty.");
-                    } else if (isbnsInResult > 1) {
-                        System.out.println("Your search was too general. Found " + isbnsInResult + " books.");
-                    } else {
-                        String isbn = result.substring(result.indexOf("isbn:")+5, result.indexOf("\n")).trim();
-
-                        for (Book book : books) {
-                            if (book.getIsbn().equals(isbn)) {
-                                System.out.println(book.toString());
-                                System.out.println("\nIs this the book? \n1. Yes, give!\n2. No, go back");
-                                String choice = scan.nextLine();
-                                if (choice.equals("1")) {
-                                    book.setStatus("Unavailable");
-                                    String userFileName = "database/users/" + activeUser.getId() + ".txt";
-                                    String bookFileName = "database/books/" + book.getIsbn() + ".txt";
-                                    String bookLineToEdit = "available";
-                                    String userLineToEdit = "activeLoans";
-                                    String bookNewLine = "Status: unavailable";
-                                    book.editFile(bookFileName, bookLineToEdit, bookNewLine);
-                                    activeUser.setActiveLoans(activeUser.getActiveLoans().concat(" " + isbn));
-                                    String userNewLine = "activeLoans: " + activeUser.getActiveLoans();
-                                    activeUser.editFile(userFileName, userLineToEdit, userNewLine);
-                                }
-                            }
-                        }
-                    }
+                    String result = searchForBook("database/books");
+                    searchResultChoiceMenu("borrow", countOccurrences("isbn:", result),result);
                     running = rerunPrompt();
                     break;
                 }
                 case "3": {
-                    //TODO lämna tillbaka en bok
-                    rerunPrompt();
+                    String result = searchForBook("database/books");
+                    searchResultChoiceMenu("return", countOccurrences("isbn:", result),result);
+                    running = rerunPrompt();
                     break;
                 }
                 case "4": {
@@ -195,6 +216,73 @@ public class Library {
         } while (running);
     }
 
+
+    private String searchForBook(String whereToSearch) {
+        System.out.println("Enter search: ");
+        String search = scan.nextLine();
+        return activeUser.searchInFile(search, whereToSearch).toLowerCase();
+
+    }
+
+    private int countOccurrences(String searchFor, String searchIn) {
+        return (searchIn.toLowerCase().split(Pattern.quote(searchFor.toLowerCase()), -1).length) - 1;
+    }
+
+    private void searchResultChoiceMenu(String operation, int nrOfSearchMatches, String resultOfSearch) {
+        if (nrOfSearchMatches < 1) {
+            System.out.println("Your search came up empty.");
+        } else if (nrOfSearchMatches > 1) {
+            System.out.println("Your search was too general. Found " + nrOfSearchMatches + " books.");
+        } else {
+            String isbn = resultOfSearch.substring(resultOfSearch.indexOf("isbn:") + 5, resultOfSearch.indexOf("\n")).trim();
+
+            for (Book book : books) {
+                if (book.getIsbn().equals(isbn)) {
+                    System.out.println(book.toString());
+                    System.out.println("\nIs this the book? \n1. Yes!\n2. No, go back.");
+                    String choice = scan.nextLine();
+                    if (choice.equals("1")) {
+                        if (operation.equals("borrow")) {
+                            borrowBook(book);
+                        } else if (operation.equals("return")) {
+                            returnBook(book);
+                        } else if (operation.equals("delete")) {
+                            deleteBook(book);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void borrowBook(Book bookToBorrow) {
+        bookToBorrow.setStatus("Unavailable");
+        String userFileName = "database/users/" + activeUser.getId() + ".txt";
+        String bookFileName = "database/books/" + bookToBorrow.getIsbn() + ".txt";
+        String bookLineToEdit = "available";
+        String userLineToEdit = "activeLoans";
+        String bookNewLine = "Status: unavailable";
+        bookToBorrow.editFile(bookFileName, bookLineToEdit, bookNewLine);
+        activeUser.setActiveLoans(activeUser.getActiveLoans().concat(" " + bookToBorrow.getIsbn()));
+        String userNewLine = "activeLoans: " + activeUser.getActiveLoans();
+        activeUser.editFile(userFileName, userLineToEdit, userNewLine);
+    }
+
+    private void returnBook(Book bookToReturn) {
+        bookToReturn.setStatus("Available");
+        String userFileName = "database/users/" + activeUser.getId() + ".txt";
+        String bookFileName = "database/books/" + bookToReturn.getIsbn() + ".txt";
+        String bookLineToEdit = "available";
+        String userLineToEdit = "activeLoans";
+        String bookNewLine = "Status: available";
+        bookToReturn.editFile(bookFileName, bookLineToEdit, bookNewLine);
+        //ta bort en rad från user
+        activeUser.setActiveLoans(activeUser.getActiveLoans().replace(bookToReturn.getIsbn(), ""));
+        //concat(" " + bookToReturn.getIsbn()));
+
+        String userNewLine = "activeLoans: " + activeUser.getActiveLoans();
+        activeUser.editFile(userFileName, userLineToEdit, userNewLine);
+    }
 
     private boolean rerunPrompt() {
         int choice = 0;
@@ -232,8 +320,10 @@ public class Library {
     }
 
     public void addBook() {
+
         System.out.println("ISBN: ");
         String isbn = scan.nextLine();
+
 
         System.out.println("Title: ");
         String title = scan.nextLine();
@@ -247,33 +337,23 @@ public class Library {
         System.out.println("Genre: ");
         String genre = scan.nextLine();
 
-        books.add(new Book(isbn, title, author, year, genre));
+
+        books.add(new Book(isbn, title, author, genre, year));
         books.get(books.size() - 1).writeToFile(("database/books/" + isbn), (books.get(books.size() - 1).toString()));
         System.out.println("Book added to the library!");
+        adminMenu();
 
 
     }
 
-    public void deleteBook() throws IOException {
+    public void deleteBook(Book bok) {
 
-        System.out.println("Vilken bok vill du ta bort? Ange ISBN.");
-        String bok = scan.nextLine();
-        Path path = Paths.get("database/books/" + bok + ".txt");
-        for (Book book : books) {
-            if (book.getIsbn().equals(bok)) {
-                books.remove(book);
-            }
-        }
-        if (!Files.exists(path)) {
-            System.out.println("Boken finns ej. Försök igen!");
-        } else {
-            try {
-                Files.delete(path);
-                System.out.println(bok + " är nu borttagen.");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        Path path = Paths.get("database/books/" + bok.getIsbn() + ".txt");
+        books.removeIf(book -> book.getIsbn().equals(bok.getIsbn()));
+
+        bok.deleteFiles(path);
+        System.out.println(bok.getTitle() + " is now deleted.");
+        adminMenu();
     }
 
 }

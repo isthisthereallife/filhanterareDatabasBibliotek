@@ -121,4 +121,16 @@ public class Base {
             ex.printStackTrace();
         }
     }
+    public void deleteFiles(Path path){
+
+        if (!Files.exists(path)) {
+            System.out.println("That file does not exist! Try again!");
+        } else {
+            try {
+                Files.delete(path);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
