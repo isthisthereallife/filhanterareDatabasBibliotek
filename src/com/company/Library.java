@@ -86,8 +86,8 @@ public class Library {
             System.out.println("5: Quit");
             System.out.println("=============================");
 
-            String choice = "0";
-            String result = "";
+            String choice;
+            String result;
 
             choice = scan.nextLine();
 
@@ -108,10 +108,11 @@ public class Library {
                     identification();
                     break;
                 case "5":
+                    running = false;
                     break;
                 default:
                     System.out.println("Invalid choice. Try again!");
-                    adminMenu();
+
             }
 
         } while (running);
@@ -308,21 +309,33 @@ public class Library {
 
 
     public void addUser() {
-        Scanner scan = new Scanner(System.in);
-        System.out.println("Your name:");
-        String name = scan.nextLine();
+        String name = " ";
+        String address = " ";
+        String mail = " ";
+        String tel = " ";
+
+        boolean inputOk = false;
+        do {
+            System.out.println("Your name:");
+            name = scan.nextLine();
+            inputOk = checkIfStringOfLetters(name);
+        } while (!inputOk);
+
         System.out.println("Your address:");
-        String address = scan.nextLine();
+        address = scan.nextLine();
         System.out.println("Your mail: ");
-        String mail = scan.nextLine();
-        System.out.println("Telephone number:");
-        String tel = scan.nextLine();
+        mail = scan.nextLine();
+        do {
+            System.out.println("Telephone number:");
+            tel = scan.nextLine();
+            inputOk = checkIfStringOfNumbers(tel);
+        } while (!inputOk);
 
         users.add(new User(name, address, mail, tel));
         activeUser = users.get(users.size() - 1);
         String uniqueId = users.get(users.size() - 1).getId();
         users.get(users.size() - 1).writeToFile(("database/users/" + uniqueId), (users.get(users.size() - 1).toString()));
-        System.out.printf("Registration completed!\nYour unique id is: %s\n", uniqueId);
+        System.out.printf("Registration complete!\nYour unique id is: %s\n", uniqueId);
         userMenu();
     }
 
