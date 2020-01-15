@@ -1,6 +1,6 @@
-ISBN: 856733498222
-Title: Aurora
+ISBN: 9788371800566
+Title: Red Mars
 Author: Kim Stanley Robinson
-Year: 2015
+Year: 1992
 Genre: Science Fiction
 Status: Available

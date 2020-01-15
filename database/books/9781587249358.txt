@@ -1,0 +1,6 @@
+isbn: 9781587249358
+title: Living Dead in Dallas
+author: Charlaine Harris
+year: 2002
+genre: Thriller
+status: Available
