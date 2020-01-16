@@ -1,0 +1,6 @@
+ISBN: 9780553386790
+Title: A Game of Thrones
+Author: George R. R. Martin
+Year: Fantasy
+Genre: 1996
+Status: Available

@@ -1,0 +1,6 @@
+ISBN: 9780140058635
+Title: Congo
+Author: Michael Crichton
+Year: Science Fiction
+Genre: 1980
+Status: Available

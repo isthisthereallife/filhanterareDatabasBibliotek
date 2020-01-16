@@ -1,0 +1,6 @@
+ISBN: 9780784838068
+Title: Jurassic Park
+Author: Michael Crichton
+Year: Science Fiction
+Genre: 1990
+Status: Available
