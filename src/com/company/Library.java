@@ -8,10 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLOutput;
-import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class Library {
@@ -20,6 +17,7 @@ public class Library {
     private ArrayList<Book> books = new ArrayList<>();
     private Base base = new Base();
     private User activeUser;
+    boolean running = true;
 
 
     public Library() {
@@ -58,23 +56,23 @@ public class Library {
 
         String choice = scan.nextLine();
 
-
-        switch (choice) {
-            case "1":
-                activeUser = new User("admin", "admin", "admin", "admin");
-                adminMenu();
-                break;
-            case "2":
-                userLoginMenu();
-                break;
-            default:
-                System.out.println("Invalid choice. Try again!");
-                identification();
-        }
+        do {
+            switch (choice) {
+                case "1":
+                    activeUser = new User("admin", "admin", "admin", "admin");
+                    adminMenu();
+                    break;
+                case "2":
+                    userLoginMenu();
+                    break;
+                default:
+                    System.out.println("Invalid choice. Try again!");
+                    identification();
+            }
+        }while(running);
     }
 
     private void adminMenu() {
-        boolean running = true;
         activeUser = new User("admin", "admin", "admin", "admin");
         do {
             System.out.println("=============================");
@@ -82,7 +80,7 @@ public class Library {
             System.out.println("1: Add book to library");
             System.out.println("2: Remove book from library");
             System.out.println("3: Edit book from library");
-            System.out.println("4: Go back to main menu");
+            System.out.println("4: Go back to login");
             System.out.println("5: Quit");
             System.out.println("=============================");
 
@@ -94,6 +92,7 @@ public class Library {
             switch (choice) {
                 case "1":
                     addBook();
+                    running = rerunPrompt();
                     break;
                 case "2":
                     result = searchForBook("database/books");
@@ -103,6 +102,7 @@ public class Library {
                 case "3":
                     result = searchForBook("database/books");
                     searchResultChoiceMenu("edit", countOccurrences("isbn:", result), result);
+                    running = rerunPrompt();
                     break;
                 case "4":
                     identification();
@@ -155,17 +155,16 @@ public class Library {
                 break;
             }
         }
-        if (!loggedIn)
+        if (!loggedIn) {
             System.out.println("Login failed.");
-        userLoginMenu();
+            userLoginMenu();
+        }
     }
 
     private void userMenu() {
         Scanner scan = new Scanner(System.in);
         System.out.println("Welcome " + activeUser.getName() + "\nPlease choose operation:");
         System.out.println();
-
-        boolean running = true;
         String number = "0";
         do {
             System.out.println("1: View available books");
@@ -184,8 +183,17 @@ public class Library {
             }
             switch (number) {
                 case "1": {
+
+
+                        books.sort(Comparator.comparing(Book::getTitle));
+                        for (Book book : books) {
+                            if (book.getStatus().equals("Available"))
+                                System.out.println(book.listToString());
+                        }
+                        System.out.println();
+
                     //söker efter böcker med "AVAILABLE" som text
-                    System.out.println(activeUser.searchInFile("available", "database/books"));
+                    //System.out.println(activeUser.searchInFile("available", "database/books"));
                     running = rerunPrompt();
                     break;
                 }
@@ -202,9 +210,11 @@ public class Library {
                     break;
                 }
                 case "4": {
-                    //söker efter böcker med en tom sträng
-                    System.out.println(activeUser.searchInFile("", "database/books"));
+                    books.sort(Comparator.comparing(Book::getTitle));
+                    for (Book book : books)
+                        System.out.println(book.listToString());
 
+                    System.out.println(" ");
                     running = rerunPrompt();
                     break;
                 }
@@ -326,9 +336,8 @@ public class Library {
         System.out.println("Your mail: ");
         mail = scan.nextLine();
         do {
-            System.out.println("Telephone number:");
-            tel = scan.nextLine();
-            inputOk = checkIfStringOfNumbers(tel);
+            System.out.println("Your telephone number:");
+            inputOk = checkIfStringOfNumbers(scan.nextLine());
         } while (!inputOk);
 
         users.add(new User(name, address, mail, tel));
@@ -340,36 +349,33 @@ public class Library {
     }
 
     private boolean checkIfStringOfNumbers(String stringToCheck) {
-        boolean result = true;
-        Character[] charList = new Character[stringToCheck.length() - 1];
-        for (int i = 0; i < stringToCheck.length() - 1; i++) {
+        stringToCheck = stringToCheck.replace(" ","");
+        Character[] charList = new Character[stringToCheck.length()];
+        for (int i = 0; i < stringToCheck.length(); i++) {
             charList[i] = stringToCheck.charAt(i);
         }
         for (Character c : charList) {
-            //kolla om c är en siffra
             if (!Character.isDigit(c)) {
                 System.out.println("Please enter only numbers.");
                 return false;
             }
         }
-        return result;
+        return true;
     }
 
     private boolean checkIfStringOfLetters(String stringToCheck) {
-        boolean result = true;
         stringToCheck = stringToCheck.replace(" ", "");
-        Character[] charList = new Character[stringToCheck.length() - 1];
-        for (int i = 0; i < stringToCheck.length() - 1; i++) {
+        Character[] charList = new Character[stringToCheck.length()];
+        for (int i = 0; i < stringToCheck.length(); i++) {
             charList[i] = stringToCheck.charAt(i);
         }
         for (Character c : charList) {
-            //kolla om c är en siffra
             if (!Character.isLetter(c)) {
                 System.out.println("Please enter only letters.");
                 return false;
             }
         }
-        return result;
+        return true;
     }
 
     private boolean checkForDuplicates(String stringToCheck) {
@@ -436,7 +442,7 @@ public class Library {
     }
 
     public void editBook(Book bookToEdit) {
-        boolean running = true;
+        boolean runningEditBook = true;
         boolean inputOk = false;
         do {
             String input = "";
@@ -485,13 +491,13 @@ public class Library {
                     System.out.println("The genre is now changed to " + bookToEdit.getGenre());
                     break;
                 case "0":
-                    running = false;
+                    runningEditBook = false;
                     break;
                 default:
                     System.out.println("Invalid choice. Please try again");
                     break;
             }
-        } while (running);
+        } while (runningEditBook);
         adminMenu();
     }
 
