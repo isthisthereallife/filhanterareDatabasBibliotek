@@ -8,10 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLOutput;
-import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class Library {
@@ -184,6 +181,7 @@ public class Library {
             }
             switch (number) {
                 case "1": {
+                    books.sort(Comparator.comparing(Book::getTitle));
                     for(Book book : books){
                         if(book.getStatus().equals("Available"))
                             System.out.println(book.listToString());
@@ -207,6 +205,7 @@ public class Library {
                     break;
                 }
                 case "4": {
+                    books.sort(Comparator.comparing(Book::getTitle));
                     for(Book book : books)
                         System.out.println(book.listToString());
 
