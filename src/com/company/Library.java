@@ -365,6 +365,8 @@ public class Library {
 
     private boolean checkIfStringOfLetters(String stringToCheck) {
         stringToCheck = stringToCheck.replace(" ", "");
+        stringToCheck = stringToCheck.replace(".", "");
+        stringToCheck = stringToCheck.replace("-", "");
         Character[] charList = new Character[stringToCheck.length()];
         for (int i = 0; i < stringToCheck.length(); i++) {
             charList[i] = stringToCheck.charAt(i);
@@ -423,7 +425,7 @@ public class Library {
             inputOk = checkIfStringOfLetters(genre);
         } while (!inputOk);
 
-        books.add(new Book(isbn, title, author, genre, year));
+        books.add(new Book(isbn, title, author, year, genre));
         books.get(books.size() - 1).writeToFile(("database/books/" + isbn), (books.get(books.size() - 1).toString()));
         System.out.println("Book added to the library!");
         adminMenu();
