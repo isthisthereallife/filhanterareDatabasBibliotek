@@ -1,0 +1,6 @@
+ISBN: 9789173488297
+Title: A Clash of Kings
+Author: George R. R. Martin
+Year: Fantasy
+Genre: 1998
+Status: Available

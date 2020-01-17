@@ -1,0 +1,6 @@
+ISBN: 9780553390568
+Title: A Dance with Dragons
+Author: George R. R. Martin
+Year: Fantasy
+Genre: 2011
+Status: Available
