@@ -77,8 +77,8 @@ public class Author extends Base {
 
     public String toString() {
         String myBooks = "";
-        for (Book bok : this.bibliography) {
-            myBooks = myBooks.concat(bok.getIsbn() + " ");
+        for (Book aBook : this.bibliography) {
+            myBooks = myBooks.concat(aBook.getIsbn() + " ");
         }
         return "first name: " + this.firstName + "\nlast name: " + this.lastName + "\nauthorId: " + this.authorId +
                 "\nbibliography: " + myBooks;
