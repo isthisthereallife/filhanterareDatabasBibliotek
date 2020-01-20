@@ -1,0 +1,4 @@
+first name: Philip
+last name: K. Dick
+authorId: 11241037117010971124
+bibliography: 9783596905669 9788374692311 

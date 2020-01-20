@@ -1,0 +1,4 @@
+first name: Mary
+last name: Gaitskill
+authorId: 10751045115311651080
+bibliography: 9780241383117 

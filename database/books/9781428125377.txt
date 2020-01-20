@@ -1,6 +1,6 @@
 ISBN: 9781428125377
 Title: Look To Windward
-Author: Iain M. Banks
+authorId: 98111349879891069
 Year: 2000
 Genre: Science Fiction
 Status: Available

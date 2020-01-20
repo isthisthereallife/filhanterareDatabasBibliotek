@@ -1,0 +1,4 @@
+first name: Michael
+last name: Crichton
+authorId: 10081074116510191167
+bibliography: 9780140058635 9780784838068 

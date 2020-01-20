@@ -1,6 +1,6 @@
 ISBN: 9780261102941
 Title: The Return of the King
-Author: J. R. R. Tolkien
+authorId: 100711051124980991
 Year: 1955
 Genre: Fantasy
 Status: Available

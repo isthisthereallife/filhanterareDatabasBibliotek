@@ -1,6 +1,6 @@
 ISBN: 9788445070253
 Title: The Dispossessed
-Author: Ursula K. Le Guin
+authorId: 112199011751144976
 Year: 1974
 Genre: Science Fiction
 Status: Available

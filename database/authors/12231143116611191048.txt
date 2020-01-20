@@ -1,0 +1,4 @@
+first name: Bram
+last name: Stoker
+authorId: 12231143116611191048
+bibliography: 9781785945168 

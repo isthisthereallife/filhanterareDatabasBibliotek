@@ -2,11 +2,11 @@ package com.company;
 
 import java.util.List;
 
-public class Book extends Base{
+public class Book extends Base {
 
     private String isbn;
     private String title;
-    private String author;
+    private String authorId;
     private String year;
     private String genre;
     private String status;
@@ -17,7 +17,7 @@ public class Book extends Base{
     public Book(String isbn, String title, String author, String year, String genre) {
         this.isbn = isbn;
         this.title = title;
-        this.author = author;
+        this.authorId = author;
         this.year = year;
         this.genre = genre;
         this.status = "Available";
@@ -25,15 +25,15 @@ public class Book extends Base{
 
     public Book(List<String> readFromFile) {
         int i = 0;
-        String[] stringsInfo = new String [6];
-        for(String content:readFromFile){
+        String[] stringsInfo = new String[6];
+        for (String content : readFromFile) {
             String trim = content.substring(content.indexOf(":") + 1).trim();
             stringsInfo[i] = trim;
             i++;
         }
         this.isbn = stringsInfo[0];
         this.title = stringsInfo[1];
-        this.author = stringsInfo[2];
+        this.authorId = stringsInfo[2];
         this.year = stringsInfo[3];
         this.genre = stringsInfo[4];
         this.status = stringsInfo[5];
@@ -77,12 +77,12 @@ public class Book extends Base{
         this.title = title;
     }
 
-    public String getAuthor() {
-        return author;
+    public String getAuthorId() {
+        return authorId;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setAuthorId(String author) {
+        this.authorId = author;
     }
 
     public String getYear() {
@@ -101,19 +101,23 @@ public class Book extends Base{
         this.genre = genre;
     }
 
-    public void setStatus(String status){this.status = status;}
-    public String getStatus(){
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getStatus() {
         return this.status;
     }
 
     public String listToString() {
-        return title + " by " + author + " (" + year + ") - ISBN: " + isbn;
+
+        return title + " by " + authorId + " (" + year + ") - ISBN: " + isbn;
     }
 
     @Override
     public String toString() {
-        return "isbn: " + isbn + "\ntitle: " + title + "\nauthor: " + author +
-                "\nyear: " + year + "\ngenre: " + genre + "\nstatus: "+status;
+        return "isbn: " + isbn + "\ntitle: " + title + "\nauthor: " + authorId +
+                "\nyear: " + year + "\ngenre: " + genre + "\nstatus: " + status;
 
     }
 }

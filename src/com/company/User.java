@@ -60,12 +60,10 @@ public class User extends Base {
 
     private String idGenerator() {
         String result = "";
-        Random randomizer = new Random();
         for (int i = 0; i < 5; i++) {
-            char a = (char) (randomizer.nextInt(26) + 'a');
-            int b = (int) (randomizer.nextInt(10));
-            result = result.concat(String.valueOf(a));
-            result = result.concat(String.valueOf(b));
+            result = result.concat(String.valueOf(new java.util.Random().nextInt(26) + 'a'));
+            result = result.concat(String.valueOf(new java.util.Random().nextInt(10)));
+
         }
         return result;
     }
@@ -81,14 +79,14 @@ public class User extends Base {
         /* splitta strängen vid mellanslag,
         sök i disk efter isbn
         */
-        if(!this.activeLoans.equals("")){
-        String isbnString = this.activeLoans.substring(this.activeLoans.indexOf(":") + 1);
+        if (!this.activeLoans.equals("")) {
+            String isbnString = this.activeLoans.substring(this.activeLoans.indexOf(":") + 1);
 
-        String[] isbnStringList = isbnString.split(" ");
-        for (String s : isbnStringList) {
-            //skicka strängen tilll readFromDisk, hitta filen som har denna sträng i sig
-            result = result.concat(searchInFile(s, "database/books"));
-        }
+            String[] isbnStringList = isbnString.split(" ");
+            for (String s : isbnStringList) {
+                //skicka strängen tilll readFromDisk, hitta filen som har denna sträng i sig
+                result = result.concat(searchInFile(s, "database/books"));
+            }
         }
 
         return result;
@@ -106,10 +104,11 @@ public class User extends Base {
     public String getName() {
         return this.name;
     }
+
     @Override
     public String toString() {
         return "name: " + this.name + "\naddress: " + this.address + "\nmail: " + this.mail +
-                "\ntel: " + this.tel + "\nactiveLoans: " + this.activeLoans + "\nuniqueId: "+this.uniqueId;
+                "\ntel: " + this.tel + "\nactiveLoans: " + this.activeLoans + "\nuniqueId: " + this.uniqueId;
 
     }
 }

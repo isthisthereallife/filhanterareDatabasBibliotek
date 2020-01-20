@@ -1,6 +1,6 @@
 ISBN: 9782266128490
 Title: Green Mars
-Author: Kim Stanley Robinson
+authorId: 12131085120511211206
 Year: 1993
 Genre: Science Fiction
 Status: Available
