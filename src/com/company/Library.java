@@ -2,7 +2,9 @@ package com.company;
 
 import javax.print.DocFlavor;
 import javax.xml.xpath.XPath;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,21 +22,36 @@ public class Library {
     boolean running = true;
 
 
-    public Library() {
+    public Library() throws IOException {
         load();
         identification();
     }
 
-    private void load() {
+    private void load() throws IOException {
         loadBooks();
         loadUsers();
+        loadBorrowedBooks();
     }
 
-    private void loadBooks() {
+    private void loadBooks() throws IOException {
         File folderPath = new File("database/books/");
+        String isbn = "";
         for (File file : base.readFromFolder(folderPath)) {
+            BufferedReader brTest = new BufferedReader(new FileReader(file));
+            String firstLine = brTest.readLine();
             final Path path = file.toPath();
-            books.add(new Book(base.readFromFile(path)));
+            String fileName = String.valueOf(path);
+            books.add(new Book(base.readFromFile(path), fileName));
+            String isbnFromFile = firstLine.substring(firstLine.indexOf(":") + 1).trim();
+            if(isbn.contains(isbnFromFile)){
+                books.remove(books.size()-1);
+                for(Book book : books){
+                    if(book.getIsbn().equals(isbnFromFile)){
+                        book.setQuantity(book.getQuantity() + 1);
+                    }
+                }
+            }
+            isbn = isbn.concat(" " + isbnFromFile);
         }
     }
 
@@ -43,6 +60,18 @@ public class Library {
         for (File file : base.readFromFolder(folderPath)) {
             final Path path = file.toPath();
             users.add(new User(base.readFromFile(path)));
+        }
+    }
+
+    private void loadBorrowedBooks() {
+        String loans = "";
+        for(User user : users) {
+            if(user.getActiveLoans() != null || !user.getActiveLoans().trim().isEmpty())
+                loans = loans.trim().concat(" " + user.getActiveLoans());
+        }
+        for(Book book : books) {
+            if(loans.contains(book.getIsbn()))
+                book.setQuantity(book.getQuantity() - 1);
         }
     }
 
@@ -187,7 +216,7 @@ public class Library {
 
                         books.sort(Comparator.comparing(Book::getTitle));
                         for (Book book : books) {
-                            if (book.getStatus().equals("Available"))
+                            if (book.getQuantity() > 0)
                                 System.out.println(book.listToString());
                         }
                         System.out.println();
@@ -274,7 +303,8 @@ public class Library {
     }
 
     private void borrowBook(Book bookToBorrow) {
-        bookToBorrow.setStatus("Unavailable");
+        int newQuantity = bookToBorrow.getQuantity() - 1;
+        bookToBorrow.setQuantity(newQuantity);
         String userFileName = "database/users/" + activeUser.getId() + ".txt";
         String bookFileName = "database/books/" + bookToBorrow.getIsbn() + ".txt";
         String bookLineToEdit = "available";
@@ -287,7 +317,8 @@ public class Library {
     }
 
     private void returnBook(Book bookToReturn) {
-        bookToReturn.setStatus("Available");
+        int newQuantity = bookToReturn.getQuantity() - 1;
+        bookToReturn.setQuantity(newQuantity);
         String userFileName = "database/users/" + activeUser.getId() + ".txt";
         String bookFileName = "database/books/" + bookToReturn.getIsbn() + ".txt";
         String bookLineToEdit = "available";
