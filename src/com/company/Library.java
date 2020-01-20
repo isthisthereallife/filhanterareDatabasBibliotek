@@ -44,22 +44,22 @@ public class Library {
     }
 
     public void updateBooks() {
-        for (Book bok : books) {
-            bok.editFile("database/books/" + bok.getIsbn() + ".txt", "author:", "authorId: " + bok.getAuthorId());
+        for (Book aBook : books) {
+            aBook.editFile("database/books/" + aBook.getIsbn() + ".txt", "author:", "authorId: " + aBook.getAuthorId());
 
         }
     }
 
-    public void convertAuthorStringsToIds(List<Book> boklistan, List<Author> authorlistan) {
-        for (Book bok : boklistan) {
+    public void convertAuthorStringsToIds(List<Book> booklist, List<Author> authorlist) {
+        for (Book aBook : booklist) {
             boolean foundAuthor = false;
-            String author = bok.getAuthorId();
+            String author = aBook.getAuthorId();
 
-            for (Author forfattare : authorlistan) {
+            for (Author anAuthor : authorlist) {
                 //om det finns en författare med samma namn
-                if (forfattare.getFirstName().concat(" " + forfattare.getLastName()).equalsIgnoreCase(author)) {
-                    forfattare.addToBibliography(bok);
-                    bok.setAuthorId(forfattare.getAuthorId());
+                if (anAuthor.getFirstName().concat(" " + anAuthor.getLastName()).equalsIgnoreCase(author)) {
+                    anAuthor.addToBibliography(aBook);
+                    aBook.setAuthorId(anAuthor.getAuthorId());
                     foundAuthor = true;
                 }
             }
@@ -70,11 +70,11 @@ public class Library {
                 for (int i = 1; i < name.size(); i++) {
                     name.set(0, name.get(0).concat(" " + name.get(i)));
                 }
-                authorlistan.add(new Author(fname, name.get(0), bok));
-                bok.setAuthorId(authorlistan.get(authorlistan.size() - 1).getAuthorId());
+                authorlist.add(new Author(fname, name.get(0), aBook));
+                aBook.setAuthorId(authorlist.get(authorlist.size() - 1).getAuthorId());
             } else if (!foundAuthor) {
-                authorlistan.add(new Author(author, "", bok));
-                bok.setAuthorId(authorlistan.get(authorlistan.size() - 1).getAuthorId());
+                authorlist.add(new Author(author, "", aBook));
+                aBook.setAuthorId(authorlist.get(authorlist.size() - 1).getAuthorId());
             }
         }
 
@@ -268,8 +268,8 @@ public class Library {
                         System.out.println("Authors in library: ");
                         for (Author auth : authors) {
                             System.out.println(auth.getFirstName() + " " + auth.getLastName());
-                            for (Book bok : auth.getBibliography()) {
-                                System.out.println(bok.getTitle());
+                            for (Book aBook : auth.getBibliography()) {
+                                System.out.println(aBook.getTitle());
                             }
                             System.out.println();
                         }
@@ -591,13 +591,13 @@ public class Library {
 
     }
 
-    public void deleteBook(Book bok) {
+    public void deleteBook(Book aBook) {
 
-        Path path = Paths.get("database/books/" + bok.getIsbn() + ".txt");
-        books.removeIf(book -> book.getIsbn().equals(bok.getIsbn()));
+        Path path = Paths.get("database/books/" + aBook.getIsbn() + ".txt");
+        books.removeIf(book -> book.getIsbn().equals(aBook.getIsbn()));
 
-        bok.deleteFiles(path);
-        System.out.println(bok.getTitle() + " is now deleted.");
+        aBook.deleteFiles(path);
+        System.out.println(aBook.getTitle() + " is now deleted.");
         adminMenu();
     }
 
