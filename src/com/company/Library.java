@@ -354,21 +354,79 @@ public class Library {
         String address = " ";
         String mail = " ";
         String tel = " ";
-
         boolean inputOk = false;
         do {
             System.out.println("Your name:");
             name = scan.nextLine();
             inputOk = checkIfStringOfLetters(name);
+            if (name.length() < 1 || name.isBlank()){
+                System.out.println("Your name must be at least one character!");
+                inputOk = false;
+            }
         } while (!inputOk);
 
-        System.out.println("Your address:");
-        address = scan.nextLine();
-        System.out.println("Your mail: ");
-        mail = scan.nextLine();
+        do {
+            System.out.println("Your address:");
+            address = scan.nextLine();
+            if (address.matches("[0-9]+")){
+                System.out.println("Your adress can not only contain numbers!");
+                inputOk = false;
+            }
+            else if (address.length() < 1 || address.isBlank()) {
+                System.out.println("Your adress must be at least one character!");
+                inputOk = false;
+            }
+            else if (!address.matches(".*\\d.*")){
+                System.out.println("There must be at least one number in your adress!");
+                inputOk = false;
+            } else {
+                inputOk = true;
+            }
+        } while (!inputOk);
+
+        do {
+            System.out.println("Your zipcode: ");
+            String zipCode = scan.nextLine();
+            inputOk = checkIfStringOfNumbers(zipCode);
+            if (zipCode.length() < 5 || zipCode.isBlank()){
+                System.out.println("Your zipCode must be at least 5 digits!");
+                inputOk = false;
+            }
+            else{
+                address += " " + zipCode;
+            }
+        } while (!inputOk);
+        do {
+            System.out.println("Enter your city: ");
+            String city = scan.nextLine();
+            inputOk = checkIfStringOfLetters(city);
+            if (city.length() < 1 || city.isBlank()){
+                System.out.println("Your city must be at least one letter!");
+                inputOk = false;
+            }
+            else{
+                address += " " + city;
+            }
+        } while (!inputOk);
+        do {
+            System.out.println("Your mail: ");
+            mail = scan.nextLine();
+            if (isValid(mail)){
+                inputOk = true;
+            }
+            else{
+                System.out.println("Your email adress must contain an @ character and a ., example: hello@hi.com");
+                inputOk = false;
+            }
+        } while (!inputOk);
         do {
             System.out.println("Your telephone number:");
-            inputOk = checkIfStringOfNumbers(scan.nextLine());
+            tel = scan.nextLine();
+            inputOk = checkIfStringOfNumbers(tel);
+            if (tel.length() < 5 || tel.isBlank()){
+                System.out.println("Your telephone number must be at least 5 digits!");
+                inputOk = false;
+            }
         } while (!inputOk);
 
         users.add(new User(name, address, mail, tel));
@@ -418,7 +476,18 @@ public class Library {
             return false;
         } else return true;
     }
+    private boolean isValid(String mail)
+    {
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+
+                "[a-zA-Z0-9_+&*-]+)*@" +
+                "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
+                "A-Z]{2,7}$";
 
+        Pattern pat = Pattern.compile(emailRegex);
+        if (mail == null)
+            return false;
+        return pat.matcher(mail).matches();
+    }
     public void addBook() {
         boolean inputOk = false;
         String isbn;
