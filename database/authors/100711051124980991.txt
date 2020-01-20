@@ -1,0 +1,4 @@
+first name: J.
+last name: R. R. Tolkien
+authorId: 100711051124980991
+bibliography: 9780261102941 9788071457060 9788372980618 

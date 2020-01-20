@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.SQLOutput;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -17,6 +16,7 @@ public class Library {
     Scanner scan = new Scanner(System.in);
     private ArrayList<User> users = new ArrayList<>();
     private ArrayList<Book> books = new ArrayList<>();
+    private ArrayList<Author> authors = new ArrayList<>();
     private Base base = new Base();
     private User activeUser;
     boolean running = true;
@@ -30,8 +30,56 @@ public class Library {
     private void load() throws IOException {
         loadBooks();
         loadUsers();
+        loadAuthors();
+        /*convertAuthorStringsToIds(books,authors);
+        updateBooks();
+        createAuthors();*/
         loadBorrowedBooks();
     }
+
+    public void createAuthors() {
+        for (Author aut : authors) {
+            aut.writeToFile("database/authors/" + aut.getAuthorId(), aut.toString());
+        }
+    }
+
+    public void updateBooks() {
+        for (Book aBook : books) {
+            aBook.editFile("database/books/" + aBook.getIsbn() + ".txt", "author:", "authorId: " + aBook.getAuthorId());
+
+        }
+    }
+
+    public void convertAuthorStringsToIds(List<Book> booklist, List<Author> authorlist) {
+        for (Book aBook : booklist) {
+            boolean foundAuthor = false;
+            String author = aBook.getAuthorId();
+
+            for (Author anAuthor : authorlist) {
+                //om det finns en författare med samma namn
+                if (anAuthor.getFirstName().concat(" " + anAuthor.getLastName()).equalsIgnoreCase(author)) {
+                    anAuthor.addToBibliography(aBook);
+                    aBook.setAuthorId(anAuthor.getAuthorId());
+                    foundAuthor = true;
+                }
+            }
+            if (author.contains(" ") && !foundAuthor) {
+
+                ArrayList<String> name = new ArrayList<>(List.of(author.split(" ")));
+                var fname = name.remove(0);
+                for (int i = 1; i < name.size(); i++) {
+                    name.set(0, name.get(0).concat(" " + name.get(i)));
+                }
+                authorlist.add(new Author(fname, name.get(0), aBook));
+                aBook.setAuthorId(authorlist.get(authorlist.size() - 1).getAuthorId());
+            } else if (!foundAuthor) {
+                authorlist.add(new Author(author, "", aBook));
+                aBook.setAuthorId(authorlist.get(authorlist.size() - 1).getAuthorId());
+            }
+        }
+
+    }
+
 
     private void loadBooks() throws IOException {
         File folderPath = new File("database/books/");
@@ -63,6 +111,14 @@ public class Library {
         }
     }
 
+    private void loadAuthors() {
+        File folderPath = new File("database/authors/");
+        for (File file : base.readFromFolder(folderPath)) {
+            final Path path = file.toPath();
+            authors.add(new Author(base.readFromFile(path), books));
+        }
+    }
+
     private void loadBorrowedBooks() {
         String loans = "";
         for(User user : users) {
@@ -76,16 +132,10 @@ public class Library {
     }
 
     public void identification() {
-        System.out.println("================================");
-        System.out.println("Who would you like to login as?");
-        System.out.println("1: Admin");
-        System.out.println("2: User");
-        System.out.println("================================");
-
-
-        String choice = scan.nextLine();
 
         do {
+            System.out.println("================================\nWelcome to the library!\nWho would you like to login as?\n1: Admin\n2: User\n================================");
+            String choice = scan.nextLine();
             switch (choice) {
                 case "1":
                     activeUser = new User("admin", "admin", "admin", "admin");
@@ -98,7 +148,7 @@ public class Library {
                     System.out.println("Invalid choice. Try again!");
                     identification();
             }
-        }while(running);
+        } while (running);
     }
 
     private void adminMenu() {
@@ -212,17 +262,25 @@ public class Library {
             }
             switch (number) {
                 case "1": {
-
-
+                    System.out.println("Sort by author?\n1. Yes\n2. No");
+                    number = scan.nextLine();
+                    if (number.equals("1")) {
+                        System.out.println("Authors in library: ");
+                        for (Author auth : authors) {
+                            System.out.println(auth.getFirstName() + " " + auth.getLastName());
+                            for (Book aBook : auth.getBibliography()) {
+                                System.out.println(aBook.getTitle());
+                            }
+                            System.out.println();
+                        }
+                    } else {
                         books.sort(Comparator.comparing(Book::getTitle));
                         for (Book book : books) {
                             if (book.getQuantity() > 0)
                                 System.out.println(book.listToString());
                         }
-                        System.out.println();
-
-                    //söker efter böcker med "AVAILABLE" som text
-                    //System.out.println(activeUser.searchInFile("available", "database/books"));
+                    }
+                    System.out.println();
                     running = rerunPrompt();
                     break;
                 }
@@ -438,7 +496,7 @@ public class Library {
     }
 
     private boolean checkIfStringOfNumbers(String stringToCheck) {
-        stringToCheck = stringToCheck.replace(" ","");
+        stringToCheck = stringToCheck.replace(" ", "");
         Character[] charList = new Character[stringToCheck.length()];
         for (int i = 0; i < stringToCheck.length(); i++) {
             charList[i] = stringToCheck.charAt(i);
@@ -533,13 +591,13 @@ public class Library {
 
     }
 
-    public void deleteBook(Book bok) {
+    public void deleteBook(Book aBook) {
 
-        Path path = Paths.get("database/books/" + bok.getIsbn() + ".txt");
-        books.removeIf(book -> book.getIsbn().equals(bok.getIsbn()));
+        Path path = Paths.get("database/books/" + aBook.getIsbn() + ".txt");
+        books.removeIf(book -> book.getIsbn().equals(aBook.getIsbn()));
 
-        bok.deleteFiles(path);
-        System.out.println(bok.getTitle() + " is now deleted.");
+        aBook.deleteFiles(path);
+        System.out.println(aBook.getTitle() + " is now deleted.");
         adminMenu();
     }
 
@@ -561,14 +619,14 @@ public class Library {
                     break;
                 case "2":
                     do {
-                        System.out.println("Current author: " + bookToEdit.getAuthor());
+                        System.out.println("Current author: " + bookToEdit.getAuthorId());
                         System.out.println("New author:");
                         input = scan.nextLine();
                         inputOk = checkIfStringOfLetters(input);
                     } while (!inputOk);
                     bookToEdit.editFile("database/books/" + bookToEdit.getIsbn() + ".txt", "author", "author: " + input);
-                    bookToEdit.setAuthor(input);
-                    System.out.println("The author is now changed to " + bookToEdit.getAuthor());
+                    bookToEdit.setAuthorId(input);
+                    System.out.println("The author is now changed to " + bookToEdit.getAuthorId());
                     break;
                 case "3":
                     do {

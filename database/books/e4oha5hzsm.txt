@@ -1,6 +1,6 @@
 ISBN: 9788483651643
 Title: All Together Dead
-Author: Charlaine Harris
+authorId: 97798310589731049
 Year: 2007
 Genre: Thriller
 Status: Available

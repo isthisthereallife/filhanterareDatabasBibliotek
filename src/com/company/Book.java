@@ -3,12 +3,12 @@ package com.company;
 import java.util.List;
 import java.util.Random;
 
-public class Book extends Base{
+public class Book extends Base {
 
     private String id;
     private String isbn;
     private String title;
-    private String author;
+    private String authorId;
     private String year;
     private String genre;
     private int quantity;
@@ -19,7 +19,7 @@ public class Book extends Base{
     public Book(String isbn, String title, String author, String year, String genre) {
         this.isbn = isbn;
         this.title = title;
-        this.author = author;
+        this.authorId = author;
         this.year = year;
         this.genre = genre;
         this.quantity = 1;
@@ -37,7 +37,7 @@ public class Book extends Base{
         this.id = idFromFile;
         this.isbn = stringsInfo[0];
         this.title = stringsInfo[1];
-        this.author = stringsInfo[2];
+        this.authorId = stringsInfo[2];
         this.year = stringsInfo[3];
         this.genre = stringsInfo[4];
         this.quantity = 1;
@@ -81,12 +81,12 @@ public class Book extends Base{
         this.title = title;
     }
 
-    public String getAuthor() {
-        return author;
+    public String getAuthorId() {
+        return authorId;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setAuthorId(String author) {
+        this.authorId = author;
     }
 
     public String getYear() {
@@ -111,7 +111,8 @@ public class Book extends Base{
     }
 
     public String listToString() {
-        return title + " by " + author + " (" + year + ") - ISBN: " + isbn;
+
+        return title + " by " + authorId + " (" + year + ") - ISBN: " + isbn;
     }
 
     private void idGenerator() {
@@ -130,7 +131,7 @@ public class Book extends Base{
 
     @Override
     public String toString() {
-        return "isbn: " + isbn + "\ntitle: " + title + "\nauthor: " + author +
+        return "isbn: " + isbn + "\ntitle: " + title + "\nauthor: " + authorId +
                 "\nyear: " + year + "\ngenre: " + genre + "\nstatus: "+quantity;
 
     }

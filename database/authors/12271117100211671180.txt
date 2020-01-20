@@ -1,0 +1,4 @@
+first name: Octavia
+last name: E. Butler
+authorId: 12271117100211671180
+bibliography: 9780807083055 

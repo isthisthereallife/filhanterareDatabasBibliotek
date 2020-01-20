@@ -1,6 +1,6 @@
 ISBN: 9783641116415
 Title: Blue Mars
-Author: Kim Stanley Robinson
+authorId: 12131085120511211206
 Year: 1996
 Genre: Science Fiction
 Status: Available
