@@ -80,7 +80,7 @@ public class Library {
 
     }
 
-    private void loadBooks() {
+
     private void loadBooks() throws IOException {
         File folderPath = new File("database/books/");
         String isbn = "";
