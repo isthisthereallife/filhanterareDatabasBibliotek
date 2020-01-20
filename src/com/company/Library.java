@@ -354,15 +354,15 @@ public class Library {
         } while (!inputOk);
 
         do {
-            System.out.println("Your postcode: ");
-            String postCode = scan.nextLine();
-            inputOk = checkIfStringOfNumbers(postCode);
-            if (postCode.length() < 5 || postCode.isBlank()){
-                System.out.println("Your postcode must be at least 5 digits!");
+            System.out.println("Your zipcode: ");
+            String zipCode = scan.nextLine();
+            inputOk = checkIfStringOfNumbers(zipCode);
+            if (zipCode.length() < 5 || zipCode.isBlank()){
+                System.out.println("Your zipCode must be at least 5 digits!");
                 inputOk = false;
             }
             else{
-                address += " " + postCode;
+                address += " " + zipCode;
             }
         } while (!inputOk);
         do {
