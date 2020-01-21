@@ -609,9 +609,13 @@ public class Library {
     public void addBook() {
         boolean inputOk = false;
         boolean isDuplicate;
+        String authorChoice;
         String isbn;
         String title;
-        String author;
+        String author = null;
+        String authorFname;
+        String authorLname;
+        String authorId;
         String year;
         String genre;
         do {
@@ -648,15 +652,40 @@ public class Library {
             } while (!inputOk);
 
         do {
-            System.out.println("Author: ");
-            author = scan.nextLine();
-            inputOk = checkIfStringOfLetters(author);
-            if (author.length() < 1 || author.isBlank()) {
-                System.out.println("The authors name must contain at least one character!");
-                inputOk = false;
+            int counter = 1;
+            for (Author authorObj : authors){
+                System.out.println("[" + counter + "]" + " " + authorObj.getFirstName() + " " + authorObj.getLastName());
+                counter++;
+            }
+            System.out.println("[" + counter + "] Add new author");
+            System.out.println("Choose one of the authors above or add a new:");
+            authorChoice = scan.nextLine();
+            int choice = Integer.parseInt(authorChoice);
+            if(choice < counter) {
+                for (int i = 0; i < authors.size(); i++) {
+                    if (choice - 1 == i) {
+                        author = authors.get(i).getAuthorId();
+                        inputOk = true;
+                    }
+                }
+            } else if (choice == counter) {
+                System.out.println("Type in Author's first name:");
+                authorFname = scan.nextLine();
+                inputOk = checkIfStringOfLetters(authorFname);
+                if (authorFname.length() < 1 || authorFname.isBlank()) {
+                    System.out.println("The authors name must contain at least one character!");
+                    inputOk = false;
+                }
+                System.out.println("Type in Author's last name:");
+                authorLname = scan.nextLine();
+                inputOk = checkIfStringOfLetters(authorLname);
+                if (authorLname.length() < 1 || authorLname.isBlank()) {
+                    System.out.println("The authors name must contain at least one character!");
+                    inputOk = false;
+                }
+                authorId = base.makeNewId();
             }
         } while (!inputOk);
-
         boolean yearCheck;
         do {
             System.out.println("Year: ");
@@ -672,18 +701,21 @@ public class Library {
         } while (!yearCheck);
 
         int genreCounter = 1;
-        System.out.println("All existing genres in the library, pick one or add a new one");
         for (Genre genreObj : genres){
-            System.out.println(genreCounter + " " + genreObj.getName());
+            System.out.println("[" + genreCounter + "]" + " " + genreObj.getName());
             genreCounter++;
         }
-        System.out.println(genres.size() + 1 + " " + "Add new genre");
-        int genreChoice = scan.nextInt();
-        for (int i = 0; i < books.size(); i++){
-            if (genreChoice - 1 == i){
-                genre = books.get(i).getGenre();
+        int newGenre = genres.size() + 1;
+        System.out.println("[" + newGenre + "]" + " " + "Add new genre");
+        System.out.println("All existing genres in the library, pick one or add a new one");
+        String genreChoice = scan.nextLine();
+        int choice = Integer.parseInt(genreChoice);
+        if (choice < genreCounter) {
+            for (int i = 0; i < books.size(); i++) {
+                if (choice - 1 == i) {
+                    genre = books.get(i).getGenre();
+                }
             }
-            
         }
 
             genre = scan.nextLine();
