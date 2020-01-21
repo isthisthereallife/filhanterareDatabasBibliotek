@@ -1,0 +1,6 @@
+ISBN: 9788071457060
+Title: The Fellowship of the Ring
+authorId: 100711051124980991
+Year: 1954
+genre: 10961078102110991172
+Status: Available

@@ -1,0 +1,6 @@
+ISBN: 9788374692311
+Title: Do Androids Dream of Electric Sheep
+authorId: 11241037117010971124
+Year: 1968
+genre: 1042108199611571077
+Status: Available

@@ -2,5 +2,5 @@ name: Steffe Larsson
 address: Gatgatan 3 213 84 Malmö
 mail: steffe823882@gmail.com
 tel: 0702342382
-activeLoans: 39612786387 732498732498
+activeLoans: 
 uniqueId: tohhdu8732fptehu234eo

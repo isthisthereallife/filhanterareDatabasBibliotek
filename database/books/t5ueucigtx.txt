@@ -1,0 +1,6 @@
+ISBN: 9789173488297
+Title: A Clash of Kings
+authorId: 1207118110879881152
+Year: 1998
+genre: 10961078102110991172
+Status: Available

@@ -1,0 +1,6 @@
+ISBN: 9783453129092
+Title: Excession
+authorId: 98111349879891069
+Year: 1996
+genre: 1042108199611571077
+Status: Available

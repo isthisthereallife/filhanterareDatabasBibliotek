@@ -1,0 +1,6 @@
+ISBN: 9785271429675
+Title: Club Dead
+authorId: 97798310589731049
+Year: 2003
+genre: 11531186106910091210
+Status: Available

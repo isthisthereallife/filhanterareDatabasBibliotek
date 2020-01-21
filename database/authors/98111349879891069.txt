@@ -1,0 +1,4 @@
+first name: Iain
+last name: M. Banks
+authorId: 98111349879891069
+bibliography: 9781428125377 9783453129092 

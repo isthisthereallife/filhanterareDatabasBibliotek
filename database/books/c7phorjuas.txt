@@ -1,0 +1,6 @@
+ISBN: 9789024567157
+Title: A Feast for Crows
+authorId: 1207118110879881152
+Year: 2005
+genre: 10961078102110991172
+Status: Available

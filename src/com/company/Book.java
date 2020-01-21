@@ -1,15 +1,19 @@
 package com.company;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
-public class Book extends Base{
+public class Book extends Base {
 
+    private String id;
     private String isbn;
     private String title;
-    private String author;
+    private String authorId;
     private String year;
     private String genre;
-    private String status;
+    private int quantity;
+    private int totalQuantity;
 
     public Book() {
     }
@@ -17,26 +21,29 @@ public class Book extends Base{
     public Book(String isbn, String title, String author, String year, String genre) {
         this.isbn = isbn;
         this.title = title;
-        this.author = author;
+        this.authorId = author;
         this.year = year;
         this.genre = genre;
-        this.status = "Available";
+        this.quantity = 1;
     }
 
-    public Book(List<String> readFromFile) {
+    public Book(List<String> readFromFile, String fileName) {
         int i = 0;
-        String[] stringsInfo = new String [6];
-        for(String content:readFromFile){
+        String[] stringsInfo = new String[7];
+        String idFromFile = fileName.substring(fileName.lastIndexOf("\\") + 1, fileName.lastIndexOf("."));
+        for (String content : readFromFile) {
             String trim = content.substring(content.indexOf(":") + 1).trim();
             stringsInfo[i] = trim;
             i++;
         }
+        this.id = idFromFile;
         this.isbn = stringsInfo[0];
         this.title = stringsInfo[1];
-        this.author = stringsInfo[2];
+        this.authorId = stringsInfo[2];
         this.year = stringsInfo[3];
         this.genre = stringsInfo[4];
-        this.status = stringsInfo[5];
+        this.quantity = 1;
+        this.totalQuantity = 1;
     }
 
     /*userInfoFromDisk) {
@@ -77,12 +84,12 @@ public class Book extends Base{
         this.title = title;
     }
 
-    public String getAuthor() {
-        return author;
+    public String getAuthorId() {
+        return authorId;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setAuthorId(String author) {
+        this.authorId = author;
     }
 
     public String getYear() {
@@ -101,19 +108,51 @@ public class Book extends Base{
         this.genre = genre;
     }
 
-    public void setStatus(String status){this.status = status;}
-    public String getStatus(){
-        return this.status;
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
-    public String listToString() {
-        return title + " by " + author + " (" + year + ") - ISBN: " + isbn;
+    public int getQuantity() {
+        return this.quantity;
+    }
+
+    public String getId() {
+        return this.id;
+    }
+
+    public void setTotalQuantity(int totalQuantity){this.totalQuantity = totalQuantity;}
+    public int getTotalQuantity(){
+        return this.totalQuantity;
+    }
+
+    public String listToString(ArrayList<Author> authors) {
+        String authorName = " ";
+        for(Author author : authors){
+            if(this.authorId.equals(author.getAuthorId()))
+                authorName = author.getFirstName() + " " + author.getLastName();
+        }
+
+        return title + " by " + authorName + " (" + year + ") ISBN: " + isbn + " - Available copies: " + quantity + " of " + totalQuantity;
+    }
+
+    private void idGenerator() {
+        int leftLimit = 48; // ASCII vart 0 börjar
+        int rightLimit = 122; // ASCII vart z slutar
+        Random random = new Random();
+
+        String generatedString = random.ints(leftLimit, rightLimit + 1)
+                .filter(i -> (i <= 57 || i >= 97)) //ASCII räknar inte med tecken från 58 till 96
+                .limit(10)
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
+
+        System.out.println(generatedString);
     }
 
     @Override
     public String toString() {
-        return "isbn: " + isbn + "\ntitle: " + title + "\nauthor: " + author +
-                "\nyear: " + year + "\ngenre: " + genre + "\nstatus: "+status;
+        return "isbn: " + isbn + "\ntitle: " + title + "\nauthor: " + authorId +
+                "\nyear: " + year + "\ngenre: " + genre + "\nstatus: " + quantity;
 
     }
 }

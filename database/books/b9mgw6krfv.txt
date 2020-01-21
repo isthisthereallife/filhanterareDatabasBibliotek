@@ -1,0 +1,6 @@
+ISBN: 9780261102941
+Title: The Return of the King
+authorId: 100711051124980991
+Year: 1955
+genre: 10961078102110991172
+Status: Available

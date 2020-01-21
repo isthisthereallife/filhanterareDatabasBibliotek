@@ -1,6 +1,0 @@
-ISBN: 9780241383117
-Title: Bad Behavior
-Author: Mary Gaitskill
-Year: 1988
-Genre: Drama
-Status: Available

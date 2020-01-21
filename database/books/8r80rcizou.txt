@@ -1,0 +1,6 @@
+ISBN: 9782266128490
+Title: Green Mars
+authorId: 12131085120511211206
+Year: 1993
+genre: 1042108199611571077
+Status: Available

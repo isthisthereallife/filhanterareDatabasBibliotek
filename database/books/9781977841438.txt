@@ -1,6 +1,0 @@
-ISBN: 9781977841438
-Title: Frankenstein
-Author: Mary Shelley
-Year: 1818
-Genre: Horror
-Status: Available

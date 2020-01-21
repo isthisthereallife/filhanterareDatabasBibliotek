@@ -1,6 +1,0 @@
-ISBN: 9788293059998
-Title: A Storm of Swords
-Author: George R. R. Martin
-Year: 2000
-Genre: Fantasy
-Status: Available

@@ -1,6 +1,0 @@
-ISBN: 9788374692311
-Title: Do Androids Dream of Electric Sheep
-Author: Philip K. Dick
-Year: 1968
-Genre: Science Fiction
-Status: Available

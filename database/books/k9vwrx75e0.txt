@@ -1,0 +1,6 @@
+ISBN: 9781587249358
+Title: Living Dead in Dallas
+authorId: 97798310589731049
+Year: 2002
+genre: 11531186106910091210
+Status: Available

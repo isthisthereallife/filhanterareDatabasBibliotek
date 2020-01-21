@@ -1,0 +1,6 @@
+ISBN: 9781428183896
+Title: Dead to the World
+authorId: 97798310589731049
+Year: 2004
+genre: 11531186106910091210
+Status: Available

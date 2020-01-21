@@ -1,6 +1,0 @@
-ISBN: 9789024567157
-Title: A Feast for Crows
-Author: George R. R. Martin
-Year: 2005
-Genre: Fantasy
-Status: Available
