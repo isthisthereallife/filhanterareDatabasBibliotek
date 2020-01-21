@@ -543,6 +543,9 @@ public class Library {
                 System.out.println("Your telephone number must be at least 5 digits!");
                 inputOk = false;
             }
+            else{
+                inputOk = true;
+            }
         } while (!inputOk);
 
         users.add(new User(name, address, mail, tel));
