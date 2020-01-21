@@ -18,6 +18,7 @@ public class Library {
     private ArrayList<Book> books = new ArrayList<>();
     private ArrayList<Author> authors = new ArrayList<>();
     private ArrayList<Genre> genres = new ArrayList<>();
+    private ArrayList<Card> cards = new ArrayList<>();
     private Base base = new Base();
     private User activeUser;
     boolean running = true;
@@ -33,12 +34,21 @@ public class Library {
         loadUsers();
         loadAuthors();
         loadGenres();
-        updateBooks();
+        loadCards();
+        //updateBooks();
         //createGenres();
         /*convertAuthorStringsToIds(books,authors);
         convertGenreStringsToIds(books, genres);
         createAuthors();*/
         loadBorrowedBooks();
+    }
+
+    public void loadCards() {
+        File folderPath = new File("database/cards/");
+        for (File file : base.readFromFolder(folderPath)) {
+            final Path path = file.toPath();
+            cards.add(new Card(base.readFromFile(path)));
+        }
     }
 
     public void createAuthors() {
@@ -230,21 +240,23 @@ public class Library {
 
         } while (running);
     }
-    private void adminChoiceMenu(){
+
+    private void adminChoiceMenu() {
         System.out.println("1: New book");
         System.out.println("2: Show list of existing authors");
         String adminChoice = scan.nextLine();
-        switch (adminChoice){
+        switch (adminChoice) {
             case "1":
                 addBook();
                 break;
             case "2":
                 int counter = 1;
-                for (Author author : authors){
+                for (Author author : authors) {
                     System.out.println(counter + " " + author.getFirstName() + " " + author.getLastName());
                 }
         }
     }
+
     private void userLoginMenu() {
         System.out.println("============");
         System.out.println("1: Login\n2: Register");
@@ -401,9 +413,8 @@ public class Library {
                             System.out.println("Do you want it?\n1. Yes\n2. No");
                             if (scan.nextLine().equals("1")) {
                                 borrowBook(book);
-                                System.out.println("You have borrowed "+book.toString());
-                            }
-                            else System.out.println("Never mind, then.");
+                                System.out.println("You have borrowed " + book.toString());
+                            } else System.out.println("Never mind, then.");
                         } else if (operation.equals("return")) {
                             returnBook(book);
                         } else if (operation.equals("edit")) {
@@ -541,9 +552,12 @@ public class Library {
 
         users.add(new User(name, address, mail, tel));
         activeUser = users.get(users.size() - 1);
-        String uniqueId = users.get(users.size() - 1).getId();
-        users.get(users.size() - 1).writeToFile(("database/users/" + uniqueId), (users.get(users.size() - 1).toString()));
-        System.out.printf("Registration complete!\nYour unique id is: %s\n", uniqueId);
+        String uniqueId = activeUser.getId();
+        cards.add(new Card(uniqueId));
+        activeUser.setCardNr(activeUser.makeNewId());
+        cards.get(cards.size() - 1).writeToFile("database/cards/" + cards.get(cards.size() - 1).getCardNr(), cards.get(cards.size() - 1).toString());
+        activeUser.writeToFile(("database/users/" + uniqueId), activeUser.toString());
+        System.out.println("Registration complete!\nYour Log-in id is: " + uniqueId + " (SAVE THIS!)\nYour card number is " + activeUser.getCardNr());
         userMenu();
     }
 
@@ -581,12 +595,12 @@ public class Library {
 
     private boolean checkForDuplicates(String stringToCheck) {
 
-            for (Book book : books){
-                if (book.getIsbn().equals(stringToCheck)){
-                    book.setQuantity(book.getQuantity()+1);
-                    return true;
-                }
+        for (Book book : books) {
+            if (book.getIsbn().equals(stringToCheck)) {
+                book.setQuantity(book.getQuantity() + 1);
+                return true;
             }
+        }
 
         return false;
     }
@@ -615,14 +629,14 @@ public class Library {
             System.out.println("ISBN: ");
             isbn = scan.nextLine();
             inputOk = checkIfStringOfNumbers(isbn);
-            if (isbn.length() < 13 || isbn.length() > 13){
+            if (isbn.length() < 13 || isbn.length() > 13) {
                 System.out.println("The ISBN number must be 13 digits!");
             }
-            if (!inputOk){
+            if (!inputOk) {
                 isDuplicate = checkForDuplicates(isbn);
-                if (isDuplicate){
+                if (isDuplicate) {
                     System.out.println("That book already exists! Another copy has been added.");
-                   return;
+                    return;
                 }
             }
         } while (inputOk || isbn.length() < 13 || isbn.length() > 13);
@@ -631,12 +645,11 @@ public class Library {
             title = scan.nextLine();
             if (title.length() < 1 || title.isBlank()) {
                 System.out.println("The book's title must contain at least one character!");
-            }
-            else{
+            } else {
                 inputOk = true;
             }
 
-            } while (!inputOk);
+        } while (!inputOk);
 
         do {
             System.out.println("Author: ");
@@ -653,32 +666,31 @@ public class Library {
             System.out.println("Year: ");
             year = scan.nextLine();
             inputOk = checkIfStringOfNumbers(year);
-            if (year.length() < 4 || year.length() > 4 || year.isBlank()){
+            if (year.length() < 4 || year.length() > 4 || year.isBlank()) {
                 System.out.println("The publishing date for the book must be 4 digits!");
                 yearCheck = false;
-            }
-            else{
+            } else {
                 yearCheck = true;
             }
         } while (!yearCheck);
 
         int genreCounter = 1;
         System.out.println("All existing genres in the library, pick one or add a new one");
-        for (Genre genreObj : genres){
+        for (Genre genreObj : genres) {
             System.out.println(genreCounter + " " + genreObj.getName());
             genreCounter++;
         }
         System.out.println(genres.size() + 1 + " " + "Add new genre");
         int genreChoice = scan.nextInt();
-        for (int i = 0; i < books.size(); i++){
-            if (genreChoice - 1 == i){
+        for (int i = 0; i < books.size(); i++) {
+            if (genreChoice - 1 == i) {
                 genre = books.get(i).getGenre();
             }
-            
+
         }
 
-            genre = scan.nextLine();
-            inputOk = checkIfStringOfLetters(genre);
+        genre = scan.nextLine();
+        inputOk = checkIfStringOfLetters(genre);
 
         books.add(new Book(isbn, title, author, year, genre));
         books.get(books.size() - 1).writeToFile(("database/books/" + isbn), (books.get(books.size() - 1).toString()));

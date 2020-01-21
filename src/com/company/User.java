@@ -13,14 +13,18 @@ public class User extends Base {
     private String tel;
     private String activeLoans;
     private String uniqueId;
+    private String cardNr;
 
+    public User (){
+
+    }
     public User(String name, String address, String mail, String tel) {
         this.name = name;
         this.address = address;
         this.mail = mail;
         this.tel = tel;
         this.activeLoans = "";
-        this.uniqueId = idGenerator();
+        this.uniqueId = makeNewId();
     }
 
     public User(List<String> userInfoFromDisk) {
@@ -39,6 +43,8 @@ public class User extends Base {
                 this.activeLoans = trim;
             } else if (s.contains("uniqueId:")) {
                 this.uniqueId = trim;
+            } else if (s.contains("cardNr:")){
+                this.cardNr = trim;
             }
         }
     }
@@ -70,6 +76,12 @@ public class User extends Base {
 
     public String getId() {
         return this.uniqueId;
+    }
+    public String getCardNr(){
+        return this.cardNr;
+    }
+    public void setCardNr(String userId){
+        this.cardNr = userId;
     }
 
 
@@ -108,7 +120,7 @@ public class User extends Base {
     @Override
     public String toString() {
         return "name: " + this.name + "\naddress: " + this.address + "\nmail: " + this.mail +
-                "\ntel: " + this.tel + "\nactiveLoans: " + this.activeLoans + "\nuniqueId: " + this.uniqueId;
+                "\ntel: " + this.tel + "\nactiveLoans: " + this.activeLoans + "\nuniqueId: " + this.uniqueId+"\ncardNr: "+cardNr;
 
     }
 }
