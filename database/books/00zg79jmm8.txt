@@ -2,5 +2,5 @@ ISBN: 9780807083055
 Title: Kindred
 authorId: 12271117100211671180
 Year: 1979
-Genre: Fantasy
+genre: 10961078102110991172
 Status: Available

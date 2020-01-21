@@ -2,5 +2,5 @@ ISBN: 9780553386790
 Title: A Game of Thrones
 authorId: 1207118110879881152
 Year: 1996
-Genre: Fantasy
+genre: 10961078102110991172
 Status: Available

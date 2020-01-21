@@ -2,5 +2,5 @@ ISBN: 9780356500485
 Title: Aurora
 authorId: 12131085120511211206
 Year: 2015
-Genre: Science Fiction
+genre: 1042108199611571077
 Status: Available

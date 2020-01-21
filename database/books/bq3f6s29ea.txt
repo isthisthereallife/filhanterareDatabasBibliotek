@@ -2,5 +2,5 @@ ISBN: 9780140058635
 Title: Congo
 authorId: 10081074116510191167
 Year: 1980
-Genre: Science Fiction
+genre: 1042108199611571077
 Status: Available

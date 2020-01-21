@@ -2,5 +2,5 @@ ISBN: 9780241383117
 Title: Bad Behavior
 authorId: 10751045115311651080
 Year: 1988
-Genre: Drama
+genre: 10841029111411581041
 Status: Available

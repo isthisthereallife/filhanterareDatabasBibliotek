@@ -15,7 +15,6 @@ public class Author extends Base {
         setAuthorId();
         this.bibliography = new ArrayList<>();
         this.bibliography.add(newBook);
-
     }
 
     public void addToBibliography(Book newBook) {

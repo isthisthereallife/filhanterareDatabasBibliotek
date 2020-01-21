@@ -2,5 +2,5 @@ ISBN: 9788445070253
 Title: The Dispossessed
 authorId: 112199011751144976
 Year: 1974
-Genre: Science Fiction
+genre: 1042108199611571077
 Status: Available
