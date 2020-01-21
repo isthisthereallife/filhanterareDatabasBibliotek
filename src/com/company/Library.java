@@ -16,13 +16,23 @@ public class Library {
     private ArrayList<User> users = new ArrayList<>();
     private ArrayList<Book> books = new ArrayList<>();
     private Base base = new Base();
+    private Menu menu;
     private User activeUser;
     boolean running = true;
 
 
     public Library() {
         load();
-        identification();
+        menu = new Menu( this);
+        menu.identification();
+    }
+
+    public User getActiveUser() {
+        return activeUser;
+    }
+
+    public void setActiveUser(User activeUser) {
+        this.activeUser = activeUser;
     }
 
     private void load() {
@@ -43,121 +53,6 @@ public class Library {
         for (File file : base.readFromFolder(folderPath)) {
             final Path path = file.toPath();
             users.add(new User(base.readFromFile(path)));
-        }
-    }
-
-    public void identification() {
-        System.out.println("================================");
-        System.out.println("Who would you like to login as?");
-        System.out.println("1: Admin");
-        System.out.println("2: User");
-        System.out.println("================================");
-
-
-        String choice = scan.nextLine();
-
-        do {
-            switch (choice) {
-                case "1":
-                    activeUser = new User("admin", "admin", "admin", "admin");
-                    adminMenu();
-                    break;
-                case "2":
-                    userLoginMenu();
-                    break;
-                default:
-                    System.out.println("Invalid choice. Try again!");
-                    identification();
-            }
-        }while(running);
-    }
-
-    private void adminMenu() {
-        activeUser = new User("admin", "admin", "admin", "admin");
-        do {
-            System.out.println("=============================");
-            System.out.println("What do you want to do?");
-            System.out.println("1: Add book to library");
-            System.out.println("2: Remove book from library");
-            System.out.println("3: Edit book from library");
-            System.out.println("4: Go back to login");
-            System.out.println("5: Quit");
-            System.out.println("=============================");
-
-            String choice;
-            String result;
-
-            choice = scan.nextLine();
-
-            switch (choice) {
-                case "1":
-                    addBook();
-                    running = rerunPrompt();
-                    break;
-                case "2":
-                    result = searchForBook("database/books");
-                    searchResultChoiceMenu("delete", countOccurrences("isbn:", result), result);
-                    running = rerunPrompt();
-                    break;
-                case "3":
-                    result = searchForBook("database/books");
-                    searchResultChoiceMenu("edit", countOccurrences("isbn:", result), result);
-                    running = rerunPrompt();
-                    break;
-                case "4":
-                    identification();
-                    break;
-                case "5":
-                    running = false;
-                    break;
-                default:
-                    System.out.println("Invalid choice. Try again!");
-
-            }
-
-        } while (running);
-    }
-
-    private void userLoginMenu() {
-        System.out.println("============");
-        System.out.println("1: Login\n2: Register");
-        System.out.println("============");
-        String choice = "0";
-
-
-        choice = scan.nextLine();
-
-
-        switch (choice) {
-            case "1":
-                loginMenu();
-                break;
-            case "2":
-                addUser();
-                break;
-            default:
-                System.out.println("Invalid choice. Try again!");
-                userLoginMenu();
-        }
-    }
-
-    public void loginMenu() {
-        boolean loggedIn = false;
-        System.out.println("What is your login id? ");
-        String loginId = scan.nextLine();
-        for (User user : users) {
-
-            if (user.getId().equalsIgnoreCase(loginId)) {
-                System.out.println("Login successful!");
-                activeUser = user;
-                loggedIn = true;
-                userMenu();
-                break;
-            }
-        }
-        if (!loggedIn) {
-            System.out.println("Login failed.");
-            userLoginMenu();
         }
     }
 
@@ -233,18 +128,18 @@ public class Library {
     }
 
 
-    private String searchForBook(String whereToSearch) {
+    String searchForBook(String whereToSearch) {
         System.out.println("Enter search: ");
         String search = scan.nextLine();
         return activeUser.searchInFile(search, whereToSearch).toLowerCase();
 
     }
 
-    private int countOccurrences(String searchFor, String searchIn) {
+    int countOccurrences(String searchFor, String searchIn) {
         return (searchIn.toLowerCase().split(Pattern.quote(searchFor.toLowerCase()), -1).length) - 1;
     }
 
-    private void searchResultChoiceMenu(String operation, int nrOfSearchMatches, String resultOfSearch) {
+    public void searchResultChoiceMenu(String operation, int nrOfSearchMatches, String resultOfSearch) {
         if (nrOfSearchMatches < 1) {
             System.out.println("Your search came up empty.");
         } else if (nrOfSearchMatches > 1) {
@@ -302,7 +197,7 @@ public class Library {
         activeUser.editFile(userFileName, userLineToEdit, userNewLine);
     }
 
-    private boolean rerunPrompt() {
+    boolean rerunPrompt() {
         int choice = 0;
         do {
             System.out.println("\n1. Back to main menu");
@@ -428,7 +323,7 @@ public class Library {
         books.add(new Book(isbn, title, author, year, genre));
         books.get(books.size() - 1).writeToFile(("database/books/" + isbn), (books.get(books.size() - 1).toString()));
         System.out.println("Book added to the library!");
-        adminMenu();
+        //adminMenu();
 
 
     }
@@ -440,7 +335,7 @@ public class Library {
 
         bok.deleteFiles(path);
         System.out.println(bok.getTitle() + " is now deleted.");
-        adminMenu();
+        //adminMenu();
     }
 
     public void editBook(Book bookToEdit) {
@@ -500,7 +395,7 @@ public class Library {
                     break;
             }
         } while (runningEditBook);
-        adminMenu();
+        //adminMenu();
     }
 
 }
