@@ -1,6 +1,4 @@
 package com.company;
-
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -89,8 +87,8 @@ public class Menu {
         System.out.println("=========================");
         System.out.println("1: Login\n2: Register\n3: Go back to main menu");
         System.out.println("=========================");
-        String choice = "0";
 
+        String choice;
         choice = scan.nextLine();
 
         switch (choice) {
@@ -189,7 +187,6 @@ public class Menu {
                     running = false;
                     break;
                 default:
-
             }
         } while (running);
     }
@@ -207,5 +204,4 @@ public class Menu {
             if (choice == 2) return false;
         } while (true);
     }
-
 }

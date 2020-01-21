@@ -1,13 +1,10 @@
 package com.company;
 
-import javax.print.DocFlavor;
-import javax.xml.xpath.XPath;
+
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.SQLOutput;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -18,7 +15,6 @@ public class Library {
     private Base base = new Base();
     private Menu menu;
     private User activeUser;
-    boolean running = true;
 
 
     public Library() {
@@ -33,11 +29,7 @@ public class Library {
 
     public ArrayList<User> getUsers() {return users; }
 
-    public void setUsers(ArrayList<User> users) {this.users = users; }
-
     public ArrayList<Book> getBooks() {return books; }
-
-    public void setBooks(ArrayList<Book> books) {this.books = books; }
 
     private void load() {
         loadBooks();
@@ -58,76 +50,6 @@ public class Library {
             final Path path = file.toPath();
             users.add(new User(base.readFromFile(path)));
         }
-    }
-
-    private void userMenu() {
-        Scanner scan = new Scanner(System.in);
-        System.out.println("Welcome " + activeUser.getName() + "\nPlease choose operation:");
-        System.out.println();
-        String number = "0";
-        do {
-            System.out.println("1: View available books");
-            System.out.println("2: Borrow a book");
-            System.out.println("3: Return a book");
-            System.out.println("4: View all books in the library");
-            if (!this.activeUser.activeLoansInfo().equals("")) {
-                System.out.println("5: View active loans");
-            }
-            System.out.println("0: Exit");
-
-            try {
-                number = scan.nextLine();
-            } catch (InputMismatchException e) {
-                userMenu();
-            }
-            switch (number) {
-                case "1": {
-
-                        books.sort(Comparator.comparing(Book::getTitle));
-                        for (Book book : books) {
-                            if (book.getStatus().equals("Available"))
-                                System.out.println(book.listToString());
-                        }
-                        System.out.println();
-
-                    //söker efter böcker med "AVAILABLE" som text
-                    //System.out.println(activeUser.searchInFile("available", "database/books"));
-                    running = rerunPrompt();
-                    break;
-                }
-                case "2": {
-                    String result = searchForBook("database/books");
-                    searchResultChoiceMenu("borrow", countOccurrences("isbn:", result), result);
-                    running = rerunPrompt();
-                    break;
-                }
-                case "3": {
-                    String result = searchForBook("database/books");
-                    searchResultChoiceMenu("return", countOccurrences("isbn:", result), result);
-                    running = rerunPrompt();
-                    break;
-                }
-                case "4": {
-                    books.sort(Comparator.comparing(Book::getTitle));
-                    for (Book book : books)
-                        System.out.println(book.listToString());
-
-                    System.out.println(" ");
-                    running = rerunPrompt();
-                    break;
-                }
-                case "5": {
-                    System.out.println(activeUser.activeLoansInfo());
-                    running = rerunPrompt();
-                    break;
-                }
-                case "0":
-                    running = false;
-                    break;
-                default:
-
-            }
-        } while (running);
     }
 
     String searchForBook(String whereToSearch) {
@@ -199,21 +121,6 @@ public class Library {
         activeUser.editFile(userFileName, userLineToEdit, userNewLine);
     }
 
-    boolean rerunPrompt() {
-        int choice = 0;
-        do {
-            System.out.println("\n1. Back to main menu");
-            System.out.println("2. Quit");
-            try {
-                choice = new java.util.Scanner(System.in).nextInt();
-            } catch (InputMismatchException e) {
-                System.out.println("Please enter 1 or 2.");
-            }
-            if (choice == 1) return true;
-            if (choice == 2) return false;
-        } while (true);
-    }
-
     public void addUser() {
         String name = " ";
         String address = " ";
@@ -241,7 +148,7 @@ public class Library {
         String uniqueId = users.get(users.size() - 1).getId();
         users.get(users.size() - 1).writeToFile(("database/users/" + uniqueId), (users.get(users.size() - 1).toString()));
         System.out.printf("Registration complete!\nYour unique id is: %s\n", uniqueId);
-        userMenu();
+        menu.userMenu();
     }
 
     private boolean checkIfStringOfNumbers(String stringToCheck) {
@@ -323,9 +230,7 @@ public class Library {
         books.add(new Book(isbn, title, author, year, genre));
         books.get(books.size() - 1).writeToFile(("database/books/" + isbn), (books.get(books.size() - 1).toString()));
         System.out.println("Book added to the library!");
-        //adminMenu();
-
-
+        menu.adminMenu();
     }
 
     public void deleteBook(Book bok) {
