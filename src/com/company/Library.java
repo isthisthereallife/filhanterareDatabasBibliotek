@@ -17,6 +17,7 @@ public class Library {
     private ArrayList<User> users = new ArrayList<>();
     private ArrayList<Book> books = new ArrayList<>();
     private ArrayList<Author> authors = new ArrayList<>();
+    private ArrayList<Genre> genres = new ArrayList<>();
     private Base base = new Base();
     private User activeUser;
     boolean running = true;
@@ -31,8 +32,11 @@ public class Library {
         loadBooks();
         loadUsers();
         loadAuthors();
-        /*convertAuthorStringsToIds(books,authors);
+        loadGenres();
         updateBooks();
+        //createGenres();
+        /*convertAuthorStringsToIds(books,authors);
+        convertGenreStringsToIds(books, genres);
         createAuthors();*/
         loadBorrowedBooks();
     }
@@ -43,10 +47,36 @@ public class Library {
         }
     }
 
+    public void createGenres() {
+        for (Genre genre : genres) {
+            new Book().writeToFile("database/genres/" + genre.getId(), genre.toString());
+        }
+    }
+
     public void updateBooks() {
         for (Book aBook : books) {
-            aBook.editFile("database/books/" + aBook.getIsbn() + ".txt", "author:", "authorId: " + aBook.getAuthorId());
+            aBook.editFile("database/books/" + aBook.getId() + ".txt", "genre:", "genre: " + aBook.getGenre());
 
+        }
+    }
+
+    //ändra i listorna. båda. lägg till nya objekt i genrelist för alla genrer som inte hittas där
+    //skapa ett id och skriv över genren i booklist för alla böcker
+    public void convertGenreStringsToIds(List<Book> booklist, List<Genre> genrelist) {
+        for (Book aBook : booklist) {
+            boolean foundGenre = false;
+            String genre = aBook.getGenre();
+            for (Genre aGenre : genrelist) {
+                if (aGenre.getName().equalsIgnoreCase(genre)) {
+                    //skriv över bokens genre till genrens id
+                    aBook.setGenre(aGenre.getId());
+                    foundGenre = true;
+                }
+            }
+            if (!foundGenre) {
+                genrelist.add(new Genre(aBook.getGenre()));
+                aBook.setGenre(genrelist.get(genrelist.size() - 1).getId());
+            }
         }
     }
 
@@ -54,9 +84,7 @@ public class Library {
         for (Book aBook : booklist) {
             boolean foundAuthor = false;
             String author = aBook.getAuthorId();
-
             for (Author anAuthor : authorlist) {
-                //om det finns en författare med samma namn
                 if (anAuthor.getFirstName().concat(" " + anAuthor.getLastName()).equalsIgnoreCase(author)) {
                     anAuthor.addToBibliography(aBook);
                     aBook.setAuthorId(anAuthor.getAuthorId());
@@ -64,7 +92,6 @@ public class Library {
                 }
             }
             if (author.contains(" ") && !foundAuthor) {
-
                 ArrayList<String> name = new ArrayList<>(List.of(author.split(" ")));
                 var fname = name.remove(0);
                 for (int i = 1; i < name.size(); i++) {
@@ -77,9 +104,7 @@ public class Library {
                 aBook.setAuthorId(authorlist.get(authorlist.size() - 1).getAuthorId());
             }
         }
-
     }
-
 
     private void loadBooks() throws IOException {
         File folderPath = new File("database/books/");
@@ -91,10 +116,10 @@ public class Library {
             String fileName = String.valueOf(path);
             books.add(new Book(base.readFromFile(path), fileName));
             String isbnFromFile = firstLine.substring(firstLine.indexOf(":") + 1).trim();
-            if(isbn.contains(isbnFromFile)){
-                books.remove(books.size()-1);
-                for(Book book : books){
-                    if(book.getIsbn().equals(isbnFromFile)){
+            if (isbn.contains(isbnFromFile)) {
+                books.remove(books.size() - 1);
+                for (Book book : books) {
+                    if (book.getIsbn().equals(isbnFromFile)) {
                         book.setQuantity(book.getQuantity() + 1);
                         book.setTotalQuantity(book.getTotalQuantity() + 1);
                     }
@@ -120,14 +145,22 @@ public class Library {
         }
     }
 
+    private void loadGenres() {
+        File folderPath = new File("database/genres/");
+        for (File file : base.readFromFolder(folderPath)) {
+            final Path path = file.toPath();
+            genres.add(new Genre(base.readFromFile(path)));
+        }
+    }
+
     private void loadBorrowedBooks() {
         String loans = "";
-        for(User user : users) {
-            if(user.getActiveLoans() != null || !user.getActiveLoans().trim().isEmpty())
+        for (User user : users) {
+            if (user.getActiveLoans() != null || !user.getActiveLoans().trim().isEmpty())
                 loans = loans.trim().concat(" " + user.getActiveLoans());
         }
-        for(Book book : books) {
-            if(loans.contains(book.getIsbn()))
+        for (Book book : books) {
+            if (loans.contains(book.getIsbn()))
                 book.setQuantity(book.getQuantity() - 1);
         }
     }
@@ -422,7 +455,7 @@ public class Library {
             System.out.println("Your name:");
             name = scan.nextLine();
             inputOk = checkIfStringOfLetters(name);
-            if (name.length() < 1 || name.isBlank()){
+            if (name.length() < 1 || name.isBlank()) {
                 System.out.println("Your name must be at least one character!");
                 inputOk = false;
             }
@@ -431,15 +464,13 @@ public class Library {
         do {
             System.out.println("Your address:");
             address = scan.nextLine();
-            if (address.matches("[0-9]+")){
+            if (address.matches("[0-9]+")) {
                 System.out.println("Your adress can not only contain numbers!");
                 inputOk = false;
-            }
-            else if (address.length() < 1 || address.isBlank()) {
+            } else if (address.length() < 1 || address.isBlank()) {
                 System.out.println("Your adress must be at least one character!");
                 inputOk = false;
-            }
-            else if (!address.matches(".*\\d.*")){
+            } else if (!address.matches(".*\\d.*")) {
                 System.out.println("There must be at least one number in your adress!");
                 inputOk = false;
             } else {
@@ -451,11 +482,10 @@ public class Library {
             System.out.println("Your zipcode: ");
             String zipCode = scan.nextLine();
             inputOk = checkIfStringOfNumbers(zipCode);
-            if (zipCode.length() < 5 || zipCode.isBlank()){
+            if (zipCode.length() < 5 || zipCode.isBlank()) {
                 System.out.println("Your zipCode must be at least 5 digits!");
                 inputOk = false;
-            }
-            else{
+            } else {
                 address += " " + zipCode;
             }
         } while (!inputOk);
@@ -463,21 +493,19 @@ public class Library {
             System.out.println("Enter your city: ");
             String city = scan.nextLine();
             inputOk = checkIfStringOfLetters(city);
-            if (city.length() < 1 || city.isBlank()){
+            if (city.length() < 1 || city.isBlank()) {
                 System.out.println("Your city must be at least one letter!");
                 inputOk = false;
-            }
-            else{
+            } else {
                 address += " " + city;
             }
         } while (!inputOk);
         do {
             System.out.println("Your mail: ");
             mail = scan.nextLine();
-            if (isValid(mail)){
+            if (isValid(mail)) {
                 inputOk = true;
-            }
-            else{
+            } else {
                 System.out.println("Your email adress must contain an @ character and a ., example: hello@hi.com");
                 inputOk = false;
             }
@@ -486,7 +514,7 @@ public class Library {
             System.out.println("Your telephone number:");
             tel = scan.nextLine();
             inputOk = checkIfStringOfNumbers(tel);
-            if (tel.length() < 5 || tel.isBlank()){
+            if (tel.length() < 5 || tel.isBlank()) {
                 System.out.println("Your telephone number must be at least 5 digits!");
                 inputOk = false;
             }
@@ -539,9 +567,9 @@ public class Library {
             return false;
         } else return true;
     }
-    private boolean isValid(String mail)
-    {
-        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+
+
+    private boolean isValid(String mail) {
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\." +
                 "[a-zA-Z0-9_+&*-]+)*@" +
                 "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
                 "A-Z]{2,7}$";
@@ -551,6 +579,7 @@ public class Library {
             return false;
         return pat.matcher(mail).matches();
     }
+
     public void addBook() {
         boolean inputOk = false;
         String isbn;

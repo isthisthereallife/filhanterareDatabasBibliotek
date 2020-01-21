@@ -2,5 +2,5 @@ ISBN: 9783596905669
 Title: A Scanner Darkly
 authorId: 11241037117010971124
 Year: 1977
-Genre: Science Fiction
+genre: 1042108199611571077
 Status: Available

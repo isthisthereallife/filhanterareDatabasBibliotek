@@ -2,5 +2,5 @@ ISBN: 9783641116415
 Title: Blue Mars
 authorId: 12131085120511211206
 Year: 1996
-Genre: Science Fiction
+genre: 1042108199611571077
 Status: Available

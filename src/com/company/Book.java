@@ -29,9 +29,9 @@ public class Book extends Base {
 
     public Book(List<String> readFromFile, String fileName) {
         int i = 0;
-        String[] stringsInfo = new String [7];
+        String[] stringsInfo = new String[7];
         String idFromFile = fileName.substring(fileName.lastIndexOf("\\") + 1, fileName.lastIndexOf("."));
-        for(String content:readFromFile){
+        for (String content : readFromFile) {
             String trim = content.substring(content.indexOf(":") + 1).trim();
             stringsInfo[i] = trim;
             i++;
@@ -108,9 +108,16 @@ public class Book extends Base {
         this.genre = genre;
     }
 
-    public void setQuantity(int quantity){this.quantity = quantity;}
-    public int getQuantity(){
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public int getQuantity() {
         return this.quantity;
+    }
+
+    public String getId() {
+        return this.id;
     }
 
     public void setTotalQuantity(int totalQuantity){this.totalQuantity = totalQuantity;}
@@ -145,7 +152,7 @@ public class Book extends Base {
     @Override
     public String toString() {
         return "isbn: " + isbn + "\ntitle: " + title + "\nauthor: " + authorId +
-                "\nyear: " + year + "\ngenre: " + genre + "\nstatus: "+quantity;
+                "\nyear: " + year + "\ngenre: " + genre + "\nstatus: " + quantity;
 
     }
 }

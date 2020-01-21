@@ -8,17 +8,16 @@ import java.util.List;
 
 public class Base {
 
-    public Base(){
+    public Base() {
 
     }
 
     /**
-     *
      * @param searchItem vad som ska sökas efter
      * @param pathString vars det ska sökas
      * @return stränginnehållet i filerna som matchade sökningen
      */
-    public String searchInFile(String searchItem, String pathString){
+    public String searchInFile(String searchItem, String pathString) {
         String result = "";
 
         File folderPath = new File(pathString);
@@ -28,14 +27,14 @@ public class Base {
                     //läs in en fil
                     String stringToCheck = "";
                     stringToCheck = stringToCheck.concat(readFromDisk(file.toPath()));
-                    if(stringToCheck.toLowerCase().contains(searchItem.toLowerCase())){
-                        result = result.concat(stringToCheck+"\n");
+                    if (stringToCheck.toLowerCase().contains(searchItem.toLowerCase())) {
+                        result = result.concat(stringToCheck + "\n");
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
             e.printStackTrace();
             result = "No such file.";
         }
@@ -44,6 +43,7 @@ public class Base {
 
     /**
      * läs in en fil från disk, returnera innehållet som sträng
+     *
      * @param path
      * @return
      * @throws IOException
@@ -53,8 +53,8 @@ public class Base {
         String result = "";
         List<String> resultList = new ArrayList<>();
         resultList = Files.readAllLines(path);
-        for (String item : resultList){
-            result = result.concat(item) +"\n";
+        for (String item : resultList) {
+            result = result.concat(item) + "\n";
         }
 
         return result;
@@ -76,10 +76,20 @@ public class Base {
         return contents;
     }
 
+
+    public String makeNewId() {
+        String id = "";
+        for (int i = 0; i < 5; i++) {
+            id = id.concat(String.valueOf(new java.util.Random().nextInt(26) + 'a'));
+            id = id.concat(String.valueOf(new java.util.Random().nextInt(10)));
+        }
+        return id;
+    }
+
     public void writeToFile(String fileName, String str) {
         File file = new File(fileName + ".txt");
         try {
-            if(file.exists()){
+            if (file.exists()) {
                 System.out.println("Filename already exists!");
             } else {
                 PrintWriter writer = null;
@@ -111,7 +121,7 @@ public class Base {
             bufferedReader.close();
             FileWriter fileWriter = new FileWriter(fileToEdit);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-            for(String string : lines) {
+            for (String string : lines) {
                 str += string + "\n";
             }
             bufferedWriter.write(str);
@@ -121,7 +131,8 @@ public class Base {
             ex.printStackTrace();
         }
     }
-    public void deleteFiles(Path path){
+
+    public void deleteFiles(Path path) {
 
         if (!Files.exists(path)) {
             System.out.println("That file does not exist! Try again!");

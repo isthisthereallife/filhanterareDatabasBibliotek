@@ -2,5 +2,5 @@ ISBN: 9781977841438
 Title: Frankenstein
 authorId: 1145995115212061053
 Year: 1818
-Genre: Horror
+genre: 10851199111310241217
 Status: Available
