@@ -1,5 +1,6 @@
 package com.company;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -12,6 +13,7 @@ public class Book extends Base {
     private String year;
     private String genre;
     private int quantity;
+    private int totalQuantity;
 
     public Book() {
     }
@@ -41,6 +43,7 @@ public class Book extends Base {
         this.year = stringsInfo[3];
         this.genre = stringsInfo[4];
         this.quantity = 1;
+        this.totalQuantity = 1;
     }
 
     /*userInfoFromDisk) {
@@ -117,9 +120,19 @@ public class Book extends Base {
         return this.id;
     }
 
-    public String listToString() {
+    public void setTotalQuantity(int totalQuantity){this.totalQuantity = totalQuantity;}
+    public int getTotalQuantity(){
+        return this.totalQuantity;
+    }
 
-        return title + " by " + authorId + " (" + year + ") - ISBN: " + isbn;
+    public String listToString(ArrayList<Author> authors) {
+        String authorName = " ";
+        for(Author author : authors){
+            if(this.authorId.equals(author.getAuthorId()))
+                authorName = author.getFirstName() + " " + author.getLastName();
+        }
+
+        return title + " by " + authorName + " (" + year + ") ISBN: " + isbn + " - Available copies: " + quantity + " of " + totalQuantity;
     }
 
     private void idGenerator() {

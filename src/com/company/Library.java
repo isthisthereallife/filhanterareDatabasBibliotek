@@ -121,6 +121,7 @@ public class Library {
                 for (Book book : books) {
                     if (book.getIsbn().equals(isbnFromFile)) {
                         book.setQuantity(book.getQuantity() + 1);
+                        book.setTotalQuantity(book.getTotalQuantity() + 1);
                     }
                 }
             }
@@ -310,7 +311,7 @@ public class Library {
                         books.sort(Comparator.comparing(Book::getTitle));
                         for (Book book : books) {
                             if (book.getQuantity() > 0)
-                                System.out.println(book.listToString());
+                                System.out.println(book.listToString(authors));
                         }
                     }
                     System.out.println();
@@ -330,11 +331,7 @@ public class Library {
                     break;
                 }
                 case "4": {
-                    books.sort(Comparator.comparing(Book::getTitle));
-                    for (Book book : books)
-                        System.out.println(book.listToString());
-
-                    System.out.println(" ");
+                    listBooks();
                     running = rerunPrompt();
                     break;
                 }
@@ -350,6 +347,14 @@ public class Library {
 
             }
         } while (running);
+    }
+
+    private void listBooks() {
+        books.sort(Comparator.comparing(Book::getTitle));
+        for (Book book : books)
+            System.out.println(book.listToString(authors));
+
+        System.out.println(" ");
     }
 
 
