@@ -203,7 +203,7 @@ public class Library {
 
             switch (choice) {
                 case "1":
-                    addBook();
+                    adminChoiceMenu();
                     running = rerunPrompt();
                     break;
                 case "2":
@@ -229,7 +229,21 @@ public class Library {
 
         } while (running);
     }
-
+    private void adminChoiceMenu(){
+        System.out.println("1: New book");
+        System.out.println("2: Show list of existing authors");
+        String adminChoice = scan.nextLine();
+        switch (adminChoice){
+            case "1":
+                addBook();
+                break;
+            case "2":
+                int counter = 1;
+                for (Author author : authors){
+                    System.out.println(counter + " " + author.getFirstName() + " " + author.getLastName());
+                }
+        }
+    }
     private void userLoginMenu() {
         System.out.println("============");
         System.out.println("1: Login\n2: Register");
@@ -532,10 +546,10 @@ public class Library {
         for (Character c : charList) {
             if (!Character.isDigit(c)) {
                 System.out.println("Please enter only numbers.");
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
     private boolean checkIfStringOfLetters(String stringToCheck) {
@@ -556,11 +570,15 @@ public class Library {
     }
 
     private boolean checkForDuplicates(String stringToCheck) {
-        Path path = Paths.get("database/books/" + stringToCheck + ".txt");
-        if (Files.exists(path)) {
-            System.out.println("Book already in library.");
-            return false;
-        } else return true;
+
+            for (Book book : books){
+                if (book.getIsbn().equals(stringToCheck)){
+                    book.setQuantity(book.getQuantity()+1);
+                    return true;
+                }
+            }
+
+        return false;
     }
 
     private boolean isValid(String mail) {
@@ -577,6 +595,7 @@ public class Library {
 
     public void addBook() {
         boolean inputOk = false;
+        boolean isDuplicate;
         String isbn;
         String title;
         String author;
@@ -586,38 +605,75 @@ public class Library {
             System.out.println("ISBN: ");
             isbn = scan.nextLine();
             inputOk = checkIfStringOfNumbers(isbn);
-            if (inputOk) {
-                inputOk = checkForDuplicates(isbn);
-
+            if (isbn.length() < 13 || isbn.length() > 13){
+                System.out.println("The ISBN number must be 13 digits!");
             }
-        } while (!inputOk);
+            if (!inputOk){
+                isDuplicate = checkForDuplicates(isbn);
+                if (isDuplicate){
+                    System.out.println("That book already exists! Another copy has been added.");
+                   return;
+                }
+            }
+        } while (inputOk || isbn.length() < 13 || isbn.length() > 13);
+        do {
+            System.out.println("Title: ");
+            title = scan.nextLine();
+            if (title.length() < 1 || title.isBlank()) {
+                System.out.println("The book's title must contain at least one character!");
+            }
+            else{
+                inputOk = true;
+            }
 
-        System.out.println("Title: ");
-        title = scan.nextLine();
+            } while (!inputOk);
 
         do {
             System.out.println("Author: ");
             author = scan.nextLine();
             inputOk = checkIfStringOfLetters(author);
+            if (author.length() < 1 || author.isBlank()) {
+                System.out.println("The authors name must contain at least one character!");
+                inputOk = false;
+            }
         } while (!inputOk);
+
+        boolean yearCheck;
         do {
             System.out.println("Year: ");
             year = scan.nextLine();
             inputOk = checkIfStringOfNumbers(year);
-        } while (!inputOk);
+            if (year.length() < 4 || year.length() > 4 || year.isBlank()){
+                System.out.println("The publishing date for the book must be 4 digits!");
+                yearCheck = false;
+            }
+            else{
+                yearCheck = true;
+            }
+        } while (!yearCheck);
 
-        do {
-            System.out.println("Genre: ");
+        int genreCounter = 1;
+        System.out.println("All existing genres in the library, pick one or add a new one");
+        for (Genre genreObj : genres){
+            System.out.println(genreCounter + " " + genreObj.getName());
+            genreCounter++;
+        }
+        System.out.println(genres.size() + 1 + " " + "Add new genre");
+        int genreChoice = scan.nextInt();
+        for (int i = 0; i < books.size(); i++){
+            if (genreChoice - 1 == i){
+                genre = books.get(i).getGenre();
+            }
+            
+        }
+
             genre = scan.nextLine();
             inputOk = checkIfStringOfLetters(genre);
-        } while (!inputOk);
 
         books.add(new Book(isbn, title, author, year, genre));
         books.get(books.size() - 1).writeToFile(("database/books/" + isbn), (books.get(books.size() - 1).toString()));
         System.out.println("Book added to the library!");
         adminMenu();
-
-
     }
 
     public void deleteBook(Book aBook) {
