@@ -27,13 +27,17 @@ public class Library {
         menu.identification();
     }
 
-    public User getActiveUser() {
-        return activeUser;
-    }
+    public User getActiveUser() {return activeUser; }
 
-    public void setActiveUser(User activeUser) {
-        this.activeUser = activeUser;
-    }
+    public void setActiveUser(User activeUser) {this.activeUser = activeUser; }
+
+    public ArrayList<User> getUsers() {return users; }
+
+    public void setUsers(ArrayList<User> users) {this.users = users; }
+
+    public ArrayList<Book> getBooks() {return books; }
+
+    public void setBooks(ArrayList<Book> books) {this.books = books; }
 
     private void load() {
         loadBooks();
@@ -78,7 +82,6 @@ public class Library {
             }
             switch (number) {
                 case "1": {
-
 
                         books.sort(Comparator.comparing(Book::getTitle));
                         for (Book book : books) {
@@ -126,7 +129,6 @@ public class Library {
             }
         } while (running);
     }
-
 
     String searchForBook(String whereToSearch) {
         System.out.println("Enter search: ");
@@ -212,7 +214,6 @@ public class Library {
         } while (true);
     }
 
-
     public void addUser() {
         String name = " ";
         String address = " ";
@@ -296,7 +297,6 @@ public class Library {
             inputOk = checkIfStringOfNumbers(isbn);
             if (inputOk) {
                 inputOk = checkForDuplicates(isbn);
-
             }
         } while (!inputOk);
 
@@ -335,7 +335,7 @@ public class Library {
 
         bok.deleteFiles(path);
         System.out.println(bok.getTitle() + " is now deleted.");
-        //adminMenu();
+        menu.adminMenu();
     }
 
     public void editBook(Book bookToEdit) {
@@ -395,7 +395,6 @@ public class Library {
                     break;
             }
         } while (runningEditBook);
-        //adminMenu();
+        menu.adminMenu();
     }
-
 }

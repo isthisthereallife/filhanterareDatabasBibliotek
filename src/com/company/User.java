@@ -70,10 +70,7 @@ public class User extends Base {
         return result;
     }
 
-    public String getId() {
-        return this.uniqueId;
-    }
-
+    public String getId() { return this.uniqueId; }
 
     public String activeLoansInfo() {
         String result = "";
@@ -90,27 +87,18 @@ public class User extends Base {
             result = result.concat(searchInFile(s, "database/books"));
         }
         }
-
         return result;
     }
 
-    public String getActiveLoans() {
-        return activeLoans;
-    }
+    public String getActiveLoans() {return activeLoans; }
 
-    public void setActiveLoans(String loaned) {
-        this.activeLoans = loaned;
-    }
+    public void setActiveLoans(String loaned) {this.activeLoans = loaned;}
 
-
-    public String getName() {
-        return this.name;
-    }
+    public String getName() {return this.name;}
     @Override
     public String toString() {
         return "name: " + this.name + "\naddress: " + this.address + "\nmail: " + this.mail +
                 "\ntel: " + this.tel + "\nactiveLoans: " + this.activeLoans + "\nuniqueId: "+this.uniqueId;
-
     }
 }
 

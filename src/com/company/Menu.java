@@ -7,8 +7,6 @@ import java.util.Scanner;
 
 public class Menu {
     Scanner scan = new Scanner(System.in);
-    private ArrayList<User> users = new ArrayList<>();
-    private ArrayList<Book> books = new ArrayList<>();
     Library library;
     boolean running = true;
 
@@ -17,6 +15,7 @@ public class Menu {
     }
 
     public void identification() {
+
         System.out.println("================================");
         System.out.println("Who would you like to login as?");
         System.out.println("1: Admin");
@@ -24,25 +23,26 @@ public class Menu {
         System.out.println("3: Quit");
         System.out.println("================================");
 
-        String choice = scan.nextLine();
+        String choice;
+        choice = scan.nextLine();
 
-            switch (choice) {
-                case "1":
-                    adminMenu();
-                    running = false;
-                case "2":
-                    userLoginMenu();
-                    running = false;
-                case "3":
-                    System.exit(0);
-                    break;
-                default:
-                    System.out.println("Invalid choice. Try again!");
-                    identification();
-                    break;
-            }
+        switch (choice) {
+            case "1":
+                adminMenu();
+                running = false;
+            case "2":
+                userLoginMenu();
+                running = false;
+            case "3":
+                System.exit(0);
+                break;
+            default:
+                System.out.println("Invalid choice. Try again!");
+                identification();
+                break;
+        }
     }
-    private void adminMenu() {
+    void adminMenu() {
         library.setActiveUser(new User("admin", "admin", "admin", "admin"));
         do {
             System.out.println("=============================");
@@ -51,23 +51,23 @@ public class Menu {
             System.out.println("2: Remove book from library");
             System.out.println("3: Edit book from library");
             System.out.println("4: Go back to login");
-           // System.out.println("5: Quit");
+            // System.out.println("5: Quit");
             System.out.println("=============================");
 
-            String choice = "0";
+            String choice;
             String result;
 
             choice = scan.nextLine();
 
             switch (choice) {
                 case "1":
-                   library.addBook();
-                   running = rerunPrompt();
+                    library.addBook();
+                    running = rerunPrompt();
                     break;
                 case "2":
-                   result = library.searchForBook("database/books");
-                   library.searchResultChoiceMenu("delete", library.countOccurrences("isbn:", result), result);
-                   running = rerunPrompt();
+                    result = library.searchForBook("database/books");
+                    library.searchResultChoiceMenu("delete", library.countOccurrences("isbn:", result), result);
+                    running = rerunPrompt();
                     break;
                 case "3":
                     result = library.searchForBook("database/books");
@@ -77,46 +77,41 @@ public class Menu {
                 case "4":
                     identification();
                     break;
-                //case "5":
-                    // Avslutas EJ?!?!?
-                 //  break;
                 default:
                     System.out.println("Invalid choice. Try again!");
                     break;
             }
-
         } while (running);
     }
 
     void userLoginMenu() {
 
-            System.out.println("=========================");
-            System.out.println("1: Login\n2: Register\n3: Go back to main menu");
-            System.out.println("=========================");
-            String choice = "0";
+        System.out.println("=========================");
+        System.out.println("1: Login\n2: Register\n3: Go back to main menu");
+        System.out.println("=========================");
+        String choice = "0";
 
-            choice = scan.nextLine();
+        choice = scan.nextLine();
 
-
-            switch (choice) {
-                case "1":
-                    loginMenu();
-                    break;
-                case "2":
-                    library.addUser();
-                    break;
-                case "3":
-                    identification();
-                default:
-                    System.out.println("Invalid choice. Try again!");
-                    userLoginMenu();
-            }
+        switch (choice) {
+            case "1":
+                loginMenu();
+                break;
+            case "2":
+                library.addUser();
+                break;
+            case "3":
+                identification();
+            default:
+                System.out.println("Invalid choice. Try again!");
+                userLoginMenu();
+        }
     }
     public void loginMenu() {
         System.out.println("What is your login id? ");
         library.setActiveUser(null);
         String loginId = scan.nextLine();
-        for (User user : users) {
+        for (User user : library.getUsers()) {
 
             if (user.getId().equalsIgnoreCase(loginId)) {
                 System.out.println("Login successful!");
@@ -130,7 +125,7 @@ public class Menu {
             userLoginMenu();
         }
     }
-    private void userMenu() {
+    void userMenu() {
         Scanner scan = new Scanner(System.in);
         System.out.println("Welcome " + library.getActiveUser().getName() + "\nPlease choose operation:");
         System.out.println();
@@ -152,8 +147,8 @@ public class Menu {
             }
             switch (number) {
                 case "1": {
-                    books.sort(Comparator.comparing(Book::getTitle));
-                    for (Book book : books) {
+                    library.getBooks().sort(Comparator.comparing(Book::getTitle));
+                    for (Book book : library.getBooks()) {
                         if (book.getStatus().equals("Available"))
                             System.out.println(book.listToString());
                     }
@@ -177,8 +172,8 @@ public class Menu {
                     break;
                 }
                 case "4": {
-                    books.sort(Comparator.comparing(Book::getTitle));
-                    for (Book book : books)
+                    library.getBooks().sort(Comparator.comparing(Book::getTitle));
+                    for (Book book :library.getBooks())
                         System.out.println(book.listToString());
 
                     System.out.println(" ");
