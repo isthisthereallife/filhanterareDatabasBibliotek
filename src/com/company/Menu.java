@@ -105,7 +105,7 @@ public class Menu {
                     library.addUser();
                     break;
                 case "3":
-                    adminMenu();
+                    identification();
                 default:
                     System.out.println("Invalid choice. Try again!");
                     userLoginMenu();
