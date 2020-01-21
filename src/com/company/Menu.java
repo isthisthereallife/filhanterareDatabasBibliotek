@@ -9,13 +9,11 @@ public class Menu {
     Scanner scan = new Scanner(System.in);
     private ArrayList<User> users = new ArrayList<>();
     private ArrayList<Book> books = new ArrayList<>();
-    private Base base = new Base();
     Library library;
     boolean running = true;
 
     public Menu(Library library) {
         this.library = library;
-
     }
 
     public void identification() {
@@ -23,12 +21,11 @@ public class Menu {
         System.out.println("Who would you like to login as?");
         System.out.println("1: Admin");
         System.out.println("2: User");
+        System.out.println("3: Quit");
         System.out.println("================================");
-
 
         String choice = scan.nextLine();
 
-        do {
             switch (choice) {
                 case "1":
                     adminMenu();
@@ -36,11 +33,13 @@ public class Menu {
                 case "2":
                     userLoginMenu();
                     running = false;
+                case "3":
+                    break;
                 default:
                     System.out.println("Invalid choice. Try again!");
-
+                    identification();
+                    break;
             }
-        } while(running);
     }
     private void adminMenu() {
         library.setActiveUser(new User("admin", "admin", "admin", "admin"));
@@ -51,10 +50,10 @@ public class Menu {
             System.out.println("2: Remove book from library");
             System.out.println("3: Edit book from library");
             System.out.println("4: Go back to login");
-            System.out.println("5: Quit");
+           // System.out.println("5: Quit");
             System.out.println("=============================");
 
-            String choice;
+            String choice = "0";
             String result;
 
             choice = scan.nextLine();
@@ -62,24 +61,24 @@ public class Menu {
             switch (choice) {
                 case "1":
                    library.addBook();
-                   running = library.rerunPrompt();
+                   running = rerunPrompt();
                     break;
                 case "2":
                    result = library.searchForBook("database/books");
                    library.searchResultChoiceMenu("delete", library.countOccurrences("isbn:", result), result);
-                   running = library.rerunPrompt();
+                   running = rerunPrompt();
                     break;
                 case "3":
                     result = library.searchForBook("database/books");
                     library.searchResultChoiceMenu("edit", library.countOccurrences("isbn:", result), result);
-                    running = library.rerunPrompt();
+                    running = rerunPrompt();
                     break;
                 case "4":
                     identification();
                     break;
-                case "5":
-                    running = false;
-                    break;
+                //case "5":
+                    // Avslutas EJ?!?!?
+                 //  break;
                 default:
                     System.out.println("Invalid choice. Try again!");
                     break;
@@ -89,26 +88,28 @@ public class Menu {
     }
 
     void userLoginMenu() {
-        System.out.println("============");
-        System.out.println("1: Login\n2: Register");
-        System.out.println("============");
-        String choice = "0";
+
+            System.out.println("=========================");
+            System.out.println("1: Login\n2: Register\n3: Go back to main menu");
+            System.out.println("=========================");
+            String choice = "0";
+
+            choice = scan.nextLine();
 
 
-        choice = scan.nextLine();
-
-
-        switch (choice) {
-            case "1":
-                loginMenu();
-                break;
-            case "2":
-                library.addUser();
-                break;
-            default:
-                System.out.println("Invalid choice. Try again!");
-                userLoginMenu();
-        }
+            switch (choice) {
+                case "1":
+                    loginMenu();
+                    break;
+                case "2":
+                    library.addUser();
+                    break;
+                case "3":
+                    adminMenu();
+                default:
+                    System.out.println("Invalid choice. Try again!");
+                    userLoginMenu();
+            }
     }
     public void loginMenu() {
         System.out.println("What is your login id? ");
@@ -150,8 +151,6 @@ public class Menu {
             }
             switch (number) {
                 case "1": {
-
-
                     books.sort(Comparator.comparing(Book::getTitle));
                     for (Book book : books) {
                         if (book.getStatus().equals("Available"))
@@ -161,19 +160,19 @@ public class Menu {
 
                     //söker efter böcker med "AVAILABLE" som text
                     //System.out.println(activeUser.searchInFile("available", "database/books"));
-                    running = library.rerunPrompt();
+                    running = rerunPrompt();
                     break;
                 }
                 case "2": {
                     String result = library.searchForBook("database/books");
                     library.searchResultChoiceMenu("borrow", library.countOccurrences("isbn:", result), result);
-                    running = library.rerunPrompt();
+                    running = rerunPrompt();
                     break;
                 }
                 case "3": {
                     String result = library.searchForBook("database/books");
                     library.searchResultChoiceMenu("return", library.countOccurrences("isbn:", result), result);
-                    running = library.rerunPrompt();
+                    running = rerunPrompt();
                     break;
                 }
                 case "4": {
@@ -182,12 +181,12 @@ public class Menu {
                         System.out.println(book.listToString());
 
                     System.out.println(" ");
-                    running = library.rerunPrompt();
+                    running = rerunPrompt();
                     break;
                 }
                 case "5": {
                     System.out.println(library.getActiveUser().activeLoansInfo());
-                    running = library.rerunPrompt();
+                    running = rerunPrompt();
                     break;
                 }
                 case "0":
@@ -197,6 +196,20 @@ public class Menu {
 
             }
         } while (running);
+    }
+    boolean rerunPrompt() {
+        int choice = 0;
+        do {
+            System.out.println("\n1. Back to main menu");
+            System.out.println("2. Quit");
+            try {
+                choice = new java.util.Scanner(System.in).nextInt();
+            } catch (InputMismatchException e) {
+                System.out.println("Please enter 1 or 2.");
+            }
+            if (choice == 1) return true;
+            if (choice == 2) return false;
+        } while (true);
     }
 
 }
