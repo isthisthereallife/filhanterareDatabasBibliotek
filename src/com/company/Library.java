@@ -35,11 +35,6 @@ public class Library {
         loadAuthors();
         loadGenres();
         loadCards();
-        //updateBooks();
-        //createGenres();
-        /*convertAuthorStringsToIds(books,authors);
-        convertGenreStringsToIds(books, genres);
-        createAuthors();*/
         loadBorrowedBooks();
     }
 
