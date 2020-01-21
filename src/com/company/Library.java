@@ -401,7 +401,6 @@ public class Library {
                             System.out.println("Do you want it?\n1. Yes\n2. No");
                             if (scan.nextLine().equals("1")) {
                                 borrowBook(book);
-                                System.out.println("You have borrowed "+book.toString());
                             }
                             else System.out.println("Never mind, then.");
                         } else if (operation.equals("return")) {
@@ -419,16 +418,22 @@ public class Library {
 
     private void borrowBook(Book bookToBorrow) {
         int newQuantity = bookToBorrow.getQuantity() - 1;
-        bookToBorrow.setQuantity(newQuantity);
-        String userFileName = "database/users/" + activeUser.getId() + ".txt";
-        String bookFileName = "database/books/" + bookToBorrow.getId() + ".txt";
-        String bookLineToEdit = "available";
-        String userLineToEdit = "activeLoans";
-        String bookNewLine = "Status: unavailable";
-        bookToBorrow.editFile(bookFileName, bookLineToEdit, bookNewLine);
-        activeUser.setActiveLoans(activeUser.getActiveLoans().concat(" " + bookToBorrow.getIsbn()));
-        String userNewLine = "activeLoans: " + activeUser.getActiveLoans();
-        activeUser.editFile(userFileName, userLineToEdit, userNewLine);
+        if (bookToBorrow.getQuantity() < 1){
+            System.out.println("Sorry, someone else has already borrowed that book!");
+        }
+        else {
+            bookToBorrow.setQuantity(newQuantity);
+            String userFileName = "database/users/" + activeUser.getId() + ".txt";
+            String bookFileName = "database/books/" + bookToBorrow.getId() + ".txt";
+            String bookLineToEdit = "available";
+            String userLineToEdit = "activeLoans";
+            String bookNewLine = "Status: unavailable";
+            bookToBorrow.editFile(bookFileName, bookLineToEdit, bookNewLine);
+            activeUser.setActiveLoans(activeUser.getActiveLoans().concat(" " + bookToBorrow.getIsbn()));
+            String userNewLine = "activeLoans: " + activeUser.getActiveLoans();
+            activeUser.editFile(userFileName, userLineToEdit, userNewLine);
+            System.out.println("You have borrowed: " + bookToBorrow.getTitle());
+        }
     }
 
     private void returnBook(Book bookToReturn) {
@@ -502,9 +507,10 @@ public class Library {
             String zipCode = scan.nextLine();
             inputOk = checkIfStringOfNumbers(zipCode);
             if (zipCode.length() < 5 || zipCode.isBlank()) {
-                System.out.println("Your zipCode must be at least 5 digits!");
+                System.out.println("Your zipcode must be at least 5 digits!");
                 inputOk = false;
             } else {
+                inputOk = true;
                 address += " " + zipCode;
             }
         } while (!inputOk);
