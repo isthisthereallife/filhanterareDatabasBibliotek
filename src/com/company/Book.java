@@ -135,7 +135,7 @@ public class Book extends Base {
         return title + " by " + authorName + " (" + year + ") ISBN: " + isbn + " - Available copies: " + quantity + " of " + totalQuantity;
     }
 
-    private void idGenerator() {
+    public String idGenerator() {
         int leftLimit = 48; // ASCII vart 0 börjar
         int rightLimit = 122; // ASCII vart z slutar
         Random random = new Random();
@@ -146,13 +146,13 @@ public class Book extends Base {
                 .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
                 .toString();
 
-        System.out.println(generatedString);
+        return generatedString;
     }
 
     @Override
     public String toString() {
-        return "isbn: " + isbn + "\ntitle: " + title + "\nauthor: " + authorId +
-                "\nyear: " + year + "\ngenre: " + genre + "\nstatus: " + quantity;
+        return "ISBN: " + isbn + "\nTitle: " + title + "\nAuthor: " + authorId +
+                "\nYear: " + year + "\nGenre: " + genre;
 
     }
 }

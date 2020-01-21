@@ -230,21 +230,7 @@ public class Library {
 
         } while (running);
     }
-    private void adminChoiceMenu(){
-        System.out.println("1: New book");
-        System.out.println("2: Show list of existing authors");
-        String adminChoice = scan.nextLine();
-        switch (adminChoice){
-            case "1":
-                addBook();
-                break;
-            case "2":
-                int counter = 1;
-                for (Author author : authors){
-                    System.out.println(counter + " " + author.getFirstName() + " " + author.getLastName());
-                }
-        }
-    }
+
     private void userLoginMenu() {
         System.out.println("============");
         System.out.println("1: Login\n2: Register");
@@ -583,7 +569,8 @@ public class Library {
 
             for (Book book : books){
                 if (book.getIsbn().equals(stringToCheck)){
-                    book.setQuantity(book.getQuantity()+1);
+                    book.setQuantity(book.getQuantity() + 1);
+                    book.setTotalQuantity(book.getTotalQuantity() + 1);
                     return true;
                 }
             }
@@ -601,6 +588,22 @@ public class Library {
         if (mail == null)
             return false;
         return pat.matcher(mail).matches();
+    }
+
+    private void adminChoiceMenu(){
+        System.out.println("1: New book");
+        System.out.println("2: Show list of existing authors");
+        String adminChoice = scan.nextLine();
+        switch (adminChoice){
+            case "1":
+                addBook();
+                break;
+            case "2":
+                int counter = 1;
+                for (Author author : authors){
+                    System.out.println(counter + " " + author.getFirstName() + " " + author.getLastName());
+                }
+        }
     }
 
     public void addBook() {
@@ -622,6 +625,12 @@ public class Library {
                 isDuplicate = checkForDuplicates(isbn);
                 if (isDuplicate){
                     System.out.println("That book already exists! Another copy has been added.");
+                    for(Book book : books) {
+                        if(book.getIsbn().equals(isbn)){
+                            String fileName = book.idGenerator();
+                            book.writeToFile(("database/books/" + fileName), (book.toString()));
+                        }
+                    }
                    return;
                 }
             }
