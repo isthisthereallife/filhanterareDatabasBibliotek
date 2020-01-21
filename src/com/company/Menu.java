@@ -34,6 +34,7 @@ public class Menu {
                     userLoginMenu();
                     running = false;
                 case "3":
+                    System.exit(0);
                     break;
                 default:
                     System.out.println("Invalid choice. Try again!");
