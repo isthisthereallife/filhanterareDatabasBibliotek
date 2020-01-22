@@ -437,6 +437,7 @@ public class Library {
         String authorId = null;
         String year;
         String genre = null;
+        String genreId = null;
         String authorsBooks = "";
         Book bookObj = new Book();
         do {
@@ -508,9 +509,9 @@ public class Library {
         } while (!inputOk);
         do {
             Author authorObj = new Author("New", "Author");
-            authorId = authorObj.getAuthorId();
+            String newAuthorId = authorObj.getAuthorId();
             File folderPath = new File("database/authors/");
-            isDuplicate = base.checkForDuplicateFileNames(folderPath, authorId);
+            isDuplicate = base.checkForDuplicateFileNames(folderPath, newAuthorId);
         } while (isDuplicate);
 
         boolean yearCheck;
@@ -541,7 +542,7 @@ public class Library {
             if (choice < genreCounter) {
                 for (int i = 0; i < books.size(); i++) {
                     if (choice - 1 == i) {
-                        genre = books.get(i).getGenre();
+                        genreId = books.get(i).getGenre();
                         inputOk = true;
                     }
                 }
@@ -567,7 +568,7 @@ public class Library {
         } while (isDuplicate);
 
 
-        books.add(new Book(fileName, isbn, title, authorId, year, genre));
+        books.add(new Book(fileName, isbn, title, authorId, year, genreId));
         books.get(books.size() - 1).writeToFile(("database/books/" + fileName), (books.get(books.size() - 1).toString()));
         if (isNewAuthor) {
             authors.add(new Author(authorFname, authorLname, authorId, books.get(books.size() - 1)));
