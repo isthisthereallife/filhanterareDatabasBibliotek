@@ -28,6 +28,29 @@ public class Library {
         menu.identification();
     }
 
+    public Card getActiveCard() {
+        return this.activeCard;
+    }
+
+    public void setActiveCard(Card card) {
+        this.activeCard = card;
+    }
+
+    public void setActiveCard(String cardNumber) {
+        if (!cardNumber.isBlank()) {
+            for (Card c : cards) {
+                if (c.getCardNr().equals(cardNumber)) {
+                    this.activeCard = c;
+                    break;
+                }
+            }
+        }
+    }
+
+    public ArrayList<Card> getCards() {
+        return cards;
+    }
+
     public User getActiveUser() {
         return activeUser;
     }
@@ -208,20 +231,20 @@ public class Library {
         if (bookToBorrow.getQuantity() < 1) {
             System.out.println("Sorry, someone else has already borrowed that book!");
         } else {
-            for (Card c : cards){
-                if(c.getCardNr().equals(activeUser.getCardNr())){
+            for (Card c : cards) {
+                if (c.getCardNr().equals(activeUser.getCardNr())) {
                     activeCard = c;
                     break;
                 }
             }
             bookToBorrow.setQuantity(bookToBorrow.getQuantity() - 1);
-            String cardFileName = "database/cards/" + activeUser.getCardNr() + ".txt";
+            String cardFileName = "database/cards/" + activeCard.getCardNr() + ".txt";
             String bookFileName = "database/books/" + bookToBorrow.getId() + ".txt";
             String cardLineToEdit = "activeLoans";
             String bookLineToEdit = "available";
             String bookNewLine = "Status: unavailable";
             bookToBorrow.editFile(bookFileName, bookLineToEdit, bookNewLine);
-            activeCard.setActiveLoans(activeCard.getActiveLoans().concat(" "+ bookToBorrow.getIsbn()));
+            activeCard.setActiveLoans(activeCard.getActiveLoans().concat(" " + bookToBorrow.getIsbn()));
             String cardNewLine = "activeLoans: " + activeCard.getActiveLoans();
             activeCard.editFile(cardFileName, cardLineToEdit, cardNewLine);
             System.out.println("You have borrowed: " + bookToBorrow.getTitle());
@@ -229,8 +252,8 @@ public class Library {
     }
 
     private void returnBook(Book bookToReturn) {
-        for (Card c : cards){
-            if(c.getCardNr().equals(activeUser.getCardNr())){
+        for (Card c : cards) {
+            if (c.getCardNr().equals(activeUser.getCardNr())) {
                 activeCard = c;
                 break;
             }
@@ -242,11 +265,11 @@ public class Library {
         String bookLineToEdit = "available";
         String bookNewLine = "Status: available";
         bookToReturn.editFile(bookFileName, bookLineToEdit, bookNewLine);
-        activeCard.setActiveLoans(activeCard.getActiveLoans().replace(bookToReturn.getIsbn(),""));
+        activeCard.setActiveLoans(activeCard.getActiveLoans().replace(bookToReturn.getIsbn(), ""));
 
         String cardNewLine = "activeLoans: " + activeUser.getActiveLoans();
         activeUser.editFile(cardFileName, cardLineToEdit, cardNewLine);
-        System.out.println("You have returned: "+bookToReturn.getTitle());
+        System.out.println("You have returned: " + bookToReturn.getTitle());
     }
 
     public void addUser() {
@@ -331,9 +354,10 @@ public class Library {
         activeUser = users.get(users.size() - 1);
         String uniqueId = activeUser.getId();
         cards.add(new Card(uniqueId));
-        activeUser.setCardNr(activeUser.makeNewId());
+        activeUser.setCardNr(cards.get(cards.size()-1).getCardNr());
         cards.get(cards.size() - 1).writeToFile("database/cards/" + cards.get(cards.size() - 1).getCardNr(), cards.get(cards.size() - 1).toString());
         activeUser.writeToFile(("database/users/" + uniqueId), activeUser.toString());
+        setActiveCard(cards.get(cards.size() - 1).getCardNr());
         System.out.println("Registration complete!\nYour Log-in id is: " + uniqueId + " (SAVE THIS!)\nYour card number is " + activeUser.getCardNr());
         menu.userMenu();
     }

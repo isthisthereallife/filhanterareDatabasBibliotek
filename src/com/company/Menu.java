@@ -43,6 +43,7 @@ public class Menu {
 
     void adminMenu() {
         library.setActiveUser(new User("admin", "admin", "admin", "admin"));
+        library.setActiveCard(new Card());
         do {
             System.out.println("=============================");
             System.out.println("What do you want to do?");
@@ -116,6 +117,7 @@ public class Menu {
             if (user.getId().equalsIgnoreCase(loginId)) {
                 System.out.println("Login successful!");
                 library.setActiveUser(user);
+                library.setActiveCard(library.getActiveUser().getCardNr());
                 userMenu();
                 break;
             }
@@ -137,7 +139,7 @@ public class Menu {
             System.out.println("2: Borrow a book");
             System.out.println("3: Return a book");
             System.out.println("4: View all books in the library");
-            if (!this.library.getActiveUser().activeLoansInfo().equals("")) {
+            if (!this.library.getActiveCard().activeLoansInfo().equals("")) {
                 System.out.println("5: View active loans");
             }
             System.out.println("0: Exit");
@@ -180,7 +182,7 @@ public class Menu {
                     break;
                 }
                 case "5": {
-                    System.out.println(library.getActiveUser().activeLoansInfo());
+                    System.out.println(library.getActiveCard().activeLoansInfo());
                     running = rerunPrompt();
                     break;
                 }

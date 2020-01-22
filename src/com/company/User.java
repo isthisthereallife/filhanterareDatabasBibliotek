@@ -81,6 +81,8 @@ public class User extends Base {
         /* splitta strängen vid mellanslag,
         sök i disk efter isbn
         */
+
+
         if (!this.activeLoans.equals("")) {
             String isbnString = this.activeLoans.substring(this.activeLoans.indexOf(":") + 1);
 
