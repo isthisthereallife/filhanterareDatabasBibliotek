@@ -4,3 +4,4 @@ mail: steffe823882@gmail.com
 tel: 0702342382
 activeLoans: 
 uniqueId: tohhdu8732fptehu234eo
+cardNr: 23498723498628777
