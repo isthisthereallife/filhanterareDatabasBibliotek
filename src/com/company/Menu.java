@@ -8,7 +8,6 @@ public class Menu {
     Scanner scan = new Scanner(System.in);
     Library library;
     boolean running = true;
-
     public Menu(Library library) {
         this.library = library;
     }
@@ -126,6 +125,7 @@ public class Menu {
     }
     void userMenu() {
         Scanner scan = new Scanner(System.in);
+
         System.out.println("Welcome " + library.getActiveUser().getName() + "\nPlease choose operation:");
         System.out.println();
         String number = "0";
@@ -149,7 +149,7 @@ public class Menu {
                     library.getBooks().sort(Comparator.comparing(Book::getTitle));
                     for (Book book : library.getBooks()) {
                         if (book.getQuantity()>0);
-                         //   System.out.println(book.listToString();
+                         System.out.println(book.listToString(library.getAuthors()));
                     }
                     System.out.println();
 
@@ -173,7 +173,7 @@ public class Menu {
                 case "4": {
                     library.getBooks().sort(Comparator.comparing(Book::getTitle));
                     for (Book book :library.getBooks())
-                      //  System.out.println(book.listToString());
+                      System.out.println(book.listToString(library.getAuthors()));
 
                     System.out.println(" ");
                     running = rerunPrompt();
