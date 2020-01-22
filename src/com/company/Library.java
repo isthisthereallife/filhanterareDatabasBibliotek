@@ -2,10 +2,7 @@ package com.company;
 
 import javax.print.DocFlavor;
 import javax.xml.xpath.XPath;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -24,19 +21,27 @@ public class Library {
     private User user;
 
 
-    public Library() throws IOException {
+    public Library() {
         load();
-        menu = new Menu( this);
+        menu = new Menu(this);
         menu.identification();
     }
 
-    public User getActiveUser() {return activeUser; }
+    public User getActiveUser() {
+        return activeUser;
+    }
 
-    public void setActiveUser(User activeUser) {this.activeUser = activeUser; }
+    public void setActiveUser(User activeUser) {
+        this.activeUser = activeUser;
+    }
 
-    public ArrayList<User> getUsers() {return users; }
+    public ArrayList<User> getUsers() {
+        return users;
+    }
 
-    public ArrayList<Book> getBooks() {return books; }
+    public ArrayList<Book> getBooks() {
+        return books;
+    }
 
     public ArrayList<Author> getAuthors() {
         return authors;
@@ -54,7 +59,7 @@ public class Library {
         this.genres = genres;
     }
 
-    private void load() throws IOException {
+    private void load() {
         loadBooks();
         loadUsers();
         loadAuthors();
@@ -132,12 +137,22 @@ public class Library {
         }
     }
 
-    private void loadBooks() throws IOException {
+    private void loadBooks() {
         File folderPath = new File("database/books/");
         String isbn = "";
         for (File file : base.readFromFolder(folderPath)) {
-            BufferedReader brTest = new BufferedReader(new FileReader(file));
-            String firstLine = brTest.readLine();
+            BufferedReader brTest = null;
+            try {
+                brTest = new BufferedReader(new FileReader(file));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            String firstLine = null;
+            try {
+                firstLine = brTest.readLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             final Path path = file.toPath();
             String fileName = String.valueOf(path);
             books.add(new Book(base.readFromFile(path), fileName));
@@ -170,6 +185,7 @@ public class Library {
             authors.add(new Author(base.readFromFile(path), books));
         }
     }
+
     private void loadGenres() {
 
         File folderPath = new File("database/genres/");
@@ -179,15 +195,16 @@ public class Library {
         }
 
     }
+
     private void loadBorrowedBooks() {
         String loans = "";
         if (user.getActiveLoans() != null || !user.getActiveLoans().trim().isEmpty())
-        for (User user : users) {
+            for (User user : users) {
                 loans = loans.trim().concat(" " + user.getActiveLoans());
-        }
+            }
         for (Book book : books) {
-                book.setQuantity(book.getQuantity() - 1);
-            if (loans.contains(book.getIsbn()));
+            book.setQuantity(book.getQuantity() - 1);
+            if (loans.contains(book.getIsbn())) ;
         }
     }
 
@@ -229,8 +246,7 @@ public class Library {
                             System.out.println("Do you want it?\n1. Yes\n2. No");
                             if (scan.nextLine().equals("1")) {
                                 borrowBook(book);
-                            }
-                            else System.out.println("Never mind, then.");
+                            } else System.out.println("Never mind, then.");
                         } else if (operation.equals("return")) {
                             returnBook(book);
                         } else if (operation.equals("edit")) {
@@ -246,10 +262,9 @@ public class Library {
 
     private void borrowBook(Book bookToBorrow) {
         int newQuantity = bookToBorrow.getQuantity() - 1;
-        if (bookToBorrow.getQuantity() < 1){
+        if (bookToBorrow.getQuantity() < 1) {
             System.out.println("Sorry, someone else has already borrowed that book!");
-        }
-        else {
+        } else {
             bookToBorrow.setQuantity(newQuantity);
             String userFileName = "database/users/" + activeUser.getId() + ".txt";
             String bookFileName = "database/books/" + bookToBorrow.getId() + ".txt";
@@ -399,12 +414,12 @@ public class Library {
 
     private boolean checkForDuplicates(String stringToCheck) {
 
-            for (Book book : books){
-                if (book.getIsbn().equals(stringToCheck)){
-                    book.setQuantity(book.getQuantity()+1);
-                    return true;
-                }
+        for (Book book : books) {
+            if (book.getIsbn().equals(stringToCheck)) {
+                book.setQuantity(book.getQuantity() + 1);
+                return true;
             }
+        }
 
         return false;
     }
@@ -433,14 +448,14 @@ public class Library {
             System.out.println("ISBN: ");
             isbn = scan.nextLine();
             inputOk = checkIfStringOfNumbers(isbn);
-            if (isbn.length() < 13 || isbn.length() > 13){
+            if (isbn.length() < 13 || isbn.length() > 13) {
                 System.out.println("The ISBN number must be 13 digits!");
             }
-            if (!inputOk){
+            if (!inputOk) {
                 isDuplicate = checkForDuplicates(isbn);
-                if (isDuplicate){
+                if (isDuplicate) {
                     System.out.println("That book already exists! Another copy has been added.");
-                   return;
+                    return;
                 }
             }
         } while (inputOk || isbn.length() < 13 || isbn.length() > 13);
@@ -449,12 +464,11 @@ public class Library {
             title = scan.nextLine();
             if (title.length() < 1 || title.isBlank()) {
                 System.out.println("The book's title must contain at least one character!");
-            }
-            else{
+            } else {
                 inputOk = true;
             }
 
-            } while (!inputOk);
+        } while (!inputOk);
 
         do {
             System.out.println("Author: ");
@@ -471,32 +485,31 @@ public class Library {
             System.out.println("Year: ");
             year = scan.nextLine();
             inputOk = checkIfStringOfNumbers(year);
-            if (year.length() < 4 || year.length() > 4 || year.isBlank()){
+            if (year.length() < 4 || year.length() > 4 || year.isBlank()) {
                 System.out.println("The publishing date for the book must be 4 digits!");
                 yearCheck = false;
-            }
-            else{
+            } else {
                 yearCheck = true;
             }
         } while (!yearCheck);
 
         int genreCounter = 1;
         System.out.println("All existing genres in the library, pick one or add a new one");
-        for (Genre genreObj : genres){
+        for (Genre genreObj : genres) {
             System.out.println(genreCounter + " " + genreObj.getName());
             genreCounter++;
         }
         System.out.println(genres.size() + 1 + " " + "Add new genre");
         int genreChoice = scan.nextInt();
-        for (int i = 0; i < books.size(); i++){
-            if (genreChoice - 1 == i){
+        for (int i = 0; i < books.size(); i++) {
+            if (genreChoice - 1 == i) {
                 genre = books.get(i).getGenre();
             }
-            
+
         }
 
-            genre = scan.nextLine();
-            inputOk = checkIfStringOfLetters(genre);
+        genre = scan.nextLine();
+        inputOk = checkIfStringOfLetters(genre);
 
         books.add(new Book(isbn, title, author, year, genre));
         books.get(books.size() - 1).writeToFile(("database/books/" + isbn), (books.get(books.size() - 1).toString()));
