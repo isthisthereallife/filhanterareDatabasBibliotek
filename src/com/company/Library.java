@@ -549,7 +549,7 @@ public class Library {
 
     public void deleteBook(Book aBook) {
 
-        Path path = Paths.get("database/books/" + aBook.getIsbn() + ".txt");
+        Path path = Paths.get("database/books/",  aBook.getId()+ ".txt");
         books.removeIf(book -> book.getIsbn().equals(aBook.getIsbn()));
 
         aBook.deleteFiles(path);
@@ -569,7 +569,7 @@ public class Library {
                     System.out.println("Current title: " + bookToEdit.getTitle());
                     System.out.println("New title:");
                     input = scan.nextLine();
-                    bookToEdit.editFile("database/books/" + bookToEdit.getIsbn() + ".txt", "title", "title: " + input);
+                    bookToEdit.editFile("database/books/" + bookToEdit.getId() + ".txt", "title", "title: " + input);
                     bookToEdit.setTitle(input);
                     System.out.println("The title is now changed to " + bookToEdit.getTitle());
                     break;
@@ -580,7 +580,7 @@ public class Library {
                         input = scan.nextLine();
                         inputOk = checkIfStringOfLetters(input);
                     } while (!inputOk);
-                    bookToEdit.editFile("database/books/" + bookToEdit.getIsbn() + ".txt", "author", "author: " + input);
+                    bookToEdit.editFile("database/books/" + bookToEdit.getId() + ".txt", "author", "author: " + input);
                     bookToEdit.setAuthorId(input);
                     System.out.println("The author is now changed to " + bookToEdit.getAuthorId());
                     break;
@@ -591,7 +591,7 @@ public class Library {
                         input = scan.nextLine();
                         inputOk = checkIfStringOfNumbers(input);
                     } while (!inputOk);
-                    bookToEdit.editFile("database/books/" + bookToEdit.getIsbn() + ".txt", "year", "year: " + input);
+                    bookToEdit.editFile("database/books/" + bookToEdit.getId() + ".txt", "year", "year: " + input);
                     bookToEdit.setYear(input);
                     System.out.println("The year is now changed to " + bookToEdit.getYear());
                     break;
@@ -602,7 +602,7 @@ public class Library {
                         input = scan.nextLine();
                         inputOk = checkIfStringOfLetters(input);
                     } while (!inputOk);
-                    bookToEdit.editFile("database/books/" + bookToEdit.getIsbn() + ".txt", "genre", "genre: " + input);
+                    bookToEdit.editFile("database/books/" + bookToEdit.getId() + ".txt", "genre", "genre: " + input);
                     bookToEdit.setGenre(input);
                     System.out.println("The genre is now changed to " + bookToEdit.getGenre());
                     break;
