@@ -77,7 +77,6 @@ public class User extends Base {
         this.cardNr = userId;
     }
 
-
     public String activeLoansInfo() {
         String result = "";
 
@@ -96,13 +95,9 @@ public class User extends Base {
         return result;
     }
 
-    public String getActiveLoans() {
-        return activeLoans;
-    }
+    public String getActiveLoans() {return activeLoans; }
 
-    public void setActiveLoans(String loaned) {
-        this.activeLoans = loaned;
-    }
+    public void setActiveLoans(String loaned) {this.activeLoans = loaned;}
 
 
     public String getName() {

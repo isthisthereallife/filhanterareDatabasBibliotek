@@ -2,10 +2,7 @@ package com.company;
 
 import javax.print.DocFlavor;
 import javax.xml.xpath.XPath;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -20,16 +17,50 @@ public class Library {
     private ArrayList<Genre> genres = new ArrayList<>();
     private ArrayList<Card> cards = new ArrayList<>();
     private Base base = new Base();
+    private Menu menu;
     private User activeUser;
-    boolean running = true;
+    private User user;
 
 
-    public Library() throws IOException {
+    public Library() {
         load();
-        identification();
+        menu = new Menu(this);
+        menu.identification();
     }
 
-    private void load() throws IOException {
+    public User getActiveUser() {
+        return activeUser;
+    }
+
+    public void setActiveUser(User activeUser) {
+        this.activeUser = activeUser;
+    }
+
+    public ArrayList<User> getUsers() {
+        return users;
+    }
+
+    public ArrayList<Book> getBooks() {
+        return books;
+    }
+
+    public ArrayList<Author> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(ArrayList<Author> authors) {
+        this.authors = authors;
+    }
+
+    public ArrayList<Genre> getGenres() {
+        return genres;
+    }
+
+    public void setGenres(ArrayList<Genre> genres) {
+        this.genres = genres;
+    }
+
+    private void load() {
         loadBooks();
         loadUsers();
         loadAuthors();
@@ -51,8 +82,18 @@ public class Library {
         File folderPath = new File("database/books/");
         String isbn = "";
         for (File file : base.readFromFolder(folderPath)) {
-            BufferedReader brTest = new BufferedReader(new FileReader(file));
-            String firstLine = brTest.readLine();
+            BufferedReader brTest = null;
+            try {
+                brTest = new BufferedReader(new FileReader(file));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            String firstLine = null;
+            try {
+                firstLine = brTest.readLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             final Path path = file.toPath();
             String fileName = String.valueOf(path);
             books.add(new Book(base.readFromFile(path), fileName));
@@ -87,246 +128,48 @@ public class Library {
     }
 
     private void loadGenres() {
+
         File folderPath = new File("database/genres/");
         for (File file : base.readFromFolder(folderPath)) {
             final Path path = file.toPath();
             genres.add(new Genre(base.readFromFile(path)));
         }
+
     }
 
     private void loadBorrowedBooks() {
         String loans = "";
-        for (User user : users) {
-            if (user.getActiveLoans() != null || !user.getActiveLoans().trim().isEmpty())
+        if (user.getActiveLoans() != null || !user.getActiveLoans().trim().isEmpty())
+            for (User user : users) {
                 loans = loans.trim().concat(" " + user.getActiveLoans());
-        }
+            }
         for (Book book : books) {
-            if (loans.contains(book.getIsbn()))
-                book.setQuantity(book.getQuantity() - 1);
+            book.setQuantity(book.getQuantity() - 1);
+            if (loans.contains(book.getIsbn())) ;
         }
-    }
-
-    public void identification() {
-
-        do {
-            System.out.println("================================\nWelcome to the library!\nWho would you like to login as?\n1: Admin\n2: User\n================================");
-            String choice = scan.nextLine();
-            switch (choice) {
-                case "1":
-                    activeUser = new User("admin", "admin", "admin", "admin");
-                    adminMenu();
-                    break;
-                case "2":
-                    userLoginMenu();
-                    break;
-                default:
-                    System.out.println("Invalid choice. Try again!");
-                    identification();
-            }
-        } while (running);
-    }
-
-    private void adminMenu() {
-        activeUser = new User("admin", "admin", "admin", "admin");
-        do {
-            System.out.println("=============================");
-            System.out.println("What do you want to do?");
-            System.out.println("1: Add book to library");
-            System.out.println("2: Remove book from library");
-            System.out.println("3: Edit book from library");
-            System.out.println("4: Go back to login");
-            System.out.println("5: Quit");
-            System.out.println("=============================");
-
-            String choice;
-            String result;
-
-            choice = scan.nextLine();
-
-            switch (choice) {
-                case "1":
-                    adminChoiceMenu();
-                    running = rerunPrompt();
-                    break;
-                case "2":
-                    result = searchForBook("database/books");
-                    searchResultChoiceMenu("delete", countOccurrences("isbn:", result), result);
-                    running = rerunPrompt();
-                    break;
-                case "3":
-                    result = searchForBook("database/books");
-                    searchResultChoiceMenu("edit", countOccurrences("isbn:", result), result);
-                    running = rerunPrompt();
-                    break;
-                case "4":
-                    identification();
-                    break;
-                case "5":
-                    running = false;
-                    break;
-                default:
-                    System.out.println("Invalid choice. Try again!");
-
-            }
-
-        } while (running);
-    }
-
-    private void adminChoiceMenu() {
-        System.out.println("1: New book");
-        System.out.println("2: Show list of existing authors");
-        String adminChoice = scan.nextLine();
-        switch (adminChoice) {
-            case "1":
-                addBook();
-                break;
-            case "2":
-                int counter = 1;
-                for (Author author : authors) {
-                    System.out.println(counter + " " + author.getFirstName() + " " + author.getLastName());
-                }
-        }
-    }
-
-    private void userLoginMenu() {
-        System.out.println("============");
-        System.out.println("1: Login\n2: Register");
-        System.out.println("============");
-        String choice = "0";
-
-
-        choice = scan.nextLine();
-
-
-        switch (choice) {
-            case "1":
-                loginMenu();
-                break;
-            case "2":
-                addUser();
-                break;
-            default:
-                System.out.println("Invalid choice. Try again!");
-                userLoginMenu();
-        }
-    }
-
-    public void loginMenu() {
-        boolean loggedIn = false;
-        System.out.println("What is your login id? ");
-        String loginId = scan.nextLine();
-        for (User user : users) {
-
-            if (user.getId().equalsIgnoreCase(loginId)) {
-                System.out.println("Login successful!");
-                activeUser = user;
-                loggedIn = true;
-                userMenu();
-                break;
-            }
-        }
-        if (!loggedIn) {
-            System.out.println("Login failed.");
-            userLoginMenu();
-        }
-    }
-
-    private void userMenu() {
-        Scanner scan = new Scanner(System.in);
-        System.out.println("Welcome " + activeUser.getName() + "\nPlease choose operation:");
-        System.out.println();
-        String number = "0";
-        do {
-            System.out.println("1: View available books");
-            System.out.println("2: Borrow a book");
-            System.out.println("3: Return a book");
-            System.out.println("4: View all books in the library");
-            if (!this.activeUser.activeLoansInfo().equals("")) {
-                System.out.println("5: View active loans");
-            }
-            System.out.println("0: Exit");
-
-            try {
-                number = scan.nextLine();
-            } catch (InputMismatchException e) {
-                userMenu();
-            }
-            switch (number) {
-                case "1": {
-                    System.out.println("Sort by author?\n1. Yes\n2. No");
-                    number = scan.nextLine();
-                    if (number.equals("1")) {
-                        System.out.println("Authors in library: ");
-                        for (Author auth : authors) {
-                            System.out.println(auth.getFirstName() + " " + auth.getLastName());
-                            for (Book aBook : auth.getBibliography()) {
-                                System.out.println(aBook.getTitle());
-                            }
-                            System.out.println();
-                        }
-                    } else {
-                        books.sort(Comparator.comparing(Book::getTitle));
-                        for (Book book : books) {
-                            if (book.getQuantity() > 0)
-                                System.out.println(book.listToString(authors));
-                        }
-                    }
-                    System.out.println();
-                    running = rerunPrompt();
-                    break;
-                }
-                case "2": {
-                    String result = searchForBook("database/books");
-                    searchResultChoiceMenu("borrow", countOccurrences("isbn:", result), result);
-                    running = rerunPrompt();
-                    break;
-                }
-                case "3": {
-                    String result = searchForBook("database/books");
-                    searchResultChoiceMenu("return", countOccurrences("isbn:", result), result);
-                    running = rerunPrompt();
-                    break;
-                }
-                case "4": {
-                    listBooks();
-                    running = rerunPrompt();
-                    break;
-                }
-                case "5": {
-                    System.out.println(activeUser.activeLoansInfo());
-                    running = rerunPrompt();
-                    break;
-                }
-                case "0":
-                    running = false;
-                    break;
-                default:
-
-            }
-        } while (running);
     }
 
     private void listBooks() {
         books.sort(Comparator.comparing(Book::getTitle));
         for (Book book : books)
-            System.out.println(book.listToString(authors));
 
+            System.out.println(book.listToString(authors));
         System.out.println(" ");
     }
 
 
-    private String searchForBook(String whereToSearch) {
+    String searchForBook(String whereToSearch) {
         System.out.println("Enter search: ");
         String search = scan.nextLine();
         return activeUser.searchInFile(search, whereToSearch).toLowerCase();
 
     }
 
-    private int countOccurrences(String searchFor, String searchIn) {
+    int countOccurrences(String searchFor, String searchIn) {
         return (searchIn.toLowerCase().split(Pattern.quote(searchFor.toLowerCase()), -1).length) - 1;
     }
 
-    private void searchResultChoiceMenu(String operation, int nrOfSearchMatches, String resultOfSearch) {
+    public void searchResultChoiceMenu(String operation, int nrOfSearchMatches, String resultOfSearch) {
         if (nrOfSearchMatches < 1) {
             System.out.println("Your search came up empty.");
         } else if (nrOfSearchMatches > 1) {
@@ -361,10 +204,9 @@ public class Library {
 
     private void borrowBook(Book bookToBorrow) {
         int newQuantity = bookToBorrow.getQuantity() - 1;
-        if (bookToBorrow.getQuantity() < 1){
+        if (bookToBorrow.getQuantity() < 1) {
             System.out.println("Sorry, someone else has already borrowed that book!");
-        }
-        else {
+        } else {
             bookToBorrow.setQuantity(newQuantity);
             String userFileName = "database/users/" + activeUser.getId() + ".txt";
             String bookFileName = "database/books/" + bookToBorrow.getId() + ".txt";
@@ -395,22 +237,6 @@ public class Library {
         String userNewLine = "activeLoans: " + activeUser.getActiveLoans();
         activeUser.editFile(userFileName, userLineToEdit, userNewLine);
     }
-
-    private boolean rerunPrompt() {
-        int choice = 0;
-        do {
-            System.out.println("\n1. Back to main menu");
-            System.out.println("2. Quit");
-            try {
-                choice = new java.util.Scanner(System.in).nextInt();
-            } catch (InputMismatchException e) {
-                System.out.println("Please enter 1 or 2.");
-            }
-            if (choice == 1) return true;
-            if (choice == 2) return false;
-        } while (true);
-    }
-
 
     public void addUser() {
         String name = " ";
@@ -499,7 +325,7 @@ public class Library {
         cards.get(cards.size() - 1).writeToFile("database/cards/" + cards.get(cards.size() - 1).getCardNr(), cards.get(cards.size() - 1).toString());
         activeUser.writeToFile(("database/users/" + uniqueId), activeUser.toString());
         System.out.println("Registration complete!\nYour Log-in id is: " + uniqueId + " (SAVE THIS!)\nYour card number is " + activeUser.getCardNr());
-        userMenu();
+        menu.userMenu();
     }
 
     private boolean checkIfStringOfNumbers(String stringToCheck) {
@@ -636,7 +462,7 @@ public class Library {
         books.add(new Book(isbn, title, author, year, genre));
         books.get(books.size() - 1).writeToFile(("database/books/" + isbn), (books.get(books.size() - 1).toString()));
         System.out.println("Book added to the library!");
-        adminMenu();
+        menu.adminMenu();
     }
 
     public void deleteBook(Book aBook) {
@@ -646,7 +472,7 @@ public class Library {
 
         aBook.deleteFiles(path);
         System.out.println(aBook.getTitle() + " is now deleted.");
-        adminMenu();
+        menu.adminMenu();
     }
 
     public void editBook(Book bookToEdit) {
@@ -706,7 +532,7 @@ public class Library {
                     break;
             }
         } while (runningEditBook);
-        adminMenu();
+        menu.adminMenu();
     }
 
     /*
