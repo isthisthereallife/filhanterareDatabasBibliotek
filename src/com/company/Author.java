@@ -16,13 +16,6 @@ public class Author extends Base {
         this.bibliography = new ArrayList<>();
         this.bibliography.add(newBook);
     }
-    public Author(String firstName, String lastName, Book newBook) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        setAuthorId();
-        this.bibliography = new ArrayList<>();
-        this.bibliography.add(newBook);
-    }
     public Author(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
