@@ -33,7 +33,7 @@ public class Library {
         loadUsers();
         loadAuthors();
         loadGenres();
-        updateBooks();
+        //updateBooks();
         //createGenres();
         /*convertAuthorStringsToIds(books,authors);
         convertGenreStringsToIds(books, genres);
@@ -80,7 +80,7 @@ public class Library {
         }
     }
 
-    public void convertAuthorStringsToIds(List<Book> booklist, List<Author> authorlist) {
+    /*public void convertAuthorStringsToIds(List<Book> booklist, List<Author> authorlist) {
         for (Book aBook : booklist) {
             boolean foundAuthor = false;
             String author = aBook.getAuthorId();
@@ -104,7 +104,7 @@ public class Library {
                 aBook.setAuthorId(authorlist.get(authorlist.size() - 1).getAuthorId());
             }
         }
-    }
+    }*/
 
     private void loadBooks() throws IOException {
         File folderPath = new File("database/books/");
@@ -609,15 +609,18 @@ public class Library {
     public void addBook() {
         boolean inputOk = false;
         boolean isDuplicate;
+        boolean isNewAuthor = false;
+        String fileName;
         String authorChoice;
         String isbn;
         String title;
-        String author = null;
-        String authorFname;
-        String authorLname;
-        String authorId;
+        String authorFname = null;
+        String authorLname = null;
+        String authorId = null;
         String year;
-        String genre;
+        String genre = null;
+        String authorsBooks = "";
+        Book bookObj = new Book();
         do {
             System.out.println("ISBN: ");
             isbn = scan.nextLine();
@@ -631,7 +634,7 @@ public class Library {
                     System.out.println("That book already exists! Another copy has been added.");
                     for(Book book : books) {
                         if(book.getIsbn().equals(isbn)){
-                            String fileName = book.idGenerator();
+                            fileName = book.idGenerator();
                             book.writeToFile(("database/books/" + fileName), (book.toString()));
                         }
                     }
@@ -664,11 +667,12 @@ public class Library {
             if(choice < counter) {
                 for (int i = 0; i < authors.size(); i++) {
                     if (choice - 1 == i) {
-                        author = authors.get(i).getAuthorId();
+                        authorId = authors.get(i).getAuthorId();
                         inputOk = true;
                     }
                 }
             } else if (choice == counter) {
+                isNewAuthor = true;
                 System.out.println("Type in Author's first name:");
                 authorFname = scan.nextLine();
                 inputOk = checkIfStringOfLetters(authorFname);
@@ -683,27 +687,33 @@ public class Library {
                     System.out.println("The authors name must contain at least one character!");
                     inputOk = false;
                 }
-                authorId = base.makeNewId();
+                do {
+                    Author authorObj = new Author("New", "Author");
+                    authorId = authorObj.getAuthorId();
+                    File folderPath = new File("database/authors/");
+                    isDuplicate = base.checkForDuplicateFileNames(folderPath, authorId);
+                } while (isDuplicate);
             }
         } while (!inputOk);
-        boolean yearCheck;
-        do {
-            System.out.println("Year: ");
-            year = scan.nextLine();
-            inputOk = checkIfStringOfNumbers(year);
-            if (year.length() < 4 || year.length() > 4 || year.isBlank()){
-                System.out.println("The publishing date for the book must be 4 digits!");
-                yearCheck = false;
-            }
-            else{
-                yearCheck = true;
-            }
+                boolean yearCheck;
+                do {
+                System.out.println("Year: ");
+                year = scan.nextLine();
+                inputOk = checkIfStringOfNumbers(year);
+                if (year.length() < 4 || year.length() > 4 || year.isBlank()){
+        System.out.println("The publishing date for the book must be 4 digits!");
+        yearCheck = false;
+        }
+        else{
+        yearCheck = true;
+        }
         } while (!yearCheck);
 
+        do {
         int genreCounter = 1;
-        for (Genre genreObj : genres){
-            System.out.println("[" + genreCounter + "]" + " " + genreObj.getName());
-            genreCounter++;
+        for (Genre genreObj : genres) {
+        System.out.println("[" + genreCounter + "]" + " " + genreObj.getName());
+        genreCounter++;
         }
         int newGenre = genres.size() + 1;
         System.out.println("[" + newGenre + "]" + " " + "Add new genre");
@@ -711,21 +721,54 @@ public class Library {
         String genreChoice = scan.nextLine();
         int choice = Integer.parseInt(genreChoice);
         if (choice < genreCounter) {
-            for (int i = 0; i < books.size(); i++) {
-                if (choice - 1 == i) {
-                    genre = books.get(i).getGenre();
+        for (int i = 0; i < books.size(); i++) {
+        if (choice - 1 == i) {
+        genre = books.get(i).getGenre();
+        inputOk = true;
+        }
+        }
+        } else if (choice == genreCounter) {
+            System.out.println("Type in the new genre:");
+            genre = scan.nextLine();
+            inputOk = checkIfStringOfLetters(genre);
+            if (genre.length() < 1 || genre.isBlank()) {
+                System.out.println("The genre must contain at least one character!");
+                inputOk = false;
+            } else {
+                genres.add(new Genre(genre));
+                Genre genreObj = genres.get(genres.size() - 1);
+                base.writeToFile("database/genres/" + genreObj.getId(), genreObj.toString());
+            }
+        }
+        }while(!inputOk);
+
+        do {
+            fileName = bookObj.idGenerator();
+            File folderPath = new File("database/books/");
+            isDuplicate = base.checkForDuplicateFileNames(folderPath, fileName);
+        } while (isDuplicate);
+
+
+        books.add(new Book(fileName, isbn, title, authorId, year, genre));
+        books.get(books.size() - 1).writeToFile(("database/books/" + fileName), (books.get(books.size() - 1).toString()));
+        if(isNewAuthor) {
+            authors.add(new Author(authorFname, authorLname, authorId, books.get(books.size() - 1)));
+            Author authorObj = authors.get(authors.size() - 1);
+            authorObj.writeToFile(("database/authors/" + authorObj.getAuthorId()), (authorObj.toString()));
+        } else {
+            for(Author author : authors){
+                if(author.getAuthorId().equals(authorId)) {
+                    author.addToBibliography(books.get(books.size() - 1));
+                    for (Book book : author.bibliography) {
+                        authorsBooks = authorsBooks.concat(book.getIsbn() + " ");
+                    }
+                    author.editFile("database/authors/" + authorId + ".txt", "bibliography", "bibliography: " + 2);
                 }
             }
         }
-
-            genre = scan.nextLine();
-            inputOk = checkIfStringOfLetters(genre);
-
-        books.add(new Book(isbn, title, author, year, genre));
-        books.get(books.size() - 1).writeToFile(("database/books/" + isbn), (books.get(books.size() - 1).toString()));
         System.out.println("Book added to the library!");
         adminMenu();
-    }
+        }
 
     public void deleteBook(Book aBook) {
 

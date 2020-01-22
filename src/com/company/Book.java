@@ -18,10 +18,11 @@ public class Book extends Base {
     public Book() {
     }
 
-    public Book(String isbn, String title, String author, String year, String genre) {
+    public Book(String id, String isbn, String title, String authorId, String year, String genre) {
+        this.id = id;
         this.isbn = isbn;
         this.title = title;
-        this.authorId = author;
+        this.authorId = authorId;
         this.year = year;
         this.genre = genre;
         this.quantity = 1;
