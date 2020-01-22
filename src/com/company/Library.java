@@ -15,10 +15,10 @@ public class Library {
     private ArrayList<Book> books = new ArrayList<>();
     private ArrayList<Author> authors = new ArrayList<>();
     private ArrayList<Genre> genres = new ArrayList<>();
+    private ArrayList<Card> cards = new ArrayList<>();
     private Base base = new Base();
     private Menu menu;
     private User activeUser;
-    private User user;
 
 
     public Library() {
@@ -64,78 +64,18 @@ public class Library {
         loadUsers();
         loadAuthors();
         loadGenres();
-        updateBooks();
-        //createGenres();
-        /*convertAuthorStringsToIds(books,authors);
-        convertGenreStringsToIds(books, genres);
-        createAuthors();*/
+        loadCards();
         //loadBorrowedBooks();
     }
 
-    public void createAuthors() {
-        for (Author aut : authors) {
-            aut.writeToFile("database/authors/" + aut.getAuthorId(), aut.toString());
+    public void loadCards() {
+        File folderPath = new File("database/cards/");
+        for (File file : base.readFromFolder(folderPath)) {
+            final Path path = file.toPath();
+            cards.add(new Card(base.readFromFile(path)));
         }
     }
 
-    public void createGenres() {
-        for (Genre genre : genres) {
-            new Book().writeToFile("database/genres/" + genre.getId(), genre.toString());
-        }
-    }
-
-    public void updateBooks() {
-        for (Book aBook : books) {
-            aBook.editFile("database/books/" + aBook.getId() + ".txt", "genre:", "genre: " + aBook.getGenre());
-
-        }
-    }
-
-    //ändra i listorna. båda. lägg till nya objekt i genrelist för alla genrer som inte hittas där
-    //skapa ett id och skriv över genren i booklist för alla böcker
-    public void convertGenreStringsToIds(List<Book> booklist, List<Genre> genrelist) {
-        for (Book aBook : booklist) {
-            boolean foundGenre = false;
-            String genre = aBook.getGenre();
-            for (Genre aGenre : genrelist) {
-                if (aGenre.getName().equalsIgnoreCase(genre)) {
-                    //skriv över bokens genre till genrens id
-                    aBook.setGenre(aGenre.getId());
-                    foundGenre = true;
-                }
-            }
-            if (!foundGenre) {
-                genrelist.add(new Genre(aBook.getGenre()));
-                aBook.setGenre(genrelist.get(genrelist.size() - 1).getId());
-            }
-        }
-    }
-
-    public void convertAuthorStringsToIds(List<Book> booklist, List<Author> authorlist) {
-        for (Book aBook : booklist) {
-            boolean foundAuthor = false;
-            String author = aBook.getAuthorId();
-            for (Author anAuthor : authorlist) {
-                if (anAuthor.getFirstName().concat(" " + anAuthor.getLastName()).equalsIgnoreCase(author)) {
-                    anAuthor.addToBibliography(aBook);
-                    aBook.setAuthorId(anAuthor.getAuthorId());
-                    foundAuthor = true;
-                }
-            }
-            if (author.contains(" ") && !foundAuthor) {
-                ArrayList<String> name = new ArrayList<>(List.of(author.split(" ")));
-                var fname = name.remove(0);
-                for (int i = 1; i < name.size(); i++) {
-                    name.set(0, name.get(0).concat(" " + name.get(i)));
-                }
-                authorlist.add(new Author(fname, name.get(0), aBook));
-                aBook.setAuthorId(authorlist.get(authorlist.size() - 1).getAuthorId());
-            } else if (!foundAuthor) {
-                authorlist.add(new Author(author, "", aBook));
-                aBook.setAuthorId(authorlist.get(authorlist.size() - 1).getAuthorId());
-            }
-        }
-    }
 
     private void loadBooks() {
         File folderPath = new File("database/books/");
@@ -198,13 +138,15 @@ public class Library {
 
     private void loadBorrowedBooks() {
         String loans = "";
-        if (user.getActiveLoans() != null || !user.getActiveLoans().trim().isEmpty())
-            for (User user : users) {
+        for (User user : users) {
+            if (user.getActiveLoans() != null || !user.getActiveLoans().trim().isEmpty()) {
                 loans = loans.trim().concat(" " + user.getActiveLoans());
             }
+        }
         for (Book book : books) {
-            book.setQuantity(book.getQuantity() - 1);
-            if (loans.contains(book.getIsbn())) ;
+            if (loans.contains(book.getIsbn())) {
+                book.setQuantity(book.getQuantity() - 1);
+            }
         }
     }
 
@@ -246,6 +188,7 @@ public class Library {
                             System.out.println("Do you want it?\n1. Yes\n2. No");
                             if (scan.nextLine().equals("1")) {
                                 borrowBook(book);
+                                System.out.println("You have borrowed " + book.toString());
                             } else System.out.println("Never mind, then.");
                         } else if (operation.equals("return")) {
                             returnBook(book);
@@ -369,17 +312,19 @@ public class Library {
             if (tel.length() < 5 || tel.isBlank()) {
                 System.out.println("Your telephone number must be at least 5 digits!");
                 inputOk = false;
-            }
-            else{
+            } else {
                 inputOk = true;
             }
         } while (!inputOk);
 
         users.add(new User(name, address, mail, tel));
         activeUser = users.get(users.size() - 1);
-        String uniqueId = users.get(users.size() - 1).getId();
-        users.get(users.size() - 1).writeToFile(("database/users/" + uniqueId), (users.get(users.size() - 1).toString()));
-        System.out.printf("Registration complete!\nYour unique id is: %s\n", uniqueId);
+        String uniqueId = activeUser.getId();
+        cards.add(new Card(uniqueId));
+        activeUser.setCardNr(activeUser.makeNewId());
+        cards.get(cards.size() - 1).writeToFile("database/cards/" + cards.get(cards.size() - 1).getCardNr(), cards.get(cards.size() - 1).toString());
+        activeUser.writeToFile(("database/users/" + uniqueId), activeUser.toString());
+        System.out.println("Registration complete!\nYour Log-in id is: " + uniqueId + " (SAVE THIS!)\nYour card number is " + activeUser.getCardNr());
         menu.userMenu();
     }
 
@@ -589,4 +534,71 @@ public class Library {
         } while (runningEditBook);
         menu.adminMenu();
     }
+
+    /*
+    public void createAuthors() {
+        for (Author aut : authors) {
+            aut.writeToFile("database/authors/" + aut.getAuthorId(), aut.toString());
+        }
+    }
+
+    public void createGenres() {
+        for (Genre genre : genres) {
+            new Book().writeToFile("database/genres/" + genre.getId(), genre.toString());
+        }
+    }
+
+    public void updateBooks() {
+        for (Book aBook : books) {
+            aBook.editFile("database/books/" + aBook.getId() + ".txt", "genre:", "genre: " + aBook.getGenre());
+
+        }
+    }
+
+    //ändra i listorna. båda. lägg till nya objekt i genrelist för alla genrer som inte hittas där
+    //skapa ett id och skriv över genren i booklist för alla böcker
+    public void convertGenreStringsToIds(List<Book> booklist, List<Genre> genrelist) {
+        for (Book aBook : booklist) {
+            boolean foundGenre = false;
+            String genre = aBook.getGenre();
+            for (Genre aGenre : genrelist) {
+                if (aGenre.getName().equalsIgnoreCase(genre)) {
+                    //skriv över bokens genre till genrens id
+                    aBook.setGenre(aGenre.getId());
+                    foundGenre = true;
+                }
+            }
+            if (!foundGenre) {
+                genrelist.add(new Genre(aBook.getGenre()));
+                aBook.setGenre(genrelist.get(genrelist.size() - 1).getId());
+            }
+        }
+    }
+
+    public void convertAuthorStringsToIds(List<Book> booklist, List<Author> authorlist) {
+        for (Book aBook : booklist) {
+            boolean foundAuthor = false;
+            String author = aBook.getAuthorId();
+            for (Author anAuthor : authorlist) {
+                if (anAuthor.getFirstName().concat(" " + anAuthor.getLastName()).equalsIgnoreCase(author)) {
+                    anAuthor.addToBibliography(aBook);
+                    aBook.setAuthorId(anAuthor.getAuthorId());
+                    foundAuthor = true;
+                }
+            }
+            if (author.contains(" ") && !foundAuthor) {
+                ArrayList<String> name = new ArrayList<>(List.of(author.split(" ")));
+                var fname = name.remove(0);
+                for (int i = 1; i < name.size(); i++) {
+                    name.set(0, name.get(0).concat(" " + name.get(i)));
+                }
+                authorlist.add(new Author(fname, name.get(0), aBook));
+                aBook.setAuthorId(authorlist.get(authorlist.size() - 1).getAuthorId());
+            } else if (!foundAuthor) {
+                authorlist.add(new Author(author, "", aBook));
+                aBook.setAuthorId(authorlist.get(authorlist.size() - 1).getAuthorId());
+            }
+        }
+    }
+    */
 }
