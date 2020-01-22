@@ -223,7 +223,7 @@ public class Library {
     }
 
     private void returnBook(Book bookToReturn) {
-        int newQuantity = bookToReturn.getQuantity() - 1;
+        int newQuantity = bookToReturn.getQuantity() + 1;
         bookToReturn.setQuantity(newQuantity);
         String userFileName = "database/users/" + activeUser.getId() + ".txt";
         String bookFileName = "database/books/" + bookToReturn.getIsbn() + ".txt";

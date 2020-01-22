@@ -1,8 +1,6 @@
 package com.company;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class User extends Base {
 
@@ -95,9 +93,13 @@ public class User extends Base {
         return result;
     }
 
-    public String getActiveLoans() {return activeLoans; }
+    public String getActiveLoans() {
+        return activeLoans;
+    }
 
-    public void setActiveLoans(String loaned) {this.activeLoans = loaned;}
+    public void setActiveLoans(String loaned) {
+        this.activeLoans = loaned;
+    }
 
 
     public String getName() {

@@ -22,8 +22,7 @@ public class Menu {
         System.out.println("3: Quit");
         System.out.println("================================");
 
-        String choice;
-        choice = scan.nextLine();
+        String choice = scan.nextLine();
 
         switch (choice) {
             case "1":
@@ -156,9 +155,6 @@ public class Menu {
                         System.out.println(book.listToString(library.getAuthors()));
                     }
                     System.out.println();
-
-                    //söker efter böcker med "AVAILABLE" som text
-                    //System.out.println(activeUser.searchInFile("available", "database/books"));
                     running = rerunPrompt();
                     break;
                 }
