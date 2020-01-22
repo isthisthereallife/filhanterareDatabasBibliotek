@@ -68,10 +68,7 @@ public class User extends Base {
         return result;
     }
 
-    public String getId() {
-        return this.uniqueId;
-    }
-
+    public String getId() { return this.uniqueId; }
 
     public String activeLoansInfo() {
         String result = "";
@@ -92,13 +89,9 @@ public class User extends Base {
         return result;
     }
 
-    public String getActiveLoans() {
-        return activeLoans;
-    }
+    public String getActiveLoans() {return activeLoans; }
 
-    public void setActiveLoans(String loaned) {
-        this.activeLoans = loaned;
-    }
+    public void setActiveLoans(String loaned) {this.activeLoans = loaned;}
 
 
     public String getName() {
