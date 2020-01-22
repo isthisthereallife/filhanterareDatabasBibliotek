@@ -26,6 +26,7 @@ public class Book extends Base {
         this.year = year;
         this.genre = genre;
         this.quantity = 1;
+        this.totalQuantity = 1;
     }
 
     public Book(List<String> readFromFile, String fileName) {
