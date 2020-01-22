@@ -21,6 +21,7 @@ public class Library {
     private Base base = new Base();
     private Menu menu;
     private User activeUser;
+    private User user;
 
 
     public Library() throws IOException {
@@ -37,7 +38,23 @@ public class Library {
 
     public ArrayList<Book> getBooks() {return books; }
 
-    private void load() {
+    public ArrayList<Author> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(ArrayList<Author> authors) {
+        this.authors = authors;
+    }
+
+    public ArrayList<Genre> getGenres() {
+        return genres;
+    }
+
+    public void setGenres(ArrayList<Genre> genres) {
+        this.genres = genres;
+    }
+
+    private void load() throws IOException {
         loadBooks();
         loadUsers();
         loadAuthors();
@@ -47,7 +64,7 @@ public class Library {
         /*convertAuthorStringsToIds(books,authors);
         convertGenreStringsToIds(books, genres);
         createAuthors();*/
-        loadBorrowedBooks();
+        //loadBorrowedBooks();
     }
 
     public void createAuthors() {
@@ -164,13 +181,13 @@ public class Library {
     }
     private void loadBorrowedBooks() {
         String loans = "";
-            if (user.getActiveLoans() != null || !user.getActiveLoans().trim().isEmpty())
+        if (user.getActiveLoans() != null || !user.getActiveLoans().trim().isEmpty())
         for (User user : users) {
                 loans = loans.trim().concat(" " + user.getActiveLoans());
         }
         for (Book book : books) {
                 book.setQuantity(book.getQuantity() - 1);
-            if (loans.contains(book.getIsbn()))
+            if (loans.contains(book.getIsbn()));
         }
     }
 
@@ -183,7 +200,7 @@ public class Library {
     }
 
 
-    private String searchForBook(String whereToSearch) {
+    String searchForBook(String whereToSearch) {
         System.out.println("Enter search: ");
         String search = scan.nextLine();
         return activeUser.searchInFile(search, whereToSearch).toLowerCase();
@@ -492,8 +509,8 @@ public class Library {
         Path path = Paths.get("database/books/" + aBook.getIsbn() + ".txt");
         books.removeIf(book -> book.getIsbn().equals(aBook.getIsbn()));
 
-        bok.deleteFiles(path);
-        System.out.println(bok.getTitle() + " is now deleted.");
+        aBook.deleteFiles(path);
+        System.out.println(aBook.getTitle() + " is now deleted.");
         menu.adminMenu();
     }
 

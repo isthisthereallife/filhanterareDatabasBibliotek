@@ -1,4 +1,5 @@
 package com.company;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -147,8 +148,8 @@ public class Menu {
                 case "1": {
                     library.getBooks().sort(Comparator.comparing(Book::getTitle));
                     for (Book book : library.getBooks()) {
-                        if (book.getStatus().equals("Available"))
-                            System.out.println(book.listToString());
+                        if (book.getQuantity()>0);
+                         //   System.out.println(book.listToString();
                     }
                     System.out.println();
 
@@ -172,7 +173,7 @@ public class Menu {
                 case "4": {
                     library.getBooks().sort(Comparator.comparing(Book::getTitle));
                     for (Book book :library.getBooks())
-                        System.out.println(book.listToString());
+                      //  System.out.println(book.listToString());
 
                     System.out.println(" ");
                     running = rerunPrompt();
