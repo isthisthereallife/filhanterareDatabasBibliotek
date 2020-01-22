@@ -138,13 +138,15 @@ public class Library {
 
     private void loadBorrowedBooks() {
         String loans = "";
-        if (activeUser.getActiveLoans() != null || !activeUser.getActiveLoans().trim().isEmpty())
-            for (User user : users) {
+        for (User user : users) {
+            if (user.getActiveLoans() != null || !user.getActiveLoans().trim().isEmpty()) {
                 loans = loans.trim().concat(" " + user.getActiveLoans());
             }
+        }
         for (Book book : books) {
-            book.setQuantity(book.getQuantity() - 1);
-            if (loans.contains(book.getIsbn())) ;
+            if (loans.contains(book.getIsbn())) {
+                book.setQuantity(book.getQuantity() - 1);
+            }
         }
     }
 
