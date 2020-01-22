@@ -217,8 +217,8 @@ public class Library {
             bookToBorrow.setQuantity(bookToBorrow.getQuantity() - 1);
             String cardFileName = "database/cards/" + activeUser.getCardNr() + ".txt";
             String bookFileName = "database/books/" + bookToBorrow.getId() + ".txt";
-            String bookLineToEdit = "available";
             String cardLineToEdit = "activeLoans";
+            String bookLineToEdit = "available";
             String bookNewLine = "Status: unavailable";
             bookToBorrow.editFile(bookFileName, bookLineToEdit, bookNewLine);
             activeCard.setActiveLoans(activeCard.getActiveLoans().concat(" "+ bookToBorrow.getIsbn()));
@@ -229,20 +229,24 @@ public class Library {
     }
 
     private void returnBook(Book bookToReturn) {
-        int newQuantity = bookToReturn.getQuantity() + 1;
-        bookToReturn.setQuantity(newQuantity);
-        String userFileName = "database/users/" + activeUser.getId() + ".txt";
-        String bookFileName = "database/books/" + bookToReturn.getIsbn() + ".txt";
+        for (Card c : cards){
+            if(c.getCardNr().equals(activeUser.getCardNr())){
+                activeCard = c;
+                break;
+            }
+        }
+        bookToReturn.setQuantity(bookToReturn.getQuantity() + 1);
+        String cardFileName = "database/cards/" + activeUser.getCardNr() + ".txt";
+        String bookFileName = "database/books/" + bookToReturn.getId() + ".txt";
+        String cardLineToEdit = "activeLoans";
         String bookLineToEdit = "available";
-        String userLineToEdit = "activeLoans";
         String bookNewLine = "Status: available";
         bookToReturn.editFile(bookFileName, bookLineToEdit, bookNewLine);
-        //ta bort en rad från user
-        activeUser.setActiveLoans(activeUser.getActiveLoans().replace(bookToReturn.getIsbn(), ""));
-        //concat(" " + bookToReturn.getIsbn()));
+        activeCard.setActiveLoans(activeCard.getActiveLoans().replace(bookToReturn.getIsbn(),""));
 
-        String userNewLine = "activeLoans: " + activeUser.getActiveLoans();
-        activeUser.editFile(userFileName, userLineToEdit, userNewLine);
+        String cardNewLine = "activeLoans: " + activeUser.getActiveLoans();
+        activeUser.editFile(cardFileName, cardLineToEdit, cardNewLine);
+        System.out.println("You have returned: "+bookToReturn.getTitle());
     }
 
     public void addUser() {
