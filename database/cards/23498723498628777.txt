@@ -1,0 +1,3 @@
+cardHolder: tohhdu8732fptehu234eo
+cardNr: 23498723498628777
+activeLoans:
