@@ -19,7 +19,6 @@ public class Library {
     private Base base = new Base();
     private Menu menu;
     private User activeUser;
-    private User user;
 
 
     public Library() {
@@ -66,7 +65,7 @@ public class Library {
         loadAuthors();
         loadGenres();
         loadCards();
-        loadBorrowedBooks();
+        //loadBorrowedBooks();
     }
 
     public void loadCards() {
@@ -78,7 +77,7 @@ public class Library {
     }
 
 
-    private void loadBooks() throws IOException {
+    private void loadBooks() {
         File folderPath = new File("database/books/");
         String isbn = "";
         for (File file : base.readFromFolder(folderPath)) {
@@ -139,7 +138,7 @@ public class Library {
 
     private void loadBorrowedBooks() {
         String loans = "";
-        if (user.getActiveLoans() != null || !user.getActiveLoans().trim().isEmpty())
+        if (activeUser.getActiveLoans() != null || !activeUser.getActiveLoans().trim().isEmpty())
             for (User user : users) {
                 loans = loans.trim().concat(" " + user.getActiveLoans());
             }
@@ -311,8 +310,7 @@ public class Library {
             if (tel.length() < 5 || tel.isBlank()) {
                 System.out.println("Your telephone number must be at least 5 digits!");
                 inputOk = false;
-            }
-            else{
+            } else {
                 inputOk = true;
             }
         } while (!inputOk);

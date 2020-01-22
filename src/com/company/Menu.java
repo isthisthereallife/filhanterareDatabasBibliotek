@@ -8,6 +8,7 @@ public class Menu {
     Scanner scan = new Scanner(System.in);
     Library library;
     boolean running = true;
+
     public Menu(Library library) {
         this.library = library;
     }
@@ -40,6 +41,7 @@ public class Menu {
                 break;
         }
     }
+
     void adminMenu() {
         library.setActiveUser(new User("admin", "admin", "admin", "admin"));
         do {
@@ -105,6 +107,7 @@ public class Menu {
                 userLoginMenu();
         }
     }
+
     public void loginMenu() {
         System.out.println("What is your login id? ");
         library.setActiveUser(null);
@@ -123,6 +126,7 @@ public class Menu {
             userLoginMenu();
         }
     }
+
     void userMenu() {
         Scanner scan = new Scanner(System.in);
 
@@ -148,8 +152,8 @@ public class Menu {
                 case "1": {
                     library.getBooks().sort(Comparator.comparing(Book::getTitle));
                     for (Book book : library.getBooks()) {
-                        if (book.getQuantity()>0);
-                         System.out.println(book.listToString(library.getAuthors()));
+                        if (book.getQuantity() > 0) ;
+                        System.out.println(book.listToString(library.getAuthors()));
                     }
                     System.out.println();
 
@@ -172,8 +176,8 @@ public class Menu {
                 }
                 case "4": {
                     library.getBooks().sort(Comparator.comparing(Book::getTitle));
-                    for (Book book :library.getBooks())
-                      System.out.println(book.listToString(library.getAuthors()));
+                    for (Book book : library.getBooks())
+                        System.out.println(book.listToString(library.getAuthors()));
 
                     System.out.println(" ");
                     running = rerunPrompt();
@@ -191,6 +195,7 @@ public class Menu {
             }
         } while (running);
     }
+
     boolean rerunPrompt() {
         int choice = 0;
         do {
