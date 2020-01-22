@@ -19,6 +19,7 @@ public class Library {
     private Base base = new Base();
     private Menu menu;
     private User activeUser;
+    private Card activeCard;
 
 
     public Library() {
@@ -188,7 +189,6 @@ public class Library {
                             System.out.println("Do you want it?\n1. Yes\n2. No");
                             if (scan.nextLine().equals("1")) {
                                 borrowBook(book);
-                                System.out.println("You have borrowed " + book.toString());
                             } else System.out.println("Never mind, then.");
                         } else if (operation.equals("return")) {
                             returnBook(book);
@@ -204,20 +204,26 @@ public class Library {
     }
 
     private void borrowBook(Book bookToBorrow) {
-        int newQuantity = bookToBorrow.getQuantity() - 1;
+
         if (bookToBorrow.getQuantity() < 1) {
             System.out.println("Sorry, someone else has already borrowed that book!");
         } else {
-            bookToBorrow.setQuantity(newQuantity);
-            String userFileName = "database/users/" + activeUser.getId() + ".txt";
+            for (Card c : cards){
+                if(c.getCardNr().equals(activeUser.getCardNr())){
+                    activeCard = c;
+                    break;
+                }
+            }
+            bookToBorrow.setQuantity(bookToBorrow.getQuantity() - 1);
+            String cardFileName = "database/cards/" + activeUser.getCardNr() + ".txt";
             String bookFileName = "database/books/" + bookToBorrow.getId() + ".txt";
             String bookLineToEdit = "available";
-            String userLineToEdit = "activeLoans";
+            String cardLineToEdit = "activeLoans";
             String bookNewLine = "Status: unavailable";
             bookToBorrow.editFile(bookFileName, bookLineToEdit, bookNewLine);
-            activeUser.setActiveLoans(activeUser.getActiveLoans().concat(" " + bookToBorrow.getIsbn()));
-            String userNewLine = "activeLoans: " + activeUser.getActiveLoans();
-            activeUser.editFile(userFileName, userLineToEdit, userNewLine);
+            activeCard.setActiveLoans(activeCard.getActiveLoans().concat(" "+ bookToBorrow.getIsbn()));
+            String cardNewLine = "activeLoans: " + activeCard.getActiveLoans();
+            activeCard.editFile(cardFileName, cardLineToEdit, cardNewLine);
             System.out.println("You have borrowed: " + bookToBorrow.getTitle());
         }
     }
