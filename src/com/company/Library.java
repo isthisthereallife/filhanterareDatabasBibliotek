@@ -382,22 +382,6 @@ public class Library {
         return pat.matcher(mail).matches();
     }
 
-    private void adminChoiceMenu() {
-        System.out.println("1: New book");
-        System.out.println("2: Show list of existing authors");
-        String adminChoice = scan.nextLine();
-        switch (adminChoice) {
-            case "1":
-                addBook();
-                break;
-            case "2":
-                int counter = 1;
-                for (Author author : authors) {
-                    System.out.println(counter + " " + author.getFirstName() + " " + author.getLastName());
-                }
-        }
-    }
-
     public void addBook() {
         boolean inputOk = false;
         boolean isDuplicate;
