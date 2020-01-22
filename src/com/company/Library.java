@@ -76,32 +76,6 @@ public class Library {
         this.genres = genres;
     }
 
-    /*public void convertAuthorStringsToIds(List<Book> booklist, List<Author> authorlist) {
-        for (Book aBook : booklist) {
-            boolean foundAuthor = false;
-            String author = aBook.getAuthorId();
-            for (Author anAuthor : authorlist) {
-                if (anAuthor.getFirstName().concat(" " + anAuthor.getLastName()).equalsIgnoreCase(author)) {
-                    anAuthor.addToBibliography(aBook);
-                    aBook.setAuthorId(anAuthor.getAuthorId());
-                    foundAuthor = true;
-                }
-            }
-            if (author.contains(" ") && !foundAuthor) {
-                ArrayList<String> name = new ArrayList<>(List.of(author.split(" ")));
-                var fname = name.remove(0);
-                for (int i = 1; i < name.size(); i++) {
-                    name.set(0, name.get(0).concat(" " + name.get(i)));
-                }
-                authorlist.add(new Author(fname, name.get(0), aBook));
-                aBook.setAuthorId(authorlist.get(authorlist.size() - 1).getAuthorId());
-            } else if (!foundAuthor) {
-                authorlist.add(new Author(author, "", aBook));
-                aBook.setAuthorId(authorlist.get(authorlist.size() - 1).getAuthorId());
-            }
-    }*/
-
-
     private void loadBooks() {
         File folderPath = new File("database/books/");
         String isbn = "";
