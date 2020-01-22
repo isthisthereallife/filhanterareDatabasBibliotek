@@ -46,70 +46,6 @@ public class Library {
         }
     }
 
-    public void createAuthors() {
-        for (Author aut : authors) {
-            aut.writeToFile("database/authors/" + aut.getAuthorId(), aut.toString());
-        }
-    }
-
-    public void createGenres() {
-        for (Genre genre : genres) {
-            new Book().writeToFile("database/genres/" + genre.getId(), genre.toString());
-        }
-    }
-
-    public void updateBooks() {
-        for (Book aBook : books) {
-            aBook.editFile("database/books/" + aBook.getId() + ".txt", "genre:", "genre: " + aBook.getGenre());
-
-        }
-    }
-
-    //ändra i listorna. båda. lägg till nya objekt i genrelist för alla genrer som inte hittas där
-    //skapa ett id och skriv över genren i booklist för alla böcker
-    public void convertGenreStringsToIds(List<Book> booklist, List<Genre> genrelist) {
-        for (Book aBook : booklist) {
-            boolean foundGenre = false;
-            String genre = aBook.getGenre();
-            for (Genre aGenre : genrelist) {
-                if (aGenre.getName().equalsIgnoreCase(genre)) {
-                    //skriv över bokens genre till genrens id
-                    aBook.setGenre(aGenre.getId());
-                    foundGenre = true;
-                }
-            }
-            if (!foundGenre) {
-                genrelist.add(new Genre(aBook.getGenre()));
-                aBook.setGenre(genrelist.get(genrelist.size() - 1).getId());
-            }
-        }
-    }
-
-    public void convertAuthorStringsToIds(List<Book> booklist, List<Author> authorlist) {
-        for (Book aBook : booklist) {
-            boolean foundAuthor = false;
-            String author = aBook.getAuthorId();
-            for (Author anAuthor : authorlist) {
-                if (anAuthor.getFirstName().concat(" " + anAuthor.getLastName()).equalsIgnoreCase(author)) {
-                    anAuthor.addToBibliography(aBook);
-                    aBook.setAuthorId(anAuthor.getAuthorId());
-                    foundAuthor = true;
-                }
-            }
-            if (author.contains(" ") && !foundAuthor) {
-                ArrayList<String> name = new ArrayList<>(List.of(author.split(" ")));
-                var fname = name.remove(0);
-                for (int i = 1; i < name.size(); i++) {
-                    name.set(0, name.get(0).concat(" " + name.get(i)));
-                }
-                authorlist.add(new Author(fname, name.get(0), aBook));
-                aBook.setAuthorId(authorlist.get(authorlist.size() - 1).getAuthorId());
-            } else if (!foundAuthor) {
-                authorlist.add(new Author(author, "", aBook));
-                aBook.setAuthorId(authorlist.get(authorlist.size() - 1).getAuthorId());
-            }
-        }
-    }
 
     private void loadBooks() throws IOException {
         File folderPath = new File("database/books/");
@@ -773,4 +709,70 @@ public class Library {
         adminMenu();
     }
 
+    /*
+    public void createAuthors() {
+        for (Author aut : authors) {
+            aut.writeToFile("database/authors/" + aut.getAuthorId(), aut.toString());
+        }
+    }
+
+    public void createGenres() {
+        for (Genre genre : genres) {
+            new Book().writeToFile("database/genres/" + genre.getId(), genre.toString());
+        }
+    }
+
+    public void updateBooks() {
+        for (Book aBook : books) {
+            aBook.editFile("database/books/" + aBook.getId() + ".txt", "genre:", "genre: " + aBook.getGenre());
+
+        }
+    }
+
+    //ändra i listorna. båda. lägg till nya objekt i genrelist för alla genrer som inte hittas där
+    //skapa ett id och skriv över genren i booklist för alla böcker
+    public void convertGenreStringsToIds(List<Book> booklist, List<Genre> genrelist) {
+        for (Book aBook : booklist) {
+            boolean foundGenre = false;
+            String genre = aBook.getGenre();
+            for (Genre aGenre : genrelist) {
+                if (aGenre.getName().equalsIgnoreCase(genre)) {
+                    //skriv över bokens genre till genrens id
+                    aBook.setGenre(aGenre.getId());
+                    foundGenre = true;
+                }
+            }
+            if (!foundGenre) {
+                genrelist.add(new Genre(aBook.getGenre()));
+                aBook.setGenre(genrelist.get(genrelist.size() - 1).getId());
+            }
+        }
+    }
+
+    public void convertAuthorStringsToIds(List<Book> booklist, List<Author> authorlist) {
+        for (Book aBook : booklist) {
+            boolean foundAuthor = false;
+            String author = aBook.getAuthorId();
+            for (Author anAuthor : authorlist) {
+                if (anAuthor.getFirstName().concat(" " + anAuthor.getLastName()).equalsIgnoreCase(author)) {
+                    anAuthor.addToBibliography(aBook);
+                    aBook.setAuthorId(anAuthor.getAuthorId());
+                    foundAuthor = true;
+                }
+            }
+            if (author.contains(" ") && !foundAuthor) {
+                ArrayList<String> name = new ArrayList<>(List.of(author.split(" ")));
+                var fname = name.remove(0);
+                for (int i = 1; i < name.size(); i++) {
+                    name.set(0, name.get(0).concat(" " + name.get(i)));
+                }
+                authorlist.add(new Author(fname, name.get(0), aBook));
+                aBook.setAuthorId(authorlist.get(authorlist.size() - 1).getAuthorId());
+            } else if (!foundAuthor) {
+                authorlist.add(new Author(author, "", aBook));
+                aBook.setAuthorId(authorlist.get(authorlist.size() - 1).getAuthorId());
+            }
+        }
+    }
+    */
 }
