@@ -9,12 +9,18 @@ public class Author extends Base {
     private String authorId;
     private ArrayList<Book> bibliography = new ArrayList<>();
 
-    public Author(String firstName, String lastName, Book newBook) {
+    public Author(String firstName, String lastName, String authorId, Book newBook) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.authorId = authorId;
+        this.bibliography = new ArrayList<>();
+        this.bibliography.add(newBook);
+    }
+    public Author(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
         setAuthorId();
         this.bibliography = new ArrayList<>();
-        this.bibliography.add(newBook);
     }
 
     public void addToBibliography(Book newBook) {

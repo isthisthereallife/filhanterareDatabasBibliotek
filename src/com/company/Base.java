@@ -65,6 +65,18 @@ public class Base {
         return fileList;
     }
 
+    public boolean checkForDuplicateFileNames (File folderPath, String fileName) {
+        File[] fileList = folderPath.listFiles();
+        for (File file : fileList) {
+            final Path path = file.toPath();
+            String strPath = String.valueOf(path);
+            if(strPath.contains(fileName)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public List<String> readFromFile(Path path) {
 
         List<String> contents = null;
