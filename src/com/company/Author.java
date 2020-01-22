@@ -7,7 +7,7 @@ public class Author extends Base {
     private String firstName;
     private String lastName;
     private String authorId;
-    ArrayList<Book> bibliography = new ArrayList<>();
+    private ArrayList<Book> bibliography = new ArrayList<>();
 
     public Author(String firstName, String lastName, String authorId, Book newBook) {
         this.firstName = firstName;
