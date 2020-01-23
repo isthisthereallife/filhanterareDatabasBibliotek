@@ -141,7 +141,7 @@ public class Menu {
             System.out.println("1: View available books");
             System.out.println("2: Borrow a book");
             System.out.println("3: Return a book");
-            System.out.println("4: View all books in the library");
+            System.out.println("4: Search");
             if (!this.library.getActiveCard().activeLoansInfo().equals("")) {
                 System.out.println("5: View active loans");
             }
@@ -178,11 +178,7 @@ public class Menu {
                     break;
                 }
                 case "4": {
-                    library.getBooks().sort(Comparator.comparing(Book::getTitle));
-                    for (Book book : library.getBooks())
-                        System.out.println(book.listToString(library.getAuthors()));
-
-                    System.out.println(" ");
+                    new Search(library.getBooks(), library.getGenres(), library.getAuthors());
                     running = rerunPrompt();
                     break;
                 }
