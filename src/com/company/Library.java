@@ -570,7 +570,7 @@ public class Library {
             for (Author author : authors) {
                 if (author.getAuthorId().equals(authorId)) {
                     author.addToBibliography(books.get(books.size() - 1));
-                    for (Book book : author.Bibliography) {
+                    for (Book book : author.bibliography) {
                         authorsBooks = authorsBooks.concat(book.getIsbn() + " ");
                     }
                     author.editFile("database/authors/" + authorId + ".txt", "bibliography", "bibliography: " + 2);
