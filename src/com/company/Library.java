@@ -19,6 +19,7 @@ public class Library {
     private Base base = new Base();
     private Menu menu;
     private User activeUser;
+    private Card activeCard;
 
 
     public Library() {
@@ -42,6 +43,29 @@ public class Library {
             final Path path = file.toPath();
             cards.add(new Card(base.readFromFile(path)));
         }
+    }
+
+    public Card getActiveCard() {
+        return this.activeCard;
+    }
+
+    public void setActiveCard(Card card) {
+        this.activeCard = card;
+    }
+
+    public void setActiveCard(String cardNumber) {
+        if (!cardNumber.isBlank()) {
+            for (Card c : cards) {
+                if (c.getCardNr().equals(cardNumber)) {
+                    this.activeCard = c;
+                    break;
+                }
+            }
+        }
+    }
+
+    public ArrayList<Card> getCards() {
+        return cards;
     }
 
     public User getActiveUser() {
@@ -187,7 +211,6 @@ public class Library {
                             System.out.println("Do you want it?\n1. Yes\n2. No");
                             if (scan.nextLine().equals("1")) {
                                 borrowBook(book);
-                                System.out.println("You have borrowed " + book.toString());
                             } else System.out.println("Never mind, then.");
                         } else if (operation.equals("return")) {
                             returnBook(book);
@@ -203,39 +226,49 @@ public class Library {
     }
 
     private void borrowBook(Book bookToBorrow) {
-        int newQuantity = bookToBorrow.getQuantity() - 1;
+
         if (bookToBorrow.getQuantity() < 1) {
             System.out.println("Sorry, someone else has already borrowed that book!");
         } else {
-            bookToBorrow.setQuantity(newQuantity);
-            String userFileName = "database/users/" + activeUser.getId() + ".txt";
+            for (Card c : cards) {
+                if (c.getCardNr().equals(activeUser.getCardNr())) {
+                    activeCard = c;
+                    break;
+                }
+            }
+            bookToBorrow.setQuantity(bookToBorrow.getQuantity() - 1);
+            String cardFileName = "database/cards/" + activeCard.getCardNr() + ".txt";
             String bookFileName = "database/books/" + bookToBorrow.getId() + ".txt";
+            String cardLineToEdit = "activeLoans";
             String bookLineToEdit = "available";
-            String userLineToEdit = "activeLoans";
             String bookNewLine = "Status: unavailable";
             bookToBorrow.editFile(bookFileName, bookLineToEdit, bookNewLine);
-            activeUser.setActiveLoans(activeUser.getActiveLoans().concat(" " + bookToBorrow.getIsbn()));
-            String userNewLine = "activeLoans: " + activeUser.getActiveLoans();
-            activeUser.editFile(userFileName, userLineToEdit, userNewLine);
+            activeCard.setActiveLoans(activeCard.getActiveLoans().concat(" " + bookToBorrow.getIsbn()));
+            String cardNewLine = "activeLoans: " + activeCard.getActiveLoans();
+            activeCard.editFile(cardFileName, cardLineToEdit, cardNewLine);
             System.out.println("You have borrowed: " + bookToBorrow.getTitle());
         }
     }
 
     private void returnBook(Book bookToReturn) {
-        int newQuantity = bookToReturn.getQuantity() - 1;
-        bookToReturn.setQuantity(newQuantity);
-        String userFileName = "database/users/" + activeUser.getId() + ".txt";
-        String bookFileName = "database/books/" + bookToReturn.getIsbn() + ".txt";
+        for (Card c : cards) {
+            if (c.getCardNr().equals(activeUser.getCardNr())) {
+                activeCard = c;
+                break;
+            }
+        }
+        bookToReturn.setQuantity(bookToReturn.getQuantity() + 1);
+        String cardFileName = "database/cards/" + activeUser.getCardNr() + ".txt";
+        String bookFileName = "database/books/" + bookToReturn.getId() + ".txt";
+        String cardLineToEdit = "activeLoans";
         String bookLineToEdit = "available";
-        String userLineToEdit = "activeLoans";
         String bookNewLine = "Status: available";
         bookToReturn.editFile(bookFileName, bookLineToEdit, bookNewLine);
-        //ta bort en rad från user
-        activeUser.setActiveLoans(activeUser.getActiveLoans().replace(bookToReturn.getIsbn(), ""));
-        //concat(" " + bookToReturn.getIsbn()));
+        activeCard.setActiveLoans(activeCard.getActiveLoans().replace(bookToReturn.getIsbn(), ""));
 
-        String userNewLine = "activeLoans: " + activeUser.getActiveLoans();
-        activeUser.editFile(userFileName, userLineToEdit, userNewLine);
+        String cardNewLine = "activeLoans: " + activeUser.getActiveLoans();
+        activeUser.editFile(cardFileName, cardLineToEdit, cardNewLine);
+        System.out.println("You have returned: " + bookToReturn.getTitle());
     }
 
     public void addUser() {
@@ -320,9 +353,10 @@ public class Library {
         activeUser = users.get(users.size() - 1);
         String uniqueId = activeUser.getId();
         cards.add(new Card(uniqueId));
-        activeUser.setCardNr(activeUser.makeNewId());
+        activeUser.setCardNr(cards.get(cards.size()-1).getCardNr());
         cards.get(cards.size() - 1).writeToFile("database/cards/" + cards.get(cards.size() - 1).getCardNr(), cards.get(cards.size() - 1).toString());
         activeUser.writeToFile(("database/users/" + uniqueId), activeUser.toString());
+        setActiveCard(cards.get(cards.size() - 1).getCardNr());
         System.out.println("Registration complete!\nYour Log-in id is: " + uniqueId + " (SAVE THIS!)\nYour card number is " + activeUser.getCardNr());
         menu.userMenu();
     }

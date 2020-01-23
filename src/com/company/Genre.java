@@ -6,7 +6,6 @@ public class Genre extends Book {
     private String name;
     private String id;
 
-    //den tar in boklistan,
     public Genre(String name) {
         this.name = name;
         this.id = makeNewId();

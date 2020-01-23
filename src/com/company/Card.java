@@ -27,6 +27,10 @@ public class Card extends User {
         }
     }
 
+    public Card() {
+
+    }
+
     public String activeLoansInfo() {
         String result = "";
 
