@@ -10,6 +10,7 @@ public class AddBook {
     private boolean inputOk = false;
     private boolean isDuplicate;
     private boolean isNewAuthor = false;
+    private boolean isNewGenre = false;
     private String fileName;
     private String authorChoice;
     private String isbn;
@@ -17,11 +18,10 @@ public class AddBook {
     private String authorFname = null;
     private String authorLname = null;
     private String authorId = null;
-    String newAuthorId;
+    private String newAuthorId = null;
     private String year;
     private String genre = null;
     private String genreId = null;
-    private String authorsBooks = "";
     private Book bookObj = new Book();
 
     public AddBook() {}
@@ -85,6 +85,45 @@ public class AddBook {
         return year;
     }
 
+    private String genre() {
+        do {
+            int genreCounter = 1;
+            for (Genre genreObj : library.getGenres()) {
+                System.out.println("[" + genreCounter + "]" + " " + genreObj.getName());
+                genreCounter++;
+            }
+            int newGenre = library.getGenres().size() + 1;
+            System.out.println("[" + newGenre + "]" + " " + "Add new genre");
+            System.out.println("All existing genres in the library, pick one or add a new one");
+            String genreChoice = scan.nextLine();
+            int choice = Integer.parseInt(genreChoice);
+            if (choice < genreCounter) {
+                for (int i = 0; i < library.getBooks().size(); i++) {
+                    if (choice - 1 == i) {
+                        genreId = library.getBooks().get(i).getGenre();
+                        inputOk = true;
+                    }
+                }
+            } else if (choice == genreCounter) {
+                System.out.println("Type in the new genre:");
+                genre = scan.nextLine();
+                inputOk = library.checkIfStringOfLetters(genre);
+                if (genre.length() < 1 || genre.isBlank()) {
+                    System.out.println("The genre must contain at least one character!");
+                    inputOk = false;
+                } else {
+                    library.getGenres().add(new Genre(genre));
+                    Genre genreObj = library.getGenres().get(library.getGenres().size() - 1);
+                    base.writeToFile("database/genres/" + genreObj.getId(), genreObj.toString());
+                }
+            }
+        } while (!inputOk);
+        if(isNewGenre){
+            genreId = library.getGenres().get(library.getGenres().size() -1).getId();
+        }
+        return genreId;
+    }
+
     private String fileName() {
         do {
             fileName = bookObj.idGenerator();
@@ -94,12 +133,32 @@ public class AddBook {
         return fileName;
     }
 
+    private void addProccess(String fileName, String isbn, String title, String authorId, String year, String genreId, boolean isNewAuthor, String authorFname, String authorLname) {
+        library.getBooks().add(new Book(fileName, isbn, title, authorId, year, genreId));
+        library.getBooks().get(library.getBooks().size() - 1).writeToFile(("database/books/" + fileName), (library.getBooks().get(library.getBooks().size() - 1).toString()));
+        if (isNewAuthor) {
+            library.getAuthors().add(new Author(authorFname, authorLname, authorId, library.getBooks().get(library.getBooks().size() - 1)));
+            Author authorObj = library.getAuthors().get(library.getAuthors().size() - 1);
+            authorObj.writeToFile(("database/authors/" + authorObj.getAuthorId()), (authorObj.toString()));
+        } else {
+            for (Author author : library.getAuthors()) {
+                if (author.getAuthorId().equals(authorId)) {
+                    String authorsBooks = "";
+                    author.addToBibliography(library.getBooks().get(library.getBooks().size() - 1));
+                    for (Book book : author.getBibliography()) {
+                        authorsBooks = authorsBooks.concat(book.getIsbn() + " ");
+                    }
+                    author.editFile("database/authors/" + authorId + ".txt", "bibliography", "bibliography: " + authorsBooks);
+                }
+            }
+        }
+    }
+
     public void addBook() {
         isbn = isbn();
         if(isbn == null)
             return;
         title = title();
-
         do {
             int counter = 1;
             for (Author authorObj : library.getAuthors()) {
@@ -141,61 +200,13 @@ public class AddBook {
             File folderPath = new File("database/authors/");
             isDuplicate = base.checkForDuplicateFileNames(folderPath, newAuthorId);
         } while (isDuplicate);
-
-        year = year();
-
-        do {
-            int genreCounter = 1;
-            for (Genre genreObj : library.getGenres()) {
-                System.out.println("[" + genreCounter + "]" + " " + genreObj.getName());
-                genreCounter++;
-            }
-            int newGenre = library.getGenres().size() + 1;
-            System.out.println("[" + newGenre + "]" + " " + "Add new genre");
-            System.out.println("All existing genres in the library, pick one or add a new one");
-            String genreChoice = scan.nextLine();
-            int choice = Integer.parseInt(genreChoice);
-            if (choice < genreCounter) {
-                for (int i = 0; i < library.getBooks().size(); i++) {
-                    if (choice - 1 == i) {
-                        genreId = library.getBooks().get(i).getGenre();
-                        inputOk = true;
-                    }
-                }
-            } else if (choice == genreCounter) {
-                System.out.println("Type in the new genre:");
-                genre = scan.nextLine();
-                inputOk = library.checkIfStringOfLetters(genre);
-                if (genre.length() < 1 || genre.isBlank()) {
-                    System.out.println("The genre must contain at least one character!");
-                    inputOk = false;
-                } else {
-                    library.getGenres().add(new Genre(genre));
-                    Genre genreObj = library.getGenres().get(library.getGenres().size() - 1);
-                    base.writeToFile("database/genres/" + genreObj.getId(), genreObj.toString());
-                }
-            }
-        } while (!inputOk);
-
-        fileName = fileName();
-
-        library.getBooks().add(new Book(fileName, isbn, title, authorId, year, genreId));
-        library.getBooks().get(library.getBooks().size() - 1).writeToFile(("database/books/" + fileName), (library.getBooks().get(library.getBooks().size() - 1).toString()));
         if (isNewAuthor) {
-            library.getAuthors().add(new Author(authorFname, authorLname, authorId, library.getBooks().get(library.getBooks().size() - 1)));
-            Author authorObj = library.getAuthors().get(library.getAuthors().size() - 1);
-            authorObj.writeToFile(("database/authors/" + authorObj.getAuthorId()), (authorObj.toString()));
-        } else {
-            for (Author author : library.getAuthors()) {
-                if (author.getAuthorId().equals(authorId)) {
-                    author.addToBibliography(library.getBooks().get(library.getBooks().size() - 1));
-                    for (Book book : author.getBibliography()) {
-                        authorsBooks = authorsBooks.concat(book.getIsbn() + " ");
-                    }
-                    author.editFile("database/authors/" + authorId + ".txt", "bibliography", "bibliography: " + 2);
-                }
-            }
+            authorId = newAuthorId;
         }
+        year = year();
+        genreId = genre();
+        fileName = fileName();
+        addProccess(fileName, isbn, title, authorId, year, genreId, isNewAuthor, authorFname, authorLname);
         System.out.println("Book added to the library!");
         return;
     }
