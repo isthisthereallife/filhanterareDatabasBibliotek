@@ -7,7 +7,7 @@ public class Author extends Base {
     private String firstName;
     private String lastName;
     private String authorId;
-    ArrayList<Book> bibliography = new ArrayList<>();
+    private ArrayList<Book> bibliography = new ArrayList<>();
 
     public Author(String firstName, String lastName, String authorId, Book newBook) {
         this.firstName = firstName;
@@ -16,6 +16,7 @@ public class Author extends Base {
         this.bibliography = new ArrayList<>();
         this.bibliography.add(newBook);
     }
+
     public Author(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -51,12 +52,9 @@ public class Author extends Base {
                 this.authorId = trim;
             } else if (s.contains("bibliography: ")) {
                 String[] authorBookString = trim.split(" ");
-                //för varje book så ska jag hitta objektet med sånt isbn
                 for (String book : authorBookString) {
-                    //kolla igenom bookList
                     for (Book item : bookList) {
                         if (item.getIsbn().equals(book)) {
-                            //lägg in det objektet i this.bibliography
                             this.bibliography.add(item);
                             System.out.println("added: " + item.getTitle() + " to " + this.firstName + " " + this.lastName);
                         }
