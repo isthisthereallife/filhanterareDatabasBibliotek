@@ -582,10 +582,10 @@ public class Library {
             for(Book book : author.getBibliography()) {
                 if (book.getIsbn().equals(aBook.getIsbn())) {
                     author.removeFromBibliography(book);
-                    for (book : author.getBibliography()) {
-                        authorsBooks = authorsBooks.concat(book.getIsbn() + " ");
+                    for (Book theBook : author.getBibliography()) {
+                        authorsBooks = authorsBooks.concat(theBook.getIsbn() + " ");
                     }
-                    author.editFile("database/authors/" + author.getAuthorId() + ".txt", "bibliography", "bibliography: " + 2);
+                    author.editFile("database/authors/" + author.getAuthorId() + ".txt", "bibliography", "bibliography: " + authorsBooks);
                 }
             }
             }
