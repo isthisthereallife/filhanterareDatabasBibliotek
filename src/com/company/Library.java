@@ -49,6 +49,10 @@ public class Library {
         return this.activeCard;
     }
 
+    public void setActiveCard(){
+        this.activeCard = null;
+    }
+
     public void setActiveCard(Card card) {
         this.activeCard = card;
     }
@@ -181,6 +185,7 @@ public class Library {
         return activeUser.searchInFile(search, whereToSearch).toLowerCase();
 
     }
+
 
     int countOccurrences(String searchFor, String searchIn) {
         return (searchIn.toLowerCase().split(Pattern.quote(searchFor.toLowerCase()), -1).length) - 1;
@@ -719,4 +724,5 @@ public class Library {
         }
     }
     */
+
 }
