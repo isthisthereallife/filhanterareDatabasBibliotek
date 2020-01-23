@@ -578,6 +578,11 @@ public class Library {
 
         Path path = Paths.get("database/books/" + aBook.getId() + ".txt");
         books.removeIf(book -> book.getIsbn().equals(aBook.getIsbn()));
+        for (Author author : authors) {
+            for(Book book : author.getBibliography()){
+                if
+            }
+        }
 
         aBook.deleteFiles(path);
         System.out.println(aBook.getTitle() + " is now deleted.");
