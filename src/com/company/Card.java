@@ -39,6 +39,7 @@ public class Card extends User {
         */
         if (!this.activeLoans.equals("")) {
             String isbnString = this.activeLoans.substring(this.activeLoans.indexOf(":") + 1);
+            isbnString = isbnString.trim();
             String[] isbnStringList = isbnString.split(" ");
             for (String s : isbnStringList) {
                 //skicka strängen tilll readFromDisk, hitta filen som har denna sträng i sig

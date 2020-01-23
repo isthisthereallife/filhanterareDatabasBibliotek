@@ -28,9 +28,11 @@ public class Menu {
             case "1":
                 adminMenu();
                 running = false;
+                break;
             case "2":
                 userLoginMenu();
                 running = false;
+                break;
             case "3":
                 System.exit(0);
                 break;
@@ -102,6 +104,7 @@ public class Menu {
                 break;
             case "3":
                 identification();
+                break;
             default:
                 System.out.println("Invalid choice. Try again!");
                 userLoginMenu();
@@ -159,7 +162,8 @@ public class Menu {
                     }
                     System.out.println();
                     running = rerunPrompt();
-                    break;*/
+                    */
+                    break;
                 }
                 case "2": {
                     String result = library.searchForBook("database/books");
