@@ -104,32 +104,25 @@ public class Library {
         File folderPath = new File("database/books/");
         String isbn = "";
         for (File file : base.readFromFolder(folderPath)) {
-            BufferedReader brTest = null;
-            try {
-                brTest = new BufferedReader(new FileReader(file));
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            String firstLine = null;
-            try {
-                firstLine = brTest.readLine();
+            try (BufferedReader brTest = new BufferedReader(new FileReader(file))) {
+                String firstLine = brTest.readLine();
+                final Path path = file.toPath();
+                String fileName = String.valueOf(path);
+                books.add(new Book(base.readFromFile(path), fileName));
+                String isbnFromFile = firstLine.substring(firstLine.indexOf(":") + 1).trim();
+                if (isbn.contains(isbnFromFile)) {
+                    books.remove(books.size() - 1);
+                    for (Book book : books) {
+                        if (book.getIsbn().equals(isbnFromFile)) {
+                            book.setQuantity(book.getQuantity() + 1);
+                            book.setTotalQuantity(book.getTotalQuantity() + 1);
+                        }
+                    }
+                }
+                isbn = isbn.concat(" " + isbnFromFile);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            final Path path = file.toPath();
-            String fileName = String.valueOf(path);
-            books.add(new Book(base.readFromFile(path), fileName));
-            String isbnFromFile = firstLine.substring(firstLine.indexOf(":") + 1).trim();
-            if (isbn.contains(isbnFromFile)) {
-                books.remove(books.size() - 1);
-                for (Book book : books) {
-                    if (book.getIsbn().equals(isbnFromFile)) {
-                        book.setQuantity(book.getQuantity() + 1);
-                        book.setTotalQuantity(book.getTotalQuantity() + 1);
-                    }
-                }
-            }
-            isbn = isbn.concat(" " + isbnFromFile);
         }
     }
 
@@ -173,7 +166,7 @@ public class Library {
         }
     }
 
-    private void listBooks() {
+    void listBooks() {
         books.sort(Comparator.comparing(Book::getTitle));
         for (Book book : books)
 
@@ -583,7 +576,7 @@ public class Library {
 
     public void deleteBook(Book aBook) {
 
-        Path path = Paths.get("database/books/" + aBook.getIsbn() + ".txt");
+        Path path = Paths.get("database/books/" + aBook.getId() + ".txt");
         books.removeIf(book -> book.getIsbn().equals(aBook.getIsbn()));
 
         aBook.deleteFiles(path);
@@ -603,7 +596,7 @@ public class Library {
                     System.out.println("Current title: " + bookToEdit.getTitle());
                     System.out.println("New title:");
                     input = scan.nextLine();
-                    bookToEdit.editFile("database/books/" + bookToEdit.getIsbn() + ".txt", "title", "title: " + input);
+                    bookToEdit.editFile("database/books/" + bookToEdit.getId() + ".txt", "title", "title: " + input);
                     bookToEdit.setTitle(input);
                     System.out.println("The title is now changed to " + bookToEdit.getTitle());
                     break;
@@ -614,7 +607,7 @@ public class Library {
                         input = scan.nextLine();
                         inputOk = checkIfStringOfLetters(input);
                     } while (!inputOk);
-                    bookToEdit.editFile("database/books/" + bookToEdit.getIsbn() + ".txt", "author", "author: " + input);
+                    bookToEdit.editFile("database/books/" + bookToEdit.getId() + ".txt", "author", "author: " + input);
                     bookToEdit.setAuthorId(input);
                     System.out.println("The author is now changed to " + bookToEdit.getAuthorId());
                     break;
@@ -624,8 +617,8 @@ public class Library {
                         System.out.println("New year:");
                         input = scan.nextLine();
                         inputOk = checkIfStringOfNumbers(input);
-                    } while (!inputOk);
-                    bookToEdit.editFile("database/books/" + bookToEdit.getIsbn() + ".txt", "year", "year: " + input);
+                    } while (inputOk);
+                    bookToEdit.editFile("database/books/" + bookToEdit.getId() + ".txt", "year", "year: " + input);
                     bookToEdit.setYear(input);
                     System.out.println("The year is now changed to " + bookToEdit.getYear());
                     break;
@@ -636,7 +629,7 @@ public class Library {
                         input = scan.nextLine();
                         inputOk = checkIfStringOfLetters(input);
                     } while (!inputOk);
-                    bookToEdit.editFile("database/books/" + bookToEdit.getIsbn() + ".txt", "genre", "genre: " + input);
+                    bookToEdit.editFile("database/books/" + bookToEdit.getId() + ".txt", "genre", "genre: " + input);
                     bookToEdit.setGenre(input);
                     System.out.println("The genre is now changed to " + bookToEdit.getGenre());
                     break;
