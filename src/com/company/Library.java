@@ -104,32 +104,25 @@ public class Library {
         File folderPath = new File("database/books/");
         String isbn = "";
         for (File file : base.readFromFolder(folderPath)) {
-            BufferedReader brTest = null;
-            try {
-                brTest = new BufferedReader(new FileReader(file));
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            String firstLine = null;
-            try {
-                firstLine = brTest.readLine();
+            try (BufferedReader brTest = new BufferedReader(new FileReader(file))) {
+                String firstLine = brTest.readLine();
+                final Path path = file.toPath();
+                String fileName = String.valueOf(path);
+                books.add(new Book(base.readFromFile(path), fileName));
+                String isbnFromFile = firstLine.substring(firstLine.indexOf(":") + 1).trim();
+                if (isbn.contains(isbnFromFile)) {
+                    books.remove(books.size() - 1);
+                    for (Book book : books) {
+                        if (book.getIsbn().equals(isbnFromFile)) {
+                            book.setQuantity(book.getQuantity() + 1);
+                            book.setTotalQuantity(book.getTotalQuantity() + 1);
+                        }
+                    }
+                }
+                isbn = isbn.concat(" " + isbnFromFile);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            final Path path = file.toPath();
-            String fileName = String.valueOf(path);
-            books.add(new Book(base.readFromFile(path), fileName));
-            String isbnFromFile = firstLine.substring(firstLine.indexOf(":") + 1).trim();
-            if (isbn.contains(isbnFromFile)) {
-                books.remove(books.size() - 1);
-                for (Book book : books) {
-                    if (book.getIsbn().equals(isbnFromFile)) {
-                        book.setQuantity(book.getQuantity() + 1);
-                        book.setTotalQuantity(book.getTotalQuantity() + 1);
-                    }
-                }
-            }
-            isbn = isbn.concat(" " + isbnFromFile);
         }
     }
 
@@ -173,7 +166,7 @@ public class Library {
         }
     }
 
-    private void listBooks() {
+    void listBooks() {
         books.sort(Comparator.comparing(Book::getTitle));
         for (Book book : books)
 
@@ -202,7 +195,7 @@ public class Library {
             String isbn = resultOfSearch.substring(resultOfSearch.indexOf("isbn:") + 5, resultOfSearch.indexOf("\n")).trim();
 
             for (Book book : books) {
-                if (book.getIsbn().equals(isbn)) {
+                if (book.getId().equals(isbn)) {
                     System.out.println(book.toString());
                     System.out.println("\nIs this the book? \n1. Yes!\n2. No, go back.");
                     String choice = scan.nextLine();
@@ -583,7 +576,7 @@ public class Library {
 
     public void deleteBook(Book aBook) {
 
-        Path path = Paths.get("database/books/" + aBook.getIsbn() + ".txt");
+        Path path = Paths.get("database/books/" + aBook.getId() + ".txt");
         books.removeIf(book -> book.getIsbn().equals(aBook.getIsbn()));
 
         aBook.deleteFiles(path);
