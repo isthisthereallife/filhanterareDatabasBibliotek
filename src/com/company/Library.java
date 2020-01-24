@@ -264,8 +264,8 @@ public class Library {
         bookToReturn.editFile(bookFileName, bookLineToEdit, bookNewLine);
         activeCard.setActiveLoans(activeCard.getActiveLoans().replace(bookToReturn.getIsbn(), ""));
 
-        String cardNewLine = "activeLoans: " + activeUser.getActiveLoans();
-        activeUser.editFile(cardFileName, cardLineToEdit, cardNewLine);
+        String cardNewLine = "activeLoans: " + activeCard.getActiveLoans();
+        activeCard.editFile(cardFileName, cardLineToEdit, cardNewLine);
         System.out.println("You have returned: " + bookToReturn.getTitle());
     }
 
@@ -418,6 +418,7 @@ public class Library {
         boolean inputOk = false;
         boolean isDuplicate;
         boolean isNewAuthor = false;
+        boolean isNewGenre = false;
         String fileName;
         String authorChoice;
         String isbn;
@@ -425,6 +426,7 @@ public class Library {
         String authorFname = null;
         String authorLname = null;
         String authorId = null;
+        String newAuthorId = null;
         String year;
         String genre = null;
         String genreId = null;
@@ -499,10 +501,13 @@ public class Library {
         } while (!inputOk);
         do {
             Author authorObj = new Author("New", "Author");
-            String newAuthorId = authorObj.getAuthorId();
+            newAuthorId = authorObj.getAuthorId();
             File folderPath = new File("database/authors/");
             isDuplicate = base.checkForDuplicateFileNames(folderPath, newAuthorId);
         } while (isDuplicate);
+        if (isNewAuthor) {
+            authorId = newAuthorId;
+        }
 
         boolean yearCheck;
 
@@ -540,6 +545,7 @@ public class Library {
                 System.out.println("Type in the new genre:");
                 genre = scan.nextLine();
                 inputOk = checkIfStringOfLetters(genre);
+                isNewGenre = true;
                 if (genre.length() < 1 || genre.isBlank()) {
                     System.out.println("The genre must contain at least one character!");
                     inputOk = false;
@@ -550,6 +556,9 @@ public class Library {
                 }
             }
         } while (!inputOk);
+        if(isNewGenre){
+            genreId = genres.get(genres.size() -1).getId();
+        }
 
         do {
             fileName = bookObj.idGenerator();
@@ -580,9 +589,20 @@ public class Library {
     }
 
     public void deleteBook(Book aBook) {
-
+        String authorsBooks = "";
         Path path = Paths.get("database/books/" + aBook.getId() + ".txt");
         books.removeIf(book -> book.getIsbn().equals(aBook.getIsbn()));
+        for (Author author : authors) {
+            for(Book book : author.getBibliography()) {
+                if (book.getIsbn().equals(aBook.getIsbn())) {
+                    author.removeFromBibliography(book);
+                    for (Book theBook : author.getBibliography()) {
+                        authorsBooks = authorsBooks.concat(theBook.getIsbn() + " ");
+                    }
+                    author.editFile("database/authors/" + author.getAuthorId() + ".txt", "bibliography", "bibliography: " + authorsBooks);
+                }
+            }
+            }
 
         aBook.deleteFiles(path);
         System.out.println(aBook.getTitle() + " is now deleted.");

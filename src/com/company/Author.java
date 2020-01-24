@@ -28,6 +28,10 @@ public class Author extends Base {
         bibliography.add(newBook);
     }
 
+    public void removeFromBibliography(Book book) {
+        bibliography.remove(book);
+    }
+
     public ArrayList<Book> getBibliography() {
         return this.bibliography;
     }

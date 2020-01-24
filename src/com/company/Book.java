@@ -153,8 +153,8 @@ public class Book extends Base {
 
     @Override
     public String toString() {
-        return "ISBN: " + isbn + "\nTitle: " + title + "\nAuthor: " + authorId +
-                "\nYear: " + year + "\nGenre: " + genre;
+        return "ISBN: " + isbn + "\nTitle: " + title + "\nauthorId: " + authorId +
+                "\nYear: " + year + "\ngenre: " + genre;
 
     }
 }
