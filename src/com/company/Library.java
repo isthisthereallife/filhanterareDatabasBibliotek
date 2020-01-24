@@ -589,9 +589,20 @@ public class Library {
     }
 
     public void deleteBook(Book aBook) {
-
+        String authorsBooks = "";
         Path path = Paths.get("database/books/" + aBook.getId() + ".txt");
         books.removeIf(book -> book.getIsbn().equals(aBook.getIsbn()));
+        for (Author author : authors) {
+            for(Book book : author.getBibliography()) {
+                if (book.getIsbn().equals(aBook.getIsbn())) {
+                    author.removeFromBibliography(book);
+                    for (Book theBook : author.getBibliography()) {
+                        authorsBooks = authorsBooks.concat(theBook.getIsbn() + " ");
+                    }
+                    author.editFile("database/authors/" + author.getAuthorId() + ".txt", "bibliography", "bibliography: " + authorsBooks);
+                }
+            }
+            }
 
         aBook.deleteFiles(path);
         System.out.println(aBook.getTitle() + " is now deleted.");
