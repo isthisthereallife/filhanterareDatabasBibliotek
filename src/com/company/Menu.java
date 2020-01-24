@@ -143,12 +143,12 @@ public class Menu {
             System.out.println("1: View available books");
             System.out.println("2: Browse books");
             System.out.println("3: Browse genre");
-            System.out.println("3: Borrow a book");
-            System.out.println("4: Return a book");
-            System.out.println("5: Search");
-            System.out.println("6: Logout");
+            System.out.println("4: Borrow a book");
+            System.out.println("5: Return a book");
+            System.out.println("6: Search");
+            System.out.println("7: Logout");
             if (!this.library.getActiveCard().activeLoansInfo().equals("")) {
-                System.out.println("6: View active loans");
+                System.out.println("8: View active loans");
             }
             System.out.println("0: Exit");
 
@@ -220,7 +220,7 @@ public class Menu {
     boolean rerunPrompt() {
         int choice = 0;
         do {
-            System.out.println("\n1. Back to main menu");
+            System.out.println("\n1. Go back");
             System.out.println("2. Quit");
             try {
                 choice = new java.util.Scanner(System.in).nextInt();
