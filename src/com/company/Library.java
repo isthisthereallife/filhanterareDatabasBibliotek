@@ -264,8 +264,8 @@ public class Library {
         bookToReturn.editFile(bookFileName, bookLineToEdit, bookNewLine);
         activeCard.setActiveLoans(activeCard.getActiveLoans().replace(bookToReturn.getIsbn(), ""));
 
-        String cardNewLine = "activeLoans: " + activeUser.getActiveLoans();
-        activeUser.editFile(cardFileName, cardLineToEdit, cardNewLine);
+        String cardNewLine = "activeLoans: " + activeCard.getActiveLoans();
+        activeCard.editFile(cardFileName, cardLineToEdit, cardNewLine);
         System.out.println("You have returned: " + bookToReturn.getTitle());
     }
 
