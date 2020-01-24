@@ -105,6 +105,7 @@ public class AddBook {
                     }
                 }
             } else if (choice == genreCounter) {
+                isNewGenre = true;
                 System.out.println("Type in the new genre:");
                 genre = scan.nextLine();
                 inputOk = library.checkIfStringOfLetters(genre);
