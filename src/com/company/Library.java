@@ -359,7 +359,7 @@ public class Library {
         menu.userMenu();
     }
 
-    private boolean checkIfStringOfNumbers(String stringToCheck) {
+    protected boolean checkIfStringOfNumbers(String stringToCheck) {
         stringToCheck = stringToCheck.replace(" ", "");
         Character[] charList = new Character[stringToCheck.length()];
         for (int i = 0; i < stringToCheck.length(); i++) {
@@ -374,7 +374,7 @@ public class Library {
         return false;
     }
 
-    private boolean checkIfStringOfLetters(String stringToCheck) {
+    protected boolean checkIfStringOfLetters(String stringToCheck) {
         stringToCheck = stringToCheck.replace(" ", "");
         stringToCheck = stringToCheck.replace(".", "");
         stringToCheck = stringToCheck.replace("-", "");
@@ -391,7 +391,7 @@ public class Library {
         return true;
     }
 
-    private boolean checkForDuplicates(String stringToCheck) {
+    protected boolean checkForDuplicates(String stringToCheck) {
         for (Book book : books) {
             if (book.getIsbn().equals(stringToCheck)) {
                 book.setQuantity(book.getQuantity() + 1);
