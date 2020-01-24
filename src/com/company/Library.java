@@ -427,6 +427,7 @@ public class Library {
                         authorsBooks = authorsBooks.concat(theBook.getIsbn() + " ");
                     }
                     author.editFile("database/authors/" + author.getAuthorId() + ".txt", "bibliography", "bibliography: " + authorsBooks);
+                    break;
                 }
             }
             }
