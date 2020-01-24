@@ -34,7 +34,7 @@ public class Library {
         loadAuthors();
         loadGenres();
         loadCards();
-        //loadBorrowedBooks();
+        loadBorrowedBooks();
     }
 
     public void loadCards() {
@@ -158,9 +158,9 @@ public class Library {
 
     private void loadBorrowedBooks() {
         String loans = "";
-        for (User user : users) {
-            if (user.getActiveLoans() != null || !user.getActiveLoans().trim().isEmpty()) {
-                loans = loans.trim().concat(" " + user.getActiveLoans());
+        for (Card card : cards) {
+            if (card.getActiveLoans() != null || !card.getActiveLoans().trim().isEmpty()) {
+                loans = loans.trim().concat(" " + card.getActiveLoans());
             }
         }
         for (Book book : books) {
