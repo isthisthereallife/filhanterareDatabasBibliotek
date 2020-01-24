@@ -49,7 +49,7 @@ public class Library {
         return this.activeCard;
     }
 
-    public void setActiveCard(){
+    public void setActiveCard() {
         this.activeCard = null;
     }
 
@@ -352,7 +352,7 @@ public class Library {
         activeUser = users.get(users.size() - 1);
         String uniqueId = activeUser.getId();
         cards.add(new Card(uniqueId));
-        activeUser.setCardNr(cards.get(cards.size()-1).getCardNr());
+        activeUser.setCardNr(cards.get(cards.size() - 1).getCardNr());
         cards.get(cards.size() - 1).writeToFile("database/cards/" + cards.get(cards.size() - 1).getCardNr(), cards.get(cards.size() - 1).toString());
         activeUser.writeToFile(("database/users/" + uniqueId), activeUser.toString());
         setActiveCard(cards.get(cards.size() - 1).getCardNr());
@@ -420,7 +420,7 @@ public class Library {
         Path path = Paths.get("database/books/" + aBook.getId() + ".txt");
         books.removeIf(book -> book.getIsbn().equals(aBook.getIsbn()));
         for (Author author : authors) {
-            for(Book book : author.getBibliography()) {
+            for (Book book : author.getBibliography()) {
                 if (book.getIsbn().equals(aBook.getIsbn())) {
                     author.removeFromBibliography(book);
                     for (Book theBook : author.getBibliography()) {
@@ -430,7 +430,7 @@ public class Library {
                     break;
                 }
             }
-            }
+        }
 
         aBook.deleteFiles(path);
         System.out.println(aBook.getTitle() + " is now deleted.");
@@ -541,5 +541,68 @@ public class Library {
         }
     }
     */
+    protected void browseByAuthor() {
+        boolean inputOk = false;
+        do {
+            int counter = 1;
+            for (Author author : authors) {
+                System.out.println("[" + counter + "]" + " " + author.getFirstName() + " " + author.getLastName());
+                counter++;
+            }
+            int back = authors.size() + 1;
+            System.out.println("[" + back + "] Go back");
+            System.out.println("Choose an author for books or go back");
+            String authorChoice = scan.nextLine();
+            inputOk = checkIfStringOfNumbers(authorChoice);
+            int choice = Integer.parseInt(authorChoice);
+            if (choice < back) {
+                for (int i = 0; i < authors.size(); i++) {
+                    if (choice - 1 == i) {
+                        System.out.println("Books written by " + authors.get(i).getFirstName() + " " + authors.get(i).getLastName() + ":");
+                        for (Book book : authors.get(i).getBibliography()) {
+                            System.out.println(book.getTitle() + " (" + book.getYear() + ") ISBN: " + book.getIsbn() + " - Available copies: " + book.getQuantity() + " of " + book.getTotalQuantity());
+                        }
+                        System.out.println("");
+                        inputOk = false;
+                    }
+                }
+            } else if (choice == counter) {
+                inputOk = false;
+            }
+        } while (inputOk);
+    }
 
-}
+    protected void browseByGenre() {
+        boolean inputOk = false;
+        do {
+            int counter = 1;
+            for (Genre genre : genres) {
+                System.out.println("[" + counter + "]" + " " + genre.getName() + " ");
+                counter++;
+            }
+            int back = genres.size() + 1;
+            System.out.println("[" + back + "] Go back");
+            System.out.println("Choose a Genre or go back");
+            String authorChoice = scan.nextLine();
+            inputOk = checkIfStringOfNumbers(authorChoice);
+            int choice = Integer.parseInt(authorChoice);
+            if (choice < back) {
+                for (int i = 0; i < genres.size(); i++) {
+                    if (choice - 1 == i) {
+                        System.out.println("Books with genres " + genres.get(i).getName() + " " + ":");
+                        for(Book book : books) {
+                            if (book.getGenre().equals(genres.get(i).getId())){
+                            System.out.println(book.listToString(authors));
+                        }
+                        }
+                        System.out.println("");
+                        inputOk = false;
+                    }
+                }
+            } else if (choice == counter) {
+                inputOk = false;
+            }
+        } while (inputOk);
+        }
+    }
+

@@ -141,12 +141,14 @@ public class Menu {
         String number = "0";
         do {
             System.out.println("1: View available books");
-            System.out.println("2: Borrow a book");
-            System.out.println("3: Return a book");
-            System.out.println("4: Search");
-            System.out.println("5: Logout");
+            System.out.println("2: Browse books");
+            System.out.println("3: Browse genre");
+            System.out.println("4: Borrow a book");
+            System.out.println("5: Return a book");
+            System.out.println("6: Search");
+            System.out.println("7: Logout");
             if (!this.library.getActiveCard().activeLoansInfo().equals("")) {
-                System.out.println("6: View active loans");
+                System.out.println("8: View active loans");
             }
             System.out.println("0: Exit");
 
@@ -169,30 +171,40 @@ public class Menu {
                     break;
                 }
                 case "2": {
+                    library.browseByAuthor();
+                    running = rerunPrompt();
+                    break;
+                }
+                case "3": {
+                    library.browseByGenre();
+                    running = rerunPrompt();
+                    break;
+                }
+                case "4": {
                     String result = library.searchForBook("database/books");
                     library.searchResultChoiceMenu("borrow", library.countOccurrences("id:", result), result);
                     running = rerunPrompt();
                     break;
                 }
-                case "3": {
+                case "5": {
                     String result = library.searchForBook("database/books");
                     library.searchResultChoiceMenu("return", library.countOccurrences("id:", result), result);
                     running = rerunPrompt();
                     break;
                 }
-                case "4": {
+                case "6": {
                     new Search(library.getBooks(), library.getGenres(), library.getAuthors());
                     running = rerunPrompt();
                     break;
                 }
-                case "5": {
+                case "7": {
                     library.setActiveUser(null);
                     library.setActiveCard();
                     System.out.println("You are now logged out");
                     identification();
                     break;
                 }
-                case "6": {
+                case "8": {
                     System.out.println(library.getActiveCard().activeLoansInfo());
                     running = rerunPrompt();
                     break;
@@ -208,7 +220,7 @@ public class Menu {
     boolean rerunPrompt() {
         int choice = 0;
         do {
-            System.out.println("\n1. Back to main menu");
+            System.out.println("\n1. Go back");
             System.out.println("2. Quit");
             try {
                 choice = new java.util.Scanner(System.in).nextInt();
