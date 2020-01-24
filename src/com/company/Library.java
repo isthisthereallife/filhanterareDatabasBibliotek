@@ -216,6 +216,7 @@ public class Library {
                             editBook(book);
                         } else if (operation.equals("delete")) {
                             deleteBook(book);
+                            break;
                         }
                     }
                 }
