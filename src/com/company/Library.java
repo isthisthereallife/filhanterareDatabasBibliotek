@@ -442,7 +442,7 @@ public class Library {
         boolean inputOk = false;
         do {
             String input = "";
-            System.out.println("===========\nEdit what?\n1. Title\n2. Author\n3. Year\n4. Genre\n0. Cancel\n===========\n");
+            System.out.println("===========\nEdit what?\n1. Title\n2. Year\n0. Cancel\n===========\n");
             String edit = scan.nextLine();
             switch (edit) {
                 case "1":
@@ -455,17 +455,6 @@ public class Library {
                     break;
                 case "2":
                     do {
-                        System.out.println("Current author: " + bookToEdit.getAuthorId());
-                        System.out.println("New author:");
-                        input = scan.nextLine();
-                        inputOk = checkIfStringOfLetters(input);
-                    } while (!inputOk);
-                    bookToEdit.editFile("database/books/" + bookToEdit.getId() + ".txt", "author", "author: " + input);
-                    bookToEdit.setAuthorId(input);
-                    System.out.println("The author is now changed to " + bookToEdit.getAuthorId());
-                    break;
-                case "3":
-                    do {
                         System.out.println("Current year: " + bookToEdit.getYear());
                         System.out.println("New year:");
                         input = scan.nextLine();
@@ -474,17 +463,6 @@ public class Library {
                     bookToEdit.editFile("database/books/" + bookToEdit.getId() + ".txt", "year", "year: " + input);
                     bookToEdit.setYear(input);
                     System.out.println("The year is now changed to " + bookToEdit.getYear());
-                    break;
-                case "4":
-                    do {
-                        System.out.println("Current genre: " + bookToEdit.getGenre());
-                        System.out.println("Edit genre:");
-                        input = scan.nextLine();
-                        inputOk = checkIfStringOfLetters(input);
-                    } while (!inputOk);
-                    bookToEdit.editFile("database/books/" + bookToEdit.getId() + ".txt", "genre", "genre: " + input);
-                    bookToEdit.setGenre(input);
-                    System.out.println("The genre is now changed to " + bookToEdit.getGenre());
                     break;
                 case "0":
                     runningEditBook = false;
