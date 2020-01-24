@@ -7,10 +7,12 @@ import java.util.Scanner;
 public class Menu {
     Scanner scan = new Scanner(System.in);
     Library library;
+    AddBook addNewBook;
     boolean running = true;
 
     public Menu(Library library) {
         this.library = library;
+        this.addNewBook = new AddBook(library);
     }
 
     public void identification() {
@@ -63,7 +65,7 @@ public class Menu {
 
             switch (choice) {
                 case "1":
-                    library.addBook();
+                    addNewBook.addBook();
                     running = rerunPrompt();
                     break;
                 case "2":
