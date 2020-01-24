@@ -418,6 +418,7 @@ public class Library {
         boolean inputOk = false;
         boolean isDuplicate;
         boolean isNewAuthor = false;
+        boolean isNewGenre = false;
         String fileName;
         String authorChoice;
         String isbn;
@@ -425,6 +426,7 @@ public class Library {
         String authorFname = null;
         String authorLname = null;
         String authorId = null;
+        String newAuthorId = null;
         String year;
         String genre = null;
         String genreId = null;
@@ -499,10 +501,13 @@ public class Library {
         } while (!inputOk);
         do {
             Author authorObj = new Author("New", "Author");
-            String newAuthorId = authorObj.getAuthorId();
+            newAuthorId = authorObj.getAuthorId();
             File folderPath = new File("database/authors/");
             isDuplicate = base.checkForDuplicateFileNames(folderPath, newAuthorId);
         } while (isDuplicate);
+        if (isNewAuthor) {
+            authorId = newAuthorId;
+        }
 
         boolean yearCheck;
 
@@ -540,6 +545,7 @@ public class Library {
                 System.out.println("Type in the new genre:");
                 genre = scan.nextLine();
                 inputOk = checkIfStringOfLetters(genre);
+                isNewGenre = true;
                 if (genre.length() < 1 || genre.isBlank()) {
                     System.out.println("The genre must contain at least one character!");
                     inputOk = false;
@@ -550,6 +556,9 @@ public class Library {
                 }
             }
         } while (!inputOk);
+        if(isNewGenre){
+            genreId = genres.get(genres.size() -1).getId();
+        }
 
         do {
             fileName = bookObj.idGenerator();
