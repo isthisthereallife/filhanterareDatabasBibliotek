@@ -6,6 +6,7 @@ import java.util.Scanner;
 public class AddBook {
     private Scanner scan = new Scanner(System.in);
     private Library library;
+    private Check checker;
     private Base base = new Base();
     private boolean inputOk = false;
     private boolean isDuplicate;
@@ -28,6 +29,7 @@ public class AddBook {
 
     public AddBook(Library library) {
         this.library = library;
+        this.checker = new Check(library);
     }
 
 
@@ -35,12 +37,12 @@ public class AddBook {
         do {
             System.out.println("ISBN: ");
             isbn = scan.nextLine();
-            inputOk = library.checkIfStringOfNumbers(isbn);
+            inputOk = checker.checkIfStringOfNumbers(isbn);
             if (isbn.length() < 13 || isbn.length() > 13) {
                 System.out.println("The ISBN number must be 13 digits!");
             }
             if (!inputOk) {
-                isDuplicate = library.checkForDuplicates(isbn);
+                isDuplicate = checker.checkForDuplicates(isbn);
                 if (isDuplicate) {
                     System.out.println("That book already exists! Another copy has been added.");
                     for (Book book : library.getBooks()) {
@@ -74,7 +76,7 @@ public class AddBook {
         do {
             System.out.println("Year: ");
             year = scan.nextLine();
-            inputOk = library.checkIfStringOfNumbers(year);
+            inputOk = checker.checkIfStringOfNumbers(year);
             if (year.length() < 4 || year.length() > 4 || year.isBlank()) {
                 System.out.println("The publishing date for the book must be 4 digits!");
                 yearCheck = false;
@@ -108,7 +110,7 @@ public class AddBook {
                 isNewGenre = true;
                 System.out.println("Type in the new genre:");
                 genre = scan.nextLine();
-                inputOk = library.checkIfStringOfLetters(genre);
+                inputOk = checker.checkIfStringOfLetters(genre);
                 if (genre.length() < 1 || genre.isBlank()) {
                     System.out.println("The genre must contain at least one character!");
                     inputOk = false;
@@ -181,14 +183,14 @@ public class AddBook {
                 isNewAuthor = true;
                 System.out.println("Type in Author's first name:");
                 authorFname = scan.nextLine();
-                inputOk = library.checkIfStringOfLetters(authorFname);
+                inputOk = checker.checkIfStringOfLetters(authorFname);
                 if (authorFname.length() < 1 || authorFname.isBlank()) {
                     System.out.println("The authors name must contain at least one character!");
                     inputOk = false;
                 }
                 System.out.println("Type in Author's last name:");
                 authorLname = scan.nextLine();
-                inputOk = library.checkIfStringOfLetters(authorLname);
+                inputOk = checker.checkIfStringOfLetters(authorLname);
                 if (authorLname.length() < 1 || authorLname.isBlank()) {
                     System.out.println("The authors name must contain at least one character!");
                     inputOk = false;

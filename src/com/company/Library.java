@@ -18,6 +18,7 @@ public class Library {
     private ArrayList<Card> cards = new ArrayList<>();
     private Base base = new Base();
     private Menu menu;
+    private BookHandler bookHandler;
     private User activeUser;
     private Card activeCard;
 
@@ -25,6 +26,7 @@ public class Library {
     public Library() {
         load();
         menu = new Menu(this);
+        bookHandler = new BookHandler(this);
         menu.identification();
     }
 
@@ -35,14 +37,6 @@ public class Library {
         loadGenres();
         loadCards();
         loadBorrowedBooks();
-    }
-
-    public void loadCards() {
-        File folderPath = new File("database/cards/");
-        for (File file : base.readFromFolder(folderPath)) {
-            final Path path = file.toPath();
-            cards.add(new Card(base.readFromFile(path)));
-        }
     }
 
     public Card getActiveCard() {
@@ -104,6 +98,14 @@ public class Library {
         this.genres = genres;
     }
 
+    private void loadCards() {
+        File folderPath = new File("database/cards/");
+        for (File file : base.readFromFolder(folderPath)) {
+            final Path path = file.toPath();
+            cards.add(new Card(base.readFromFile(path)));
+        }
+    }
+
     private void loadBooks() {
         File folderPath = new File("database/books/");
         String isbn = "";
@@ -147,13 +149,11 @@ public class Library {
     }
 
     private void loadGenres() {
-
         File folderPath = new File("database/genres/");
         for (File file : base.readFromFolder(folderPath)) {
             final Path path = file.toPath();
             genres.add(new Genre(base.readFromFile(path)));
         }
-
     }
 
     private void loadBorrowedBooks() {
@@ -169,23 +169,6 @@ public class Library {
             }
         }
     }
-
-    void listBooks() {
-        books.sort(Comparator.comparing(Book::getTitle));
-        for (Book book : books)
-
-            System.out.println(book.listToString(authors));
-        System.out.println(" ");
-    }
-
-
-    String searchForBook(String whereToSearch) {
-        System.out.println("Enter search: ");
-        String search = scan.nextLine();
-        return activeUser.searchInFile(search, whereToSearch).toLowerCase();
-
-    }
-
 
     int countOccurrences(String searchFor, String searchIn) {
         return (searchIn.toLowerCase().split(Pattern.quote(searchFor.toLowerCase()), -1).length) - 1;
@@ -208,271 +191,20 @@ public class Library {
                         if (operation.equals("borrow")) {
                             System.out.println("Do you want it?\n1. Yes\n2. No");
                             if (scan.nextLine().equals("1")) {
-                                borrowBook(book);
+                                bookHandler.borrowBook(book);
                             } else System.out.println("Never mind, then.");
                         } else if (operation.equals("return")) {
-                            returnBook(book);
+                            bookHandler.returnBook(book);
                         } else if (operation.equals("edit")) {
-                            editBook(book);
+                            bookHandler.editBook(book);
                         } else if (operation.equals("delete")) {
-                            deleteBook(book);
+                            bookHandler.deleteBook(book);
                             break;
                         }
                     }
                 }
             }
         }
-    }
-
-    private void borrowBook(Book bookToBorrow) {
-
-        if (bookToBorrow.getQuantity() < 1) {
-            System.out.println("Sorry, someone else has already borrowed that book!");
-        } else {
-            for (Card c : cards) {
-                if (c.getCardNr().equals(activeUser.getCardNr())) {
-                    activeCard = c;
-                    break;
-                }
-            }
-            bookToBorrow.setQuantity(bookToBorrow.getQuantity() - 1);
-            String cardFileName = "database/cards/" + activeCard.getCardNr() + ".txt";
-            String bookFileName = "database/books/" + bookToBorrow.getId() + ".txt";
-            String cardLineToEdit = "activeLoans";
-            String bookLineToEdit = "available";
-            String bookNewLine = "Status: unavailable";
-            bookToBorrow.editFile(bookFileName, bookLineToEdit, bookNewLine);
-            activeCard.setActiveLoans(activeCard.getActiveLoans().concat(" " + bookToBorrow.getIsbn()));
-            String cardNewLine = "activeLoans: " + activeCard.getActiveLoans();
-            activeCard.editFile(cardFileName, cardLineToEdit, cardNewLine);
-            System.out.println("You have borrowed: " + bookToBorrow.getTitle());
-        }
-    }
-
-    private void returnBook(Book bookToReturn) {
-        for (Card c : cards) {
-            if (c.getCardNr().equals(activeUser.getCardNr())) {
-                activeCard = c;
-                break;
-            }
-        }
-        bookToReturn.setQuantity(bookToReturn.getQuantity() + 1);
-        String cardFileName = "database/cards/" + activeUser.getCardNr() + ".txt";
-        String bookFileName = "database/books/" + bookToReturn.getId() + ".txt";
-        String cardLineToEdit = "activeLoans";
-        String bookLineToEdit = "available";
-        String bookNewLine = "Status: available";
-        bookToReturn.editFile(bookFileName, bookLineToEdit, bookNewLine);
-        activeCard.setActiveLoans(activeCard.getActiveLoans().replace(bookToReturn.getIsbn(), ""));
-
-        String cardNewLine = "activeLoans: " + activeCard.getActiveLoans();
-        activeCard.editFile(cardFileName, cardLineToEdit, cardNewLine);
-        System.out.println("You have returned: " + bookToReturn.getTitle());
-    }
-
-    public void addUser() {
-        String name = " ";
-        String address = " ";
-        String mail = " ";
-        String tel = " ";
-        boolean inputOk = false;
-        do {
-            System.out.println("Your name:");
-            name = scan.nextLine();
-            inputOk = checkIfStringOfLetters(name);
-            if (name.length() < 1 || name.isBlank()) {
-                System.out.println("Your name must be at least one character!");
-                inputOk = false;
-            }
-        } while (!inputOk);
-
-        do {
-            System.out.println("Your address:");
-            address = scan.nextLine();
-            if (address.matches("[0-9]+")) {
-                System.out.println("Your adress can not only contain numbers!");
-                inputOk = false;
-            } else if (address.length() < 1 || address.isBlank()) {
-                System.out.println("Your adress must be at least one character!");
-                inputOk = false;
-            } else if (!address.matches(".*\\d.*")) {
-                System.out.println("There must be at least one number in your adress!");
-                inputOk = false;
-            } else {
-                inputOk = true;
-            }
-        } while (!inputOk);
-
-        do {
-            System.out.println("Your zipcode: ");
-            String zipCode = scan.nextLine();
-            inputOk = checkIfStringOfNumbers(zipCode);
-            if (zipCode.length() < 5 || zipCode.isBlank()) {
-                System.out.println("Your zipcode must be at least 5 digits!");
-                inputOk = false;
-            } else {
-                inputOk = true;
-                address += " " + zipCode;
-            }
-        } while (!inputOk);
-        do {
-            System.out.println("Enter your city: ");
-            String city = scan.nextLine();
-            inputOk = checkIfStringOfLetters(city);
-            if (city.length() < 1 || city.isBlank()) {
-                System.out.println("Your city must be at least one letter!");
-                inputOk = false;
-            } else {
-                address += " " + city;
-            }
-        } while (!inputOk);
-        do {
-            System.out.println("Your mail: ");
-            mail = scan.nextLine();
-            if (isValid(mail)) {
-                inputOk = true;
-            } else {
-                System.out.println("Your email adress must contain an @ character and a ., example: hello@hi.com");
-                inputOk = false;
-            }
-        } while (!inputOk);
-        do {
-            System.out.println("Your telephone number:");
-            tel = scan.nextLine();
-            inputOk = checkIfStringOfNumbers(tel);
-            if (tel.length() < 5 || tel.isBlank()) {
-                System.out.println("Your telephone number must be at least 5 digits!");
-                inputOk = false;
-            } else {
-                inputOk = true;
-            }
-        } while (!inputOk);
-
-        users.add(new User(name, address, mail, tel));
-        activeUser = users.get(users.size() - 1);
-        String uniqueId = activeUser.getId();
-        cards.add(new Card(uniqueId));
-        activeUser.setCardNr(cards.get(cards.size() - 1).getCardNr());
-        cards.get(cards.size() - 1).writeToFile("database/cards/" + cards.get(cards.size() - 1).getCardNr(), cards.get(cards.size() - 1).toString());
-        activeUser.writeToFile(("database/users/" + uniqueId), activeUser.toString());
-        setActiveCard(cards.get(cards.size() - 1).getCardNr());
-        System.out.println("Registration complete!\nYour Log-in id is: " + uniqueId + " (SAVE THIS!)\nYour card number is " + activeUser.getCardNr());
-        menu.userMenu();
-    }
-
-    protected boolean checkIfStringOfNumbers(String stringToCheck) {
-        stringToCheck = stringToCheck.replace(" ", "");
-        Character[] charList = new Character[stringToCheck.length()];
-        for (int i = 0; i < stringToCheck.length(); i++) {
-            charList[i] = stringToCheck.charAt(i);
-        }
-        for (Character c : charList) {
-            if (!Character.isDigit(c)) {
-                System.out.println("Please enter only numbers.");
-                return true;
-            }
-        }
-        return false;
-    }
-
-    protected boolean checkIfStringOfLetters(String stringToCheck) {
-        stringToCheck = stringToCheck.replace(" ", "");
-        stringToCheck = stringToCheck.replace(".", "");
-        stringToCheck = stringToCheck.replace("-", "");
-        Character[] charList = new Character[stringToCheck.length()];
-        for (int i = 0; i < stringToCheck.length(); i++) {
-            charList[i] = stringToCheck.charAt(i);
-        }
-        for (Character c : charList) {
-            if (!Character.isLetter(c)) {
-                System.out.println("Please enter only letters.");
-                return false;
-            }
-        }
-        return true;
-    }
-
-    protected boolean checkForDuplicates(String stringToCheck) {
-        for (Book book : books) {
-            if (book.getIsbn().equals(stringToCheck)) {
-                book.setQuantity(book.getQuantity() + 1);
-                book.setTotalQuantity(book.getTotalQuantity() + 1);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean isValid(String mail) {
-        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\." +
-                "[a-zA-Z0-9_+&*-]+)*@" +
-                "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
-                "A-Z]{2,7}$";
-
-        Pattern pat = Pattern.compile(emailRegex);
-        if (mail == null)
-            return false;
-        return pat.matcher(mail).matches();
-    }
-
-    public void deleteBook(Book aBook) {
-        String authorsBooks = "";
-        Path path = Paths.get("database/books/" + aBook.getId() + ".txt");
-        books.removeIf(book -> book.getIsbn().equals(aBook.getIsbn()));
-        for (Author author : authors) {
-            for (Book book : author.getBibliography()) {
-                if (book.getIsbn().equals(aBook.getIsbn())) {
-                    author.removeFromBibliography(book);
-                    for (Book theBook : author.getBibliography()) {
-                        authorsBooks = authorsBooks.concat(theBook.getIsbn() + " ");
-                    }
-                    author.editFile("database/authors/" + author.getAuthorId() + ".txt", "bibliography", "bibliography: " + authorsBooks);
-                    break;
-                }
-            }
-        }
-
-        aBook.deleteFiles(path);
-        System.out.println(aBook.getTitle() + " is now deleted.");
-        menu.adminMenu();
-    }
-
-    public void editBook(Book bookToEdit) {
-        boolean runningEditBook = true;
-        boolean inputOk = false;
-        do {
-            String input = "";
-            System.out.println("===========\nEdit what?\n1. Title\n2. Year\n0. Cancel\n===========\n");
-            String edit = scan.nextLine();
-            switch (edit) {
-                case "1":
-                    System.out.println("Current title: " + bookToEdit.getTitle());
-                    System.out.println("New title:");
-                    input = scan.nextLine();
-                    bookToEdit.editFile("database/books/" + bookToEdit.getId() + ".txt", "title", "title: " + input);
-                    bookToEdit.setTitle(input);
-                    System.out.println("The title is now changed to " + bookToEdit.getTitle());
-                    break;
-                case "2":
-                    do {
-                        System.out.println("Current year: " + bookToEdit.getYear());
-                        System.out.println("New year:");
-                        input = scan.nextLine();
-                        inputOk = checkIfStringOfNumbers(input);
-                    } while (inputOk);
-                    bookToEdit.editFile("database/books/" + bookToEdit.getId() + ".txt", "year", "year: " + input);
-                    bookToEdit.setYear(input);
-                    System.out.println("The year is now changed to " + bookToEdit.getYear());
-                    break;
-                case "0":
-                    runningEditBook = false;
-                    break;
-                default:
-                    System.out.println("Invalid choice. Please try again");
-                    break;
-            }
-        } while (runningEditBook);
-        menu.adminMenu();
     }
 
     /*
@@ -541,68 +273,5 @@ public class Library {
         }
     }
     */
-    protected void browseByAuthor() {
-        boolean inputOk = false;
-        do {
-            int counter = 1;
-            for (Author author : authors) {
-                System.out.println("[" + counter + "]" + " " + author.getFirstName() + " " + author.getLastName());
-                counter++;
-            }
-            int back = authors.size() + 1;
-            System.out.println("[" + back + "] Go back");
-            System.out.println("Choose an author for books or go back");
-            String authorChoice = scan.nextLine();
-            inputOk = checkIfStringOfNumbers(authorChoice);
-            int choice = Integer.parseInt(authorChoice);
-            if (choice < back) {
-                for (int i = 0; i < authors.size(); i++) {
-                    if (choice - 1 == i) {
-                        System.out.println("Books written by " + authors.get(i).getFirstName() + " " + authors.get(i).getLastName() + ":");
-                        for (Book book : authors.get(i).getBibliography()) {
-                            System.out.println(book.getTitle() + " (" + book.getYear() + ") ISBN: " + book.getIsbn() + " - Available copies: " + book.getQuantity() + " of " + book.getTotalQuantity());
-                        }
-                        System.out.println("");
-                        inputOk = false;
-                    }
-                }
-            } else if (choice == counter) {
-                inputOk = false;
-            }
-        } while (inputOk);
-    }
-
-    protected void browseByGenre() {
-        boolean inputOk = false;
-        do {
-            int counter = 1;
-            for (Genre genre : genres) {
-                System.out.println("[" + counter + "]" + " " + genre.getName() + " ");
-                counter++;
-            }
-            int back = genres.size() + 1;
-            System.out.println("[" + back + "] Go back");
-            System.out.println("Choose a Genre or go back");
-            String authorChoice = scan.nextLine();
-            inputOk = checkIfStringOfNumbers(authorChoice);
-            int choice = Integer.parseInt(authorChoice);
-            if (choice < back) {
-                for (int i = 0; i < genres.size(); i++) {
-                    if (choice - 1 == i) {
-                        System.out.println("Books with genres " + genres.get(i).getName() + " " + ":");
-                        for(Book book : books) {
-                            if (book.getGenre().equals(genres.get(i).getId())){
-                            System.out.println(book.listToString(authors));
-                        }
-                        }
-                        System.out.println("");
-                        inputOk = false;
-                    }
-                }
-            } else if (choice == counter) {
-                inputOk = false;
-            }
-        } while (inputOk);
-        }
     }
 

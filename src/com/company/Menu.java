@@ -8,11 +8,17 @@ public class Menu {
     Scanner scan = new Scanner(System.in);
     Library library;
     AddBook addNewBook;
+    AddUser addNewUser;
+    private BookHandler bookHandler;
+    Browse browseMethods;
     boolean running = true;
 
     public Menu(Library library) {
         this.library = library;
         this.addNewBook = new AddBook(library);
+        this.addNewUser = new AddUser(library);
+        this.browseMethods = new Browse(library);
+        this.bookHandler = new BookHandler(library);
     }
 
     public void identification() {
@@ -69,12 +75,12 @@ public class Menu {
                     running = rerunPrompt();
                     break;
                 case "2":
-                    result = library.searchForBook("database/books");
+                    result = bookHandler.searchForBook("database/books");
                     library.searchResultChoiceMenu("delete", library.countOccurrences("isbn:", result), result);
                     running = rerunPrompt();
                     break;
                 case "3":
-                    result = library.searchForBook("database/books");
+                    result = bookHandler.searchForBook("database/books");
                     library.searchResultChoiceMenu("edit", library.countOccurrences("isbn:", result), result);
                     running = rerunPrompt();
                     break;
@@ -102,7 +108,7 @@ public class Menu {
                 loginMenu();
                 break;
             case "2":
-                library.addUser();
+                addNewUser.addUser();
                 break;
             case "3":
                 identification();
@@ -159,7 +165,7 @@ public class Menu {
             }
             switch (number) {
                 case "1": {
-                    library.listBooks();
+                    browseMethods.listBooks();
                     /*library.getBooks().sort(Comparator.comparing(Book::getTitle));
                     for (Book book : library.getBooks()) {
                         if (book.getQuantity() > 0) ;
@@ -171,23 +177,23 @@ public class Menu {
                     break;
                 }
                 case "2": {
-                    library.browseByAuthor();
+                    browseMethods.browseByAuthor();
                     running = rerunPrompt();
                     break;
                 }
                 case "3": {
-                    library.browseByGenre();
+                    browseMethods.browseByGenre();
                     running = rerunPrompt();
                     break;
                 }
                 case "4": {
-                    String result = library.searchForBook("database/books");
+                    String result = bookHandler.searchForBook("database/books");
                     library.searchResultChoiceMenu("borrow", library.countOccurrences("id:", result), result);
                     running = rerunPrompt();
                     break;
                 }
                 case "5": {
-                    String result = library.searchForBook("database/books");
+                    String result = bookHandler.searchForBook("database/books");
                     library.searchResultChoiceMenu("return", library.countOccurrences("id:", result), result);
                     running = rerunPrompt();
                     break;
